@@ -3,6 +3,7 @@ TEMPLATE = subdirs
 # c++
 SUBDIRS += \
     desktop \
+    dragAndDrop \
     layouts \
     listbox \
     messagebox \
