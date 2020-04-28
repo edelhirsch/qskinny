@@ -40,12 +40,6 @@ protected:
         }
     }
 
-    void dragEnterEvent(QDragEnterEvent *event) override
-    {
-        qDebug() << Q_FUNC_INFO << event;
-        QskTextLabel::dragEnterEvent( event );
-    }
-
     void dragLeaveEvent(QDragLeaveEvent *event) override
     {
         qDebug() << Q_FUNC_INFO;
@@ -65,6 +59,30 @@ protected:
     }
 };
 
+class DropItem : public QskBox
+{
+    Q_OBJECT
+public:
+    DropItem(QQuickItem* parent = nullptr) : QskBox(parent)
+    {
+        setPanel( true );
+        setFixedSize( 500, 100 );
+        setBackground( Qt::green );
+
+        setFlag( ItemAcceptsDrops, true );
+    }
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event) override
+    {
+        auto* sourceItem = qobject_cast< QQuickItem* >( event->source() );
+        auto* layout = qobject_cast< QskLinearBox* >( parentItem() );
+        sourceItem->setParentItem( this );
+        layout->insertSpacer( 0, sourceItem->width() ); // just so the item doesn't jump
+        event->setAccepted( true );
+    }
+};
+
 int main( int argc, char* argv[] )
 {
     QGuiApplication app( argc, argv );
@@ -77,17 +95,15 @@ int main( int argc, char* argv[] )
     horizontalBox->setMargins( 10 );
     horizontalBox->setSpacing( 10 );
 
-    auto* label1 = new DraggableItem( "draggable item 1" );
-    label1->setMargins( 10 );
-    label1->setBackgroundColor( Qt::magenta );
-    horizontalBox->addItem( label1 );
+    auto* label = new DraggableItem( "draggable item" );
+    label->setMargins( 10 );
+    label->setBackgroundColor( Qt::magenta );
+    horizontalBox->addItem( label );
 
     horizontalBox->addSpacer( 200 );
 
-    auto* label2 = new DraggableItem( "draggable item 2" );
-    label2->setMargins( 10 );
-    label2->setBackgroundColor( Qt::magenta );
-    horizontalBox->addItem( label2 );
+    auto* dropItem = new DropItem;
+    horizontalBox->addItem( dropItem );
 
     QskWindow window;
     window.addItem( horizontalBox );
