@@ -11,8 +11,8 @@
 #include <QskWindow.h>
 
 #include <QGuiApplication>
-#include <QTimer>
-#include <private/qquickdrag_p.h>
+#include <QMimeData>
+#include <QDrag>
 
 class DraggableItem : public QskTextLabel
 {
@@ -21,24 +21,28 @@ class DraggableItem : public QskTextLabel
 public:
     DraggableItem( const QString& text, QQuickItem* parent = nullptr ) : QskTextLabel( text, parent )
     {
-        qDebug() << Q_FUNC_INFO;
         setPanel( true );
-        setBackground( Qt::cyan );
+        setAcceptedMouseButtons(Qt::AllButtons);
+        setAcceptTouchEvents(true);
         setFlag( ItemAcceptsDrops, true );
-
-        QTimer::singleShot( 0, this, [this]() {
-
-        auto* drag = new QQuickDrag( this );
-        drag->setTarget( this );
-        drag->setActive( true );
-        drag->setAxis( QQuickDrag::XAndYAxis );
-        });
+        setBackground( Qt::cyan );
     }
 
 protected:
+    void mousePressEvent(QMouseEvent* event) override
+    {
+        if (event->button() == Qt::LeftButton) {
+            auto* drag = new QDrag( this );
+            auto* mimeData = new QMimeData;
+            mimeData->setData( "text/html", "bla" );
+            drag->setMimeData( mimeData );
+            drag->exec();
+        }
+    }
+
     void dragEnterEvent(QDragEnterEvent *event) override
     {
-        qDebug() << Q_FUNC_INFO;
+        qDebug() << Q_FUNC_INFO << event;
         QskTextLabel::dragEnterEvent( event );
     }
 
