@@ -36,26 +36,8 @@ protected:
             auto* mimeData = new QMimeData;
             mimeData->setData( "text/html", "bla" );
             drag->setMimeData( mimeData );
-            drag->exec();
+            drag->exec( Qt::MoveAction );
         }
-    }
-
-    void dragLeaveEvent(QDragLeaveEvent *event) override
-    {
-        qDebug() << Q_FUNC_INFO;
-        QskTextLabel::dragLeaveEvent( event );
-    }
-
-    void dragMoveEvent(QDragMoveEvent *event) override
-    {
-        qDebug() << Q_FUNC_INFO;
-        QskTextLabel::dragMoveEvent( event );
-    }
-
-    void dropEvent(QDropEvent *event) override
-    {
-        qDebug() << Q_FUNC_INFO;
-        QskTextLabel::dropEvent( event );
     }
 };
 
@@ -80,6 +62,21 @@ protected:
         sourceItem->setParentItem( this );
         layout->insertSpacer( 0, sourceItem->width() ); // just so the item doesn't jump
         event->setAccepted( true );
+    }
+
+    void dragMoveEvent(QDragMoveEvent *event) override
+    {
+        QskBox::dragMoveEvent( event );
+    }
+
+    void dragLeaveEvent(QDragLeaveEvent *event) override
+    {
+        QskBox::dragLeaveEvent( event );
+    }
+
+    void dropEvent(QDropEvent *event) override
+    {
+        QskBox::dropEvent( event );
     }
 };
 
