@@ -11,6 +11,8 @@
 #include <QskWindow.h>
 
 #include <QGuiApplication>
+#include <QTimer>
+#include <private/qquickdrag_p.h>
 
 class DraggableItem : public QskTextLabel
 {
@@ -23,6 +25,14 @@ public:
         setPanel( true );
         setBackground( Qt::cyan );
         setFlag( ItemAcceptsDrops, true );
+
+        QTimer::singleShot( 0, this, [this]() {
+
+        auto* drag = new QQuickDrag( this );
+        drag->setTarget( this );
+        drag->setActive( true );
+        drag->setAxis( QQuickDrag::XAndYAxis );
+        });
     }
 
 protected:
