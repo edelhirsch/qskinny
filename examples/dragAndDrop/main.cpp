@@ -59,23 +59,31 @@ protected:
     {
         auto* sourceItem = qobject_cast< QQuickItem* >( event->source() );
         auto* layout = qobject_cast< QskLinearBox* >( parentItem() );
+
+        if( sourceItem->parentItem() != this )
+        {
+            layout->insertSpacer( 0, sourceItem->width() ); // just so the item doesn't jump
+        }
+
         sourceItem->setParentItem( this );
-        layout->insertSpacer( 0, sourceItem->width() ); // just so the item doesn't jump
         event->setAccepted( true );
     }
 
     void dragMoveEvent(QDragMoveEvent *event) override
     {
+        qDebug() << Q_FUNC_INFO;
         QskBox::dragMoveEvent( event );
     }
 
     void dragLeaveEvent(QDragLeaveEvent *event) override
     {
+        qDebug() << Q_FUNC_INFO;
         QskBox::dragLeaveEvent( event );
     }
 
     void dropEvent(QDropEvent *event) override
     {
+        qDebug() << Q_FUNC_INFO;
         QskBox::dropEvent( event );
     }
 };
