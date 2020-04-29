@@ -33,6 +33,9 @@ protected:
     {
         if (event->button() == Qt::LeftButton) {
             auto* drag = new QDrag( this );
+            QImage image( "/home/peter/dev/qskinny/examples/dragAndDrop/item.png" );
+            QPixmap pixmap = QPixmap::fromImage( image );
+            drag->setPixmap( pixmap );
             auto* mimeData = new QMimeData;
             mimeData->setData( "text/html", "bla" );
             drag->setMimeData( mimeData );
