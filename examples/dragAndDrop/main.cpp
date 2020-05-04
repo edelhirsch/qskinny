@@ -23,7 +23,11 @@ public:
     {
         setPanel( true );
         setAcceptedMouseButtons(Qt::AllButtons);
-        setAcceptTouchEvents(true);
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+        setAcceptTouchEvents( true );
+#else
+        setAcceptHoverEvents( true );
+#endif
         setFlag( ItemAcceptsDrops, true );
         setBackground( Qt::cyan );
     }
