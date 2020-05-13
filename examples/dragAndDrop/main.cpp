@@ -76,6 +76,7 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event) override
     {
         qDebug() << Q_FUNC_INFO;
+        event->setAccepted( true );
         QskBox::dragMoveEvent( event );
     }
 
