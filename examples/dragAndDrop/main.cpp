@@ -23,7 +23,7 @@ public:
     {
         setPanel( true );
         setAcceptedMouseButtons(Qt::AllButtons);
-#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+#if QT_VERSION > QT_VERSION_CHECK(5, 9, 0)
         setAcceptTouchEvents( true );
 #else
         setAcceptHoverEvents( true );
@@ -36,12 +36,24 @@ protected:
     void mousePressEvent(QMouseEvent* event) override
     {
         if (event->button() == Qt::LeftButton) {
-            auto* drag = new QDrag( this );
-            auto* mimeData = new QMimeData;
-            mimeData->setData( "text/html", "bla" );
-            drag->setMimeData( mimeData );
-            drag->exec( Qt::MoveAction );
+            startDragging( QCursor::pos() );
         }
+    }
+
+    void touchEvent( QTouchEvent *event ) override
+    {
+        startDragging( event->touchPoints().at( 0 ).pos() );
+    }
+
+private:
+    void startDragging( const QPointF& posF )
+    {
+        auto* drag = new QDrag( this );
+        drag->setHotSpot( posF.toPoint() );
+        auto* mimeData = new QMimeData;
+        mimeData->setData( "text/html", "bla" );
+        drag->setMimeData( mimeData );
+        drag->exec( Qt::MoveAction );
     }
 };
 
