@@ -22,38 +22,25 @@ public:
     DraggableItem( const QString& text, QQuickItem* parent = nullptr ) : QskTextLabel( text, parent )
     {
         setPanel( true );
-        setAcceptedMouseButtons(Qt::AllButtons);
-#if QT_VERSION > QT_VERSION_CHECK(5, 9, 0)
-        setAcceptTouchEvents( true );
-#else
-        setAcceptHoverEvents( true );
-#endif
+        setAcceptedMouseButtons( Qt::AllButtons );
         setFlag( ItemAcceptsDrops, true );
         setBackground( Qt::cyan );
     }
 
 protected:
-    void mousePressEvent(QMouseEvent* event) override
+    void mousePressEvent( QMouseEvent* event ) override
     {
         if (event->button() == Qt::LeftButton) {
-            startDragging( QCursor::pos() );
+            auto* drag = new QDrag( this );
+            // for synthesized mouse events (= touch events) the cursor position will be invalid:
+            auto position = ( event->source() == Qt::MouseEventSynthesizedByQt ) ? event->globalPos() : QCursor::pos();
+            drag->setHotSpot( position );
+            auto* mimeData = new QMimeData;
+            mimeData->setData( "text/html", "bla" );
+            drag->setMimeData( mimeData );
+            drag->exec( Qt::MoveAction );
+            event->accept();
         }
-    }
-
-    void touchEvent( QTouchEvent *event ) override
-    {
-        startDragging( event->touchPoints().at( 0 ).pos() );
-    }
-
-private:
-    void startDragging( const QPointF& posF )
-    {
-        auto* drag = new QDrag( this );
-        drag->setHotSpot( posF.toPoint() );
-        auto* mimeData = new QMimeData;
-        mimeData->setData( "text/html", "bla" );
-        drag->setMimeData( mimeData );
-        drag->exec( Qt::MoveAction );
     }
 };
 
@@ -87,7 +74,6 @@ protected:
 
     void dragMoveEvent(QDragMoveEvent *event) override
     {
-        qDebug() << Q_FUNC_INFO;
         event->setAccepted( true );
         QskBox::dragMoveEvent( event );
     }
