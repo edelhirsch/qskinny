@@ -24,6 +24,12 @@ QSK_QT_PRIVATE_END
 #include <qpa/qplatforminputcontext.h>
 #include <qpa/qplatformintegration.h>
 
+#define HUNSPELL 0
+
+#if HUNSPELL
+#include "QskHunspellTextPredictor.h"
+#endif
+
 namespace
 {
     class Panel final : public QskInputPanel
@@ -170,6 +176,20 @@ namespace
       private:
         QMap< const QQuickWindow*, Channel > m_map;
     };
+
+    class InputContextFactory final : public QskInputContextFactory
+    {
+      public:
+        QskTextPredictor* createPredictor( const QLocale& locale ) const override
+        {
+#if HUNSPELL
+            if ( locale.language() == QLocale::English )
+                return new QskHunspellTextPredictor();
+#endif
+
+            return QskInputContextFactory::createPredictor( locale );
+        }
+    };
 }
 
 static QPointer< QskInputContext > qskInputContext;
@@ -307,6 +327,7 @@ QskInputContext::QskInputContext()
     : m_data( new PrivateData() )
 {
     setObjectName( "InputContext" );
+    setFactory( new InputContextFactory() );
 }
 
 QskInputContext::~QskInputContext()

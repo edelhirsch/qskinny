@@ -5,6 +5,9 @@ QT += quick quick-private
 
 contains(QSK_CONFIG, QskDll): DEFINES += QSK_MAKEDLL
 
+# CONFIG += pinyin
+CONFIG += hunspell
+
 QSK_SUBDIRS = common graphic nodes controls layouts dialogs inputpanel
 INCLUDEPATH *= $${QSK_SUBDIRS}
 DEPENDPATH *= $${QSK_SUBDIRS}
@@ -330,6 +333,37 @@ SOURCES += \
     inputpanel/QskInputPanelBox.cpp \
     inputpanel/QskInputPredictionBar.cpp \
     inputpanel/QskVirtualKeyboard.cpp
+
+pinyin {
+
+    unix {
+
+        CONFIG += link_pkgconfig
+        PKGCONFIG += pinyin
+
+        HEADERS += \
+            inputpanel/QskPinyinTextPredictor.h
+
+        SOURCES += \
+            inputpanel/QskPinyinTextPredictor.cpp
+    }
+}
+
+hunspell {
+
+    unix {
+
+        CONFIG += link_pkgconfig
+        PKGCONFIG += hunspell
+
+        HEADERS += \
+            inputpanel/QskHunspellTextPredictor.h
+
+        SOURCES += \
+            inputpanel/QskHunspellTextPredictor.cpp
+    }
+
+}
 
 target.path    = $${QSK_INSTALL_LIBS}
 INSTALLS       = target
