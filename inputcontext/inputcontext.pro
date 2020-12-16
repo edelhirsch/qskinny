@@ -9,9 +9,6 @@ CONFIG += qskinny
 QSK_PLUGIN_SUBDIR = platforminputcontexts
 contains(QSK_CONFIG, QskDll): DEFINES += QSK_INPUTCONTEXT_MAKEDLL
 
-HEADERS += \
-    QskInputContextGlobal.h
-
 SOURCES += \
     QskInputContextPlugin.cpp
 
