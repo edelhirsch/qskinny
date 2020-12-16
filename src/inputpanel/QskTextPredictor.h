@@ -37,7 +37,7 @@ class QSK_EXPORT QskTextPredictor : public QObject
     Attributes attributes() const;
 
   Q_SIGNALS:
-    void predictionChanged();
+    void predictionChanged( const QVector< QString >& candidates );
 
   protected:
     QskTextPredictor( Attributes, QObject* );

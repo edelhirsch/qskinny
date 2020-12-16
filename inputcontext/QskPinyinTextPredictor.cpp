@@ -59,7 +59,7 @@ void QskPinyinTextPredictor::reset()
     if ( !m_data->candidates.isEmpty() )
     {
         m_data->candidates.clear();
-        Q_EMIT predictionChanged();
+        Q_EMIT predictionChanged( {} );
     }
 }
 
@@ -100,5 +100,5 @@ void QskPinyinTextPredictor::request( const QString& text )
     }
 
     m_data->candidates = candidates;
-    Q_EMIT predictionChanged();
+    Q_EMIT predictionChanged( m_data->candidates );
 }
