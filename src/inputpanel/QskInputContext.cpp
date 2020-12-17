@@ -69,7 +69,7 @@ namespace
             m_box->setPanelHint( QskInputPanelBox::Prediction, on );
         }
 
-        void setPrediction( const QStringList& prediction ) override
+        void setPrediction( const QVector< QString >& prediction ) override
         {
             m_box->setPrediction( prediction );
         }

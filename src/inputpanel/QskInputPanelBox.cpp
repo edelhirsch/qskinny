@@ -213,7 +213,7 @@ void QskInputPanelBox::setInputPrompt( const QString& text )
     }
 }
 
-void QskInputPanelBox::setPrediction( const QStringList& prediction )
+void QskInputPanelBox::setPrediction( const QVector< QString >& prediction )
 {
     m_data->predictionBar->setPrediction( prediction );
 }

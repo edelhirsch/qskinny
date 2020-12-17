@@ -64,7 +64,7 @@ class QSK_EXPORT QskInputPanelBox : public QskBox
 
   public Q_SLOTS:
     void setInputPrompt( const QString& );
-    void setPrediction( const QStringList& );
+    void setPrediction( const QVector< QString >& );
 
   protected:
     void keyPressEvent( QKeyEvent* ) override;

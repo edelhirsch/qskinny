@@ -61,7 +61,7 @@ class QskInputPredictionBar::PrivateData
 {
   public:
     QskLinearBox* layoutBox;
-    QStringList candidates;
+    QVector< QString > candidates;
 
     int scrollOffset = 0;
     const int buttonCount = 12;
@@ -106,7 +106,7 @@ QskAspect::Subcontrol QskInputPredictionBar::effectiveSubcontrol(
     return subControl;
 }
 
-void QskInputPredictionBar::setPrediction( const QStringList& candidates )
+void QskInputPredictionBar::setPrediction( const QVector< QString >& candidates )
 {
     if ( m_data->candidates != candidates )
     {
@@ -115,7 +115,7 @@ void QskInputPredictionBar::setPrediction( const QStringList& candidates )
     }
 }
 
-QStringList QskInputPredictionBar::candidates() const
+QVector< QString > QskInputPredictionBar::candidates() const
 {
     return m_data->candidates;
 }

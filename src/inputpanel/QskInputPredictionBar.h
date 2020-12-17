@@ -23,13 +23,13 @@ class QSK_EXPORT QskInputPredictionBar : public QskBox
     QskAspect::Subcontrol effectiveSubcontrol(
         QskAspect::Subcontrol subControl ) const override;
 
-    QStringList candidates() const;
+    QVector<QString> candidates() const;
 
   Q_SIGNALS:
     void predictiveTextSelected( int );
 
   public Q_SLOTS:
-    void setPrediction( const QStringList& );
+    void setPrediction(const QVector<QString> & );
 
   private:
     void buttonClicked();

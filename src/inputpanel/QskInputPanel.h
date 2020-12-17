@@ -41,7 +41,7 @@ class QSK_EXPORT QskInputPanel : public QskControl
 
   public Q_SLOTS:
     virtual void setPrompt( const QString& );
-    virtual void setPrediction( const QStringList& );
+    virtual void setPrediction( const QVector< QString >& );
     virtual void setPredictionEnabled( bool );
 
   protected:
@@ -49,7 +49,7 @@ class QSK_EXPORT QskInputPanel : public QskControl
 
   private:
     void resetPredictor( const QLocale& );
-    void updatePrediction();
+    void updatePrediction( const QVector< QString >& candidates );
 
     void updateLocale( const QLocale& );
 

@@ -433,15 +433,15 @@ void QskInputPanel::commitPredictiveText( int index )
 
     m_data->keyProcessor.reset();
 
-    setPrediction( QStringList() );
+    setPrediction( {} );
 
     qskSendText( qskReceiverItem( this ), text, true );
 }
 
-void QskInputPanel::updatePrediction()
+void QskInputPanel::updatePrediction( const QVector<QString> &candidates )
 {
     if ( m_data->predictor )
-        setPrediction( m_data->predictor->candidates() );
+        setPrediction( candidates );
 }
 
 QQuickItem* QskInputPanel::inputProxy() const
@@ -462,7 +462,7 @@ void QskInputPanel::setPredictionEnabled( bool )
 {
 }
 
-void QskInputPanel::setPrediction( const QStringList& )
+void QskInputPanel::setPrediction(const QVector<QString> & )
 {
 }
 
