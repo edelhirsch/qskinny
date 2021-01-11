@@ -28,16 +28,6 @@ QskHunspellTextPredictor::~QskHunspellTextPredictor()
     Hunspell_destroy( m_data->hunspellHandle );
 }
 
-int QskHunspellTextPredictor::candidateCount() const
-{
-    return m_data->candidates.count();
-}
-
-QString QskHunspellTextPredictor::candidate( int pos ) const
-{
-    return m_data->candidates[ pos ];
-}
-
 void QskHunspellTextPredictor::reset()
 {
     if ( !m_data->candidates.isEmpty() )

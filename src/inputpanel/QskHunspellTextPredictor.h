@@ -11,14 +11,13 @@
 
 class QSK_EXPORT QskHunspellTextPredictor : public QskTextPredictor
 {
+    Q_OBJECT // ### also add to pinyin
+
     using Inherited = QskTextPredictor;
 
   public:
     QskHunspellTextPredictor( QObject* = nullptr );
     ~QskHunspellTextPredictor() override;
-
-    int candidateCount() const override;
-    QString candidate( int pos ) const override;
 
   protected:
     void request( const QString& ) override;

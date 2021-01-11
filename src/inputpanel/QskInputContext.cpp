@@ -24,7 +24,7 @@ QSK_QT_PRIVATE_END
 #include <qpa/qplatforminputcontext.h>
 #include <qpa/qplatformintegration.h>
 
-#define HUNSPELL 0
+#define HUNSPELL 1
 
 #if HUNSPELL
 #include "QskHunspellTextPredictor.h"
@@ -71,6 +71,7 @@ namespace
 
         void setPrediction( const QVector< QString >& prediction ) override
         {
+            QskInputPanel::setPrediction( prediction );
             m_box->setPrediction( prediction );
         }
 
@@ -180,15 +181,39 @@ namespace
     class InputContextFactory final : public QskInputContextFactory
     {
       public:
-        QskTextPredictor* createPredictor( const QLocale& locale ) const override
+        ~InputContextFactory()
+        {
+            if( m_thread )
+            {
+                m_thread->quit();
+                connect( m_thread, &QThread::finished, m_thread, &QObject::deleteLater );
+            }
+        }
+
+        QskTextPredictor* createPredictor( const QLocale& locale ) override
         {
 #if HUNSPELL
             if ( locale.language() == QLocale::English )
-                return new QskHunspellTextPredictor();
+            {
+                auto* predictor = new QskHunspellTextPredictor();
+
+                if( !m_thread )
+                {
+                    m_thread = new QThread();
+                    m_thread->start();
+                }
+
+                predictor->moveToThread( m_thread );
+
+                return predictor;
+            }
 #endif
 
             return QskInputContextFactory::createPredictor( locale );
         }
+
+      private:
+        QThread* m_thread = nullptr;
     };
 }
 
@@ -544,7 +569,7 @@ QskInputContextFactory::~QskInputContextFactory()
 {
 }
 
-QskTextPredictor* QskInputContextFactory::createPredictor( const QLocale& ) const
+QskTextPredictor* QskInputContextFactory::createPredictor( const QLocale& )
 {
     return nullptr;
 }

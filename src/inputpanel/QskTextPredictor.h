@@ -26,17 +26,18 @@ class QSK_EXPORT QskTextPredictor : public QObject
 
     ~QskTextPredictor() override;
 
+    // Doesn't seem to be used yet; once it does, we need to convert it
+    // into a slot:
+    Attributes attributes() const;
+
+  public Q_SLOTS:
+    // ### change Pinyin class as well
     virtual void request( const QString& text ) = 0;
     virtual void reset() = 0;
 
-    virtual int candidateCount() const = 0;
-    virtual QString candidate( int ) const = 0;
-
-    virtual QStringList candidates() const;
-
-    Attributes attributes() const;
-
   Q_SIGNALS:
+    // ### maybe we can remove some of the methods above, and cache the candidates
+    // from here in the input panel, which runs in the main thread:
     void predictionChanged( const QVector< QString >& candidates );
 
   protected:

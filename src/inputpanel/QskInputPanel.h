@@ -19,6 +19,14 @@ class QSK_EXPORT QskInputPanel : public QskControl
     using Inherited = QskControl;
 
   public:
+    struct Result
+    {
+        int key = 0;
+
+        QString text;
+        bool isFinal = true;
+    };
+
     QskInputPanel( QQuickItem* parent = nullptr );
     ~QskInputPanel() override;
 
@@ -30,6 +38,8 @@ class QSK_EXPORT QskInputPanel : public QskControl
 
     virtual Qt::Alignment alignment() const;
 
+    QVector< QString > candidates() const;
+
   public Q_SLOTS:
     void commitKey( int keyCode );
     void commitPredictiveText( int index );
@@ -39,17 +49,23 @@ class QSK_EXPORT QskInputPanel : public QskControl
     void predictiveTextSelected( int );
     void inputItemDestroyed();
 
+    void predictionReset();
+    void predictionRequested( const QString& text );
+
   public Q_SLOTS:
     virtual void setPrompt( const QString& );
-    virtual void setPrediction( const QVector< QString >& );
+    virtual void setPrediction( const QVector< QString >& candidates );
     virtual void setPredictionEnabled( bool );
 
   protected:
     virtual void attachItem( QQuickItem* ) = 0;
 
+  private Q_SLOTS:
+    void updatePrediction( const QVector< QString >& candidates );
+    void handleKeyProcessingFinished( const Result& result );
+
   private:
     void resetPredictor( const QLocale& );
-    void updatePrediction( const QVector< QString >& candidates );
 
     void updateLocale( const QLocale& );
 

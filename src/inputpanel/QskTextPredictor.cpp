@@ -9,6 +9,7 @@ QskTextPredictor::QskTextPredictor( Attributes attributes, QObject* parent )
     : QObject( parent )
     , m_attributes( attributes )
 {
+    qRegisterMetaType< QVector< QString > >("QVector<QString>");
 }
 
 QskTextPredictor::~QskTextPredictor()
@@ -18,19 +19,6 @@ QskTextPredictor::~QskTextPredictor()
 QskTextPredictor::Attributes QskTextPredictor::attributes() const
 {
     return m_attributes;
-}
-
-QStringList QskTextPredictor::candidates() const
-{
-    const auto count = candidateCount();
-
-    QStringList candidates;
-    candidates.reserve( count );
-
-    for ( int i = 0; i < count; i++ )
-        candidates += candidate( i );
-
-    return candidates;
 }
 
 #include "moc_QskTextPredictor.cpp"

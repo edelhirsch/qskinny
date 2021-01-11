@@ -88,170 +88,174 @@ static inline void qskSendKey( QQuickItem* receiver, int key )
     QCoreApplication::sendEvent( receiver, &keyRelease );
 }
 
-namespace
+class KeyProcessor : public QObject
 {
-    class KeyProcessor
+    Q_OBJECT
+
+  public:
+    void processKey(
+        int key, Qt::InputMethodHints inputHints, QskInputPanel* panel,
+        QskTextPredictor* predictor, int spaceLeft )
     {
-      public:
-        struct Result
+        QskInputPanel::Result result;
+        m_predictor = predictor;
+        m_spaceLeft = spaceLeft;
+
+        // First we have to handle the control keys
+
+        switch ( key )
         {
-            int key = 0;
-
-            QString text;
-            bool isFinal = true;
-        };
-
-        Result processKey(
-            int key, Qt::InputMethodHints inputHints,
-            QskTextPredictor* predictor, int spaceLeft )
-        {
-            Result result;
-
-            // First we have to handle the control keys
-
-            switch ( key )
+            case Qt::Key_Backspace:
+            case Qt::Key_Muhenkan:
             {
-                case Qt::Key_Backspace:
-                case Qt::Key_Muhenkan:
+                if ( predictor && !m_preedit.isEmpty() )
                 {
-                    if ( predictor )
-                    {
-                        if ( !m_preedit.isEmpty() )
-                        {
-                            m_preedit.chop( 1 );
+                    m_preedit.chop( 1 );
 
-                            result.text = m_preedit;
-                            result.isFinal = false;
-
-                            predictor->request( m_preedit );
-
-                            return result;
-                        }
-                    }
-
-                    result.key = Qt::Key_Backspace;
-                    return result;
-                }
-                case Qt::Key_Return:
-                {
-                    if ( predictor )
-                    {
-                        if ( !m_preedit.isEmpty() )
-                        {
-                            if ( spaceLeft )
-                            {
-                                result.text = m_preedit.left( spaceLeft );
-                                result.isFinal = true;
-                            }
-
-                            reset();
-
-                            return result;
-                        }
-                    }
-
-                    if ( !( inputHints & Qt::ImhMultiLine ) )
-                    {
-                        result.key = Qt::Key_Return;
-                        return result;
-                    }
-
-                    break;
-                }
-                case Qt::Key_Space:
-                {
-                    if ( predictor )
-                    {
-                        if ( !m_preedit.isEmpty() && spaceLeft )
-                        {
-                            m_preedit += keyString( key );
-                            m_preedit = m_preedit.left( spaceLeft );
-
-                            result.text = m_preedit;
-                            result.isFinal = true;
-
-                            reset();
-
-                            return result;
-                        }
-                    }
-
-                    break;
-                }
-                case Qt::Key_Left:
-                case Qt::Key_Right:
-                case Qt::Key_Escape:
-                {
-                    result.key = key;
-                    return result;
-                }
-            }
-
-            const QString text = keyString( key );
-
-            if ( predictor )
-            {
-                m_preedit += text;
-
-                predictor->request( m_preedit );
-
-                if ( predictor->candidateCount() > 0 )
-                {
                     result.text = m_preedit;
-                    result.isFinal = false;
+                    result.isFinal = false; // ### make sure to set this when continuing
+
+                    Q_EMIT panel->predictionRequested( m_preedit );
                 }
                 else
                 {
-                    result.text = m_preedit.left( spaceLeft );
-                    result.isFinal = true;
-
-                    m_preedit.clear();
+                    result.key = Qt::Key_Backspace;
+                    Q_EMIT keyProcessingFinished( result );
                 }
+
+                break;
+            }
+            case Qt::Key_Return:
+            {
+                if ( predictor )
+                {
+                    if ( !m_preedit.isEmpty() )
+                    {
+                        if ( spaceLeft )
+                        {
+                            result.text = m_preedit.left( spaceLeft );
+                            result.isFinal = true;
+                        }
+
+                        reset();
+                        Q_EMIT keyProcessingFinished( result );
+                    }
+                }
+
+                if ( !( inputHints & Qt::ImhMultiLine ) )
+                {
+                    result.key = Qt::Key_Return;
+                    Q_EMIT keyProcessingFinished( result );
+                }
+
+                break;
+            }
+            case Qt::Key_Space:
+            {
+                if ( predictor )
+                {
+                    if ( !m_preedit.isEmpty() && spaceLeft )
+                    {
+                        m_preedit += keyString( key );
+                        m_preedit = m_preedit.left( spaceLeft );
+
+                        result.text = m_preedit;
+                        result.isFinal = true;
+
+                        reset();
+
+                        Q_EMIT keyProcessingFinished( result );
+                    }
+                }
+
+                break;
+            }
+            case Qt::Key_Left:
+            case Qt::Key_Right:
+            case Qt::Key_Escape:
+            {
+                result.key = key;
+                Q_EMIT keyProcessingFinished( result );
+            }
+        }
+
+        const QString text = keyString( key );
+
+        if ( predictor )
+        {
+            m_preedit += text;
+            Q_EMIT panel->predictionRequested( m_preedit );
+        }
+        else
+        {
+            result.text = text;
+            result.isFinal = true; // ### how is this conserved?
+            Q_EMIT keyProcessingFinished( result );
+        }
+    }
+
+    void reset()
+    {
+        m_preedit.clear();
+    }
+
+    void continueProcessingKey( const QVector< QString >& candidates )
+    {
+        QskInputPanel::Result result;
+
+        if ( m_predictor )
+        {
+            if ( candidates.count() > 0 )
+            {
+                result.text = m_preedit;
+                result.isFinal = false;
             }
             else
             {
-                result.text = text;
+                result.text = m_preedit.left( m_spaceLeft );
                 result.isFinal = true;
+
+                m_preedit.clear();
             }
-
-            return result;
         }
 
-        void reset()
+        Q_EMIT keyProcessingFinished( result );
+    }
+
+  Q_SIGNALS:
+    void keyProcessingFinished( const QskInputPanel::Result& result );
+
+  private:
+    inline QString keyString( int keyCode ) const
+    {
+        // Special case entry codes here, else default to the symbol
+        switch ( keyCode )
         {
-            m_preedit.clear();
+            case Qt::Key_Shift:
+            case Qt::Key_CapsLock:
+            case Qt::Key_Mode_switch:
+            case Qt::Key_Backspace:
+            case Qt::Key_Muhenkan:
+                return QString();
+
+            case Qt::Key_Return:
+            case Qt::Key_Kanji:
+                return QChar( QChar::CarriageReturn );
+
+            case Qt::Key_Space:
+                return QChar( QChar::Space );
+
+            default:
+                break;
         }
 
-      private:
-        inline QString keyString( int keyCode ) const
-        {
-            // Special case entry codes here, else default to the symbol
-            switch ( keyCode )
-            {
-                case Qt::Key_Shift:
-                case Qt::Key_CapsLock:
-                case Qt::Key_Mode_switch:
-                case Qt::Key_Backspace:
-                case Qt::Key_Muhenkan:
-                    return QString();
+        return QChar( keyCode );
+    }
 
-                case Qt::Key_Return:
-                case Qt::Key_Kanji:
-                    return QChar( QChar::CarriageReturn );
-
-                case Qt::Key_Space:
-                    return QChar( QChar::Space );
-
-                default:
-                    break;
-            }
-
-            return QChar( keyCode );
-        }
-
-        QString m_preedit;
-    };
-}
+    QString m_preedit;
+    int m_spaceLeft = -1;
+    QskTextPredictor* m_predictor = nullptr;
+};
 
 class QskInputPanel::PrivateData
 {
@@ -261,6 +265,7 @@ class QskInputPanel::PrivateData
 
     QLocale predictorLocale;
     QPointer< QskTextPredictor > predictor;
+    QVector< QString > candidates;
 
     Qt::InputMethodHints inputHints;
     bool hasPredictorLocale = false;
@@ -273,6 +278,8 @@ QskInputPanel::QskInputPanel( QQuickItem* parent )
     setAutoLayoutChildren( true );
     initSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Constrained );
 
+    qRegisterMetaType< Result >( "Result" );
+
     connect( this, &QskInputPanel::keySelected,
         this, &QskInputPanel::commitKey );
 
@@ -281,6 +288,9 @@ QskInputPanel::QskInputPanel( QQuickItem* parent )
 
     connect( this, &QskControl::localeChanged,
         this, &QskInputPanel::updateLocale );
+
+    connect( &m_data->keyProcessor, &KeyProcessor::keyProcessingFinished,
+        this, &QskInputPanel::handleKeyProcessingFinished );
 
     updateLocale( locale() );
 }
@@ -305,7 +315,7 @@ void QskInputPanel::attachInputItem( QQuickItem* item )
     if ( item )
     {
         if ( m_data->predictor )
-            m_data->predictor->reset();
+            Q_EMIT predictionReset();
 
         m_data->keyProcessor.reset();
         m_data->inputHints = Qt::InputMethodHints();
@@ -397,7 +407,7 @@ void QskInputPanel::resetPredictor( const QLocale& locale )
     {
         if ( m_data->predictor->parent() == this )
         {
-            delete m_data->predictor;
+            delete m_data->predictor; // ### deleteLater()?
         }
         else
         {
@@ -413,6 +423,12 @@ void QskInputPanel::resetPredictor( const QLocale& locale )
         if ( predictor->parent() == nullptr )
             predictor->setParent( this );
 
+        // text predictor lives in another thread, so these will all be QueuedConnections:
+        connect( this, &QskInputPanel::predictionReset,
+                 predictor, &QskTextPredictor::reset );
+        connect( this, &QskInputPanel::predictionRequested,
+                 predictor, &QskTextPredictor::request );
+
         connect( predictor, &QskTextPredictor::predictionChanged,
             this, &QskInputPanel::updatePrediction );
     }
@@ -427,8 +443,8 @@ void QskInputPanel::commitPredictiveText( int index )
 
     if ( m_data->predictor )
     {
-        text = m_data->predictor->candidate( index );
-        m_data->predictor->reset();
+        text = m_data->candidates.at( index );
+        Q_EMIT predictionReset();
     }
 
     m_data->keyProcessor.reset();
@@ -441,71 +457,14 @@ void QskInputPanel::commitPredictiveText( int index )
 void QskInputPanel::updatePrediction( const QVector<QString> &candidates )
 {
     if ( m_data->predictor )
-        setPrediction( candidates );
-}
-
-QQuickItem* QskInputPanel::inputProxy() const
-{
-    return nullptr;
-}
-
-QQuickItem* QskInputPanel::inputItem() const
-{
-    return m_data->inputItem;
-}
-
-void QskInputPanel::setPrompt( const QString& )
-{
-}
-
-void QskInputPanel::setPredictionEnabled( bool )
-{
-}
-
-void QskInputPanel::setPrediction(const QVector<QString> & )
-{
-}
-
-Qt::Alignment QskInputPanel::alignment() const
-{
-    /*
-        When we have an input proxy, we don't care if
-        the input item becomes hidden
-     */
-
-    return inputProxy() ? Qt::AlignVCenter : Qt::AlignBottom;
-}
-
-void QskInputPanel::commitKey( int key )
-{
-    if ( m_data->inputItem == nullptr )
-        return;
-
-    int spaceLeft = -1;
-
-    if ( !( m_data->inputHints & Qt::ImhMultiLine ) )
     {
-        QInputMethodQueryEvent event1( Qt::ImMaximumTextLength );
-        QCoreApplication::sendEvent( m_data->inputItem, &event1 );
-
-        const int maxChars = event1.value( Qt::ImMaximumTextLength ).toInt();
-        if ( maxChars >= 0 )
-        {
-            QInputMethodQueryEvent event2( Qt::ImSurroundingText );
-            QCoreApplication::sendEvent( qskReceiverItem( this ), &event2 );
-
-            const auto text = event2.value( Qt::ImSurroundingText ).toString();
-            spaceLeft = maxChars - text.length();
-        }
+        setPrediction( candidates );
+        m_data->keyProcessor.continueProcessingKey( candidates );
     }
+}
 
-    QskTextPredictor* predictor = nullptr;
-    if ( qskUsePrediction( m_data->inputHints ) )
-        predictor = m_data->predictor;
-
-    const auto result = m_data->keyProcessor.processKey(
-        key, m_data->inputHints, predictor, spaceLeft );
-
+void QskInputPanel::handleKeyProcessingFinished( const QskInputPanel::Result& result )
+{
     switch ( result.key )
     {
         case 0:
@@ -544,4 +503,73 @@ void QskInputPanel::commitKey( int key )
     }
 }
 
-#include "moc_QskInputPanel.cpp"
+QQuickItem* QskInputPanel::inputProxy() const
+{
+    return nullptr;
+}
+
+QQuickItem* QskInputPanel::inputItem() const
+{
+    return m_data->inputItem;
+}
+
+void QskInputPanel::setPrompt( const QString& )
+{
+}
+
+void QskInputPanel::setPredictionEnabled( bool )
+{
+}
+
+void QskInputPanel::setPrediction(const QVector<QString>& candidates )
+{
+    m_data->candidates = candidates;
+}
+
+Qt::Alignment QskInputPanel::alignment() const
+{
+    /*
+        When we have an input proxy, we don't care if
+        the input item becomes hidden
+     */
+
+    return inputProxy() ? Qt::AlignVCenter : Qt::AlignBottom;
+}
+
+QVector< QString > QskInputPanel::candidates() const
+{
+    return m_data->candidates;
+}
+
+void QskInputPanel::commitKey( int key )
+{
+    if ( m_data->inputItem == nullptr )
+        return;
+
+    int spaceLeft = -1;
+
+    if ( !( m_data->inputHints & Qt::ImhMultiLine ) )
+    {
+        QInputMethodQueryEvent event1( Qt::ImMaximumTextLength );
+        QCoreApplication::sendEvent( m_data->inputItem, &event1 );
+
+        const int maxChars = event1.value( Qt::ImMaximumTextLength ).toInt();
+        if ( maxChars >= 0 )
+        {
+            QInputMethodQueryEvent event2( Qt::ImSurroundingText );
+            QCoreApplication::sendEvent( qskReceiverItem( this ), &event2 );
+
+            const auto text = event2.value( Qt::ImSurroundingText ).toString();
+            spaceLeft = maxChars - text.length();
+        }
+    }
+
+    QskTextPredictor* predictor = nullptr;
+    if ( qskUsePrediction( m_data->inputHints ) )
+        predictor = m_data->predictor;
+
+    m_data->keyProcessor.processKey(
+        key, m_data->inputHints, this, predictor, spaceLeft );
+}
+
+#include "QskInputPanel.moc"
