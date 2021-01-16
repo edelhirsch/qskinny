@@ -1,14 +1,14 @@
 {
-  "baseUrl": "/",
+  "baseUrl": "/public/",
   "indexInFolders": true,
-  "linkSuffix": ".md",
-  "linkLowercase": false,
-  "indexClassesName": "README",
-  "indexFilesName": "README",
-  "indexGroupsName": "README",
-  "indexNamespacesName": "README",
-  "indexRelatedPagesName": "README",
-  "indexExamplesName": "README",
+  "linkSuffix": "/",
+  "linkLowercase": true,
+  "indexClassesName": "_index",
+  "indexFilesName": "_index",
+  "indexGroupsName": "_index",
+  "indexNamespacesName": "_index",
+  "indexRelatedPagesName": "_index",
+  "indexExamplesName": "_index",
   "mainPageInRoot": true,
-  "mainPageName": "README"
+  "mainPageName": "_index"
 }
