@@ -1,0 +1,4 @@
+baseURL = "https://localhost/public"
+languageCode = "en-us"
+title = "QSkinny documentation"
+theme = "hugo-book"
