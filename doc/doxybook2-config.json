@@ -1,5 +1,5 @@
 {
-  "baseUrl": "/public/",
+  "baseUrl": "/docs/",
   "indexInFolders": true,
   "linkSuffix": "/",
   "linkLowercase": true,
