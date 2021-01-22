@@ -934,7 +934,8 @@ EXCLUDE_PATTERNS       = *Private.* moc*.cpp *.moc
 
 EXCLUDE_SYMBOLS        = QskPainterCommand::PixmapData \
                          QskPainterCommand::ImageData \
-                         QskPainterCommand::StateData
+                         QskPainterCommand::StateData \
+                         QSK_QT_PRIVATE_END::*
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
@@ -994,7 +995,7 @@ INPUT_FILTER           =
 # need to set EXTENSION_MAPPING for the extension otherwise the files are not
 # properly processed by doxygen.
 
-FILTER_PATTERNS        = *.h=doxyfilter.sh
+#FILTER_PATTERNS        = *.h=doxyfilter.sh
 
 # If the FILTER_SOURCE_FILES tag is set to YES, the input filter (if set using
 # INPUT_FILTER) will also be used to filter the input files that are used for
@@ -1169,7 +1170,7 @@ IGNORE_PREFIX          = Qsk \
 # If the GENERATE_HTML tag is set to YES, doxygen will generate HTML output
 # The default value is: YES.
 
-GENERATE_HTML          = YES
+GENERATE_HTML          = NO
 
 # The HTML_OUTPUT tag is used to specify where the HTML docs will be put. If a
 # relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
