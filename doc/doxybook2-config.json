@@ -1,5 +1,11 @@
 {
   "baseUrl": "/docs/",
+  "folderClassesName": "classes",
+  "folderGroupsName": "modules",
+  "folderFilesName": "files",
+  "folderRelatedPagesName": "pages",
+  "folderNamespacesName": "namespaces",
+  "folderExamplesName": "examples",
   "indexInFolders": true,
   "linkSuffix": "/",
   "linkLowercase": true,
