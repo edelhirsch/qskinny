@@ -552,7 +552,7 @@ HIDE_UNDOC_MEMBERS     = NO
 # has no effect if EXTRACT_ALL is enabled.
 # The default value is: NO.
 
-HIDE_UNDOC_CLASSES     = NO
+HIDE_UNDOC_CLASSES     = YES
 
 # If the HIDE_FRIEND_COMPOUNDS tag is set to YES, doxygen will hide all friend
 # declarations. If set to NO, these declarations will be included in the
@@ -935,7 +935,9 @@ EXCLUDE_PATTERNS       = *Private.* moc*.cpp *.moc
 EXCLUDE_SYMBOLS        = QskPainterCommand::PixmapData \
                          QskPainterCommand::ImageData \
                          QskPainterCommand::StateData \
-                         QSK_QT_PRIVATE_END::*
+                         QSK_QT_PRIVATE_END::* \
+                         *::PrivateData \
+                         QList
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
