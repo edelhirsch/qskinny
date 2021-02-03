@@ -932,11 +932,7 @@ EXCLUDE_PATTERNS       = *Private.* moc*.cpp *.moc
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories use the pattern */test/*
 
-EXCLUDE_SYMBOLS        = QskPainterCommand::PixmapData \
-                         QskPainterCommand::ImageData \
-                         QskPainterCommand::StateData \
-                         QSK_QT_PRIVATE_END::* \
-                         *::PrivateData \
+EXCLUDE_SYMBOLS        = *::* \
                          QList
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
