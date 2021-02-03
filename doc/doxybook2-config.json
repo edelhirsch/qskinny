@@ -8,7 +8,7 @@
   "folderExamplesName": "examples",
   "indexInFolders": true,
   "linkSuffix": "/",
-  "linkLowercase": true,
+  "linkLowercase": false,
   "indexClassesName": "index",
   "indexFilesName": "index",
   "indexGroupsName": "index",
