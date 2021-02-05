@@ -4,7 +4,9 @@ set -e
 
 PUBDIR=/var/www/html/
 DOXYBOOK=~/dev/doxybook2/build-debug/src/DoxybookCli/doxybook2
-WEBSITE=~/dev/edelhirsch.github.io
+DOXYGEN=~/dev/doxygen/build/bin/doxygen
+WEBSITE=~/dev/qskinny-website/
+WEBSITE_PUBLIC=~/dev/edelhirsch.github.io
 
 cd "$(dirname "$0")"
 
@@ -16,16 +18,31 @@ else
     DOXYBOOK_OUT=~/dev/qskinny-website/docs
 fi
 
+DOXYGEN_RUN=false
+
+# generate HTML if necessary (to generate the inheritance diagrams):
+if [ ! -d "html" ]
+then
+    cd ..
+    git grep -i qsk_qt_private_begin|cut -d ':' -f 1|grep -v generate-website.sh|grep -v QskGlobal.h|xargs sed -i 's/QSK_QT_PRIVATE_BEGIN//'
+    git grep -i qsk_qt_private_end|cut -d ':' -f 1|grep -v generate-website.sh|grep -v QskGlobal.h|xargs sed -i 's/QSK_QT_PRIVATE_END//'
+    cd doc
+    echo generating HTML from Doxygen for the SVGs
+    $DOXYGEN Doxyfile.generate-html
+    cp html/class*.svg $WEBSITE/docs/classes/svg/
+    DOXYGEN_RUN=true
+fi
+
 # generate XML if necessary:
 ### we also need a new version of doxygen
-DOXYGEN_RUN=false
 if [ ! -d "xml" ]
 then
     cd ..
     git grep -i qsk_qt_private_begin|cut -d ':' -f 1|grep -v generate-website.sh|grep -v QskGlobal.h|xargs sed -i 's/QSK_QT_PRIVATE_BEGIN//'
     git grep -i qsk_qt_private_end|cut -d ':' -f 1|grep -v generate-website.sh|grep -v QskGlobal.h|xargs sed -i 's/QSK_QT_PRIVATE_END//'
     cd doc
-    doxygen
+    echo generating XML from Doxygen
+    $DOXYGEN
     DOXYGEN_RUN=true
 fi
 
@@ -59,7 +76,7 @@ then
 
     # copy static HTML to website:
     cd ~/dev
-    [ ! -d "$WEBSITE" ] && git clone git@github.com:edelhirsch/edelhirsch.github.io.git
+    [ ! -d "$WEBSITE_PUBLIC" ] && git clone git@github.com:edelhirsch/edelhirsch.github.io.git
     cd edelhirsch.github.io/
     git rm -r ./*
     cp -r ~/dev/qskinny-website/_site/* ./
