@@ -29,6 +29,8 @@ then
     cd doc
     echo generating HTML from Doxygen for the SVGs
     $DOXYGEN Doxyfile.generate-html
+    # correct links manually:
+    find html/ -name 'class*.svg'|xargs sed -i 's/\.html//g; s/href=\"class/href=\"..\/class/g'
     cp html/class*.svg $WEBSITE/docs/classes/svg/
     DOXYGEN_RUN=true
 fi
