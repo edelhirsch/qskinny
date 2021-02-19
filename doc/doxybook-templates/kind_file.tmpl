@@ -1,0 +1,10 @@
+{% include "header" -%}
+
+{% if exists("programlisting")%}## Source code
+
+```cpp
+{{programlisting}}
+```
+{% endif %}
+
+{% include "footer" %}
