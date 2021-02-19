@@ -64,6 +64,7 @@ fi
 
 # generate Markdown from XML:
 $DOXYBOOK -i xml -o $DOXYBOOK_OUT -c doxybook2-config.json
+./generate-json-index.sh|sed -z 's/,\n]/\n]/' > $DOXYBOOK_OUT/class-index.json
 
 if [ $DOXYGEN_RUN = true ]
 then
