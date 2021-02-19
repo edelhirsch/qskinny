@@ -859,8 +859,7 @@ WARN_LOGFILE           = Doxygen.log
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = . \
-                         classes \
+INPUT                  = classes \
                          ../src
 
 # This tag can be used to specify the character encoding of the source files
