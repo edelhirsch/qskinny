@@ -63,7 +63,7 @@ then
 fi
 
 # generate Markdown from XML:
-$DOXYBOOK -i xml -o $DOXYBOOK_OUT -c doxybook2-config.json
+$DOXYBOOK -i xml -o $DOXYBOOK_OUT -c doxybook2-config.json -t doxybook-templates
 
 if [ $DOXYGEN_RUN = true ]
 then
