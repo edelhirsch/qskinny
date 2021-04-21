@@ -66,6 +66,11 @@ fi
 $DOXYBOOK -i xml -o $DOXYBOOK_OUT -c doxybook2-config.json
 ./generate-json-index.sh|sed -z 's/,\n]/\n]/' > $DOXYBOOK_OUT/class-index.json
 
+if [ "$1" != "-local" ]
+then
+    cp -r tutorials $WEBSITE/docs/
+fi
+
 if [ $DOXYGEN_RUN = true ]
 then
     git reset --hard
