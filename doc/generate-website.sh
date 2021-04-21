@@ -31,9 +31,10 @@ then
     $DOXYGEN Doxyfile.generate-html
     # correct links manually:
     find html/ -name 'class*.svg'|xargs sed -i 's/\.html//g; s/href=\"class/href=\"..\/class/g'
-    cp html/class*.svg $WEBSITE/docs/classes/svg/
     DOXYGEN_RUN=true
 fi
+
+cp html/class*.svg $WEBSITE/docs/classes/svg/
 
 # generate XML if necessary:
 ### we also need a new version of doxygen
