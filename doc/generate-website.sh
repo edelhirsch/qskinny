@@ -6,7 +6,7 @@ PUBDIR=/var/www/html/
 DOXYBOOK=~/dev/doxybook2/build-debug/src/DoxybookCli/doxybook2
 DOXYGEN=~/dev/doxygen/build/bin/doxygen
 WEBSITE=~/dev/qskinny-website/
-WEBSITE_PUBLIC=~/dev/edelhirsch.github.io
+WEBSITE_PUBLIC=~/dev/qskinny.github.io
 
 cd "$(dirname "$0")"
 
@@ -85,10 +85,10 @@ then
 
     # copy static HTML to website:
     cd ~/dev
-    [ ! -d "$WEBSITE_PUBLIC" ] && git clone git@github.com:edelhirsch/edelhirsch.github.io.git
-    cd edelhirsch.github.io/
+    [ ! -d "$WEBSITE_PUBLIC" ] && git clone git@github.com:edelhirsch/qskinny.github.io.git
+    cd $WEBSITE_PUBLIC
     git rm -r ./*
-    cp -r ~/dev/qskinny-website/_site/* ./
+    cp -r $WEBSITE/_site/* ./
     git add ./*
     git commit -m "new version"
     git push
