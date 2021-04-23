@@ -46,6 +46,8 @@ then
     cd doc
     echo generating XML from Doxygen
     $DOXYGEN
+    # We don't want the .dox files to appear in the files list:
+    find xml -name '*_8dox.xml'|xargs rm
     DOXYGEN_RUN=true
 fi
 
