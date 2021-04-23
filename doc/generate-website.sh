@@ -77,7 +77,7 @@ then
     git reset --hard
 fi
 
-if [ "$1" == "-generate" ]
+if [ "$1" == "-publish" ]
 then
     # generate static HTML from Markdown:
     cd ~/dev/qskinny-website
