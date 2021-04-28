@@ -20,4 +20,4 @@ together with QSkinny is possible though.
 An overview of how QSkinny fits into the Qt architecture is depicted below:
 
 .QSkinny sits on top of QtQuick, while QML is optional
-image::../images/architecture-simple.png[QSkinny architecture]
+image::../images/architecture-simple.jpg[QSkinny architecture]
