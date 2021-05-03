@@ -1,9 +1,9 @@
 ---
-title: 9. Scene graph representations of controls
+title: 11. Scene graph representations of controls
 layout: docs
 ---
 
-:doctitle: 9. Scene graph representations of controls
+:doctitle: 11. Scene graph representations of controls
 :notitle:
 
 == QSkinny - Scene graph representations of controls
