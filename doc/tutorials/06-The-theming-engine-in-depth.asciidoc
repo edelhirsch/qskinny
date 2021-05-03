@@ -8,5 +8,134 @@ layout: docs
 
 == Defining skin hints
 
+Let's say we want to define skin hints for the following control:
+
+```cpp
+class Control : public QskControl
+{
+        Q_OBJECT
+
+    public:
+        QSK_SUBCONTROLS( Panel, InnerArea )
+        QSK_STATES( Active, Highlighted )
+
+    ...
+};
+
+QSK_SUBCONTROL( Control, Panel )
+QSK_SUBCONTROL( Active, Highlighted )
+
+QSK_STATE( Control, Active, ( QskAspect::FirstUserState << 1 ) )
+QSK_STATE( Control, Highlighted, ( QskAspect::FirstUserState << 2 ) )
+
+```
+
+As described in previous chapters, skin hints for that class can be defined the
+following way:
+
+```cpp
+Skin::Skin( QObject* parent ) : QskSkin( parent )
+{
+    QskSkinHintTableEditor ed( &hintTable() );
+
+    ed.setGradient( Control::Panel, Qt::red );
+    ed.setGradient( Control::Panel | Control::Active, Qt::green );
+    ed.setGradient( Control::Panel | Control::Active | QskControl::Hovered, Qt::blue );
+}
+```
+
+This means that the color of `Control` 's panel (probably a background color)
+will be red by default; if the control is in the `Active` state, it will be
+green. When in addition entering the `Hovered` state, i.e. the user hovers with
+the mouse over the element, it will be blue.
+
+In general, which skin hint is used for drawing a graphical element always
+depends on the skinlet and should be properly documented. However,
+the theming engine itself has its logic how skin hints are resolved.
+
+
+== Types of skin hints
+
+There are two types of skin hints: local and global ones. They are checked in
+the following order:
+
+*1. local skin hints*
+
+Local skin hints are set on the control itself via `setMarginHint()`,
+`setGradientHint()` and other functions.
+If a skin hint is found in the local table, it takes precedence over the ones
+defined in the global skin.
+In general, it is preferrable to set the skin hints in
+the skin itself; occasionally it can be easier to set the skin hint locally,
+though.
+
+*2. global skin hints*
+
+Global skin hints are set on the skin rather than on the control, usually on an
+application-wide subclass of `QskSkin`, as described in the example above for
+`Control`.
+
+The logic described is defined in
+link:../../files/QskSkinnable_8cpp[QskSkinnable::storedHint()].
+
 == Resolving skin hints
 
+When resolving the right skin hint, QSkinny first needs to determine which skin
+hint to resolve, by checking the follwing:
+
+*1. Which subcontrol is being drawed?*
+
+This is the easy part, and can be a subcontrol from QSkinny (e.g.
+`QskTextLabel::Text`), or a user-defined one, like `Control::Panel` in our
+example above.
+
+*2. Which state is the subcontrol in?*
+
+Skin hints can differ depending on the state, see above example: Without any
+state set the panel of the control should be drawn in red, but when it is in
+the `Active` state, it should be drawn in green (and then in addition there is
+the `Hovered` state).
+
+So when drawing a subcontrol, QSkinny will automatically
+lookup the skin hint for that subcontrol in the current state.
+
+E.g. when looking up a skin hint of `Control::Panel`, which happens to be in
+the `Control::Active` state, QSkinny looks up the skin hint for
+`Control::Panel | Control::Active`.
+
+=== Exact matches
+
+If the subcontrol `Panel` in the state `Active` is defined in the skin hint
+table, which in our example it is, we have found the right skin hint
+(`Qt::green`) and will return that to the skinlet for drawing.
+
+=== Non exact matches
+
+The interesting case is when there is no exact match for the skin hint:
+Let's say we want to look up the panel skin hint for when the control is in the
+`Highlighted` state, i.e. we are looking up the hint for
+`Control::Panel | Control::Highlighted`. Since there is no definition for it in
+the skin, we have to make a guess which skin hint to use: In that case we remove
+the state and look up the hint for `Control::Panel`, which is defined as red.
+
+In general, we look for the right skin hint by removing the "most significant"
+state until we find a skin hint that matches. If the control had both states
+`Active` and `Highlighted` set, the skin hint to look up would have been
+`Control::Panel | Control::Active | Control::Highlighted`.
+
+Since the skin does not have a definition for it, we would have checked for
+`Control::Panel | Control::Active` next. So why did we not choose to look up
+`Control::Panel | Control::Highlighted` instead? The reason for this is that
+the states are defined in the following way:
+
+```
+QSK_STATE( Control, Active, ( QskAspect::FirstUserState << 1 ) )
+QSK_STATE( Control, Highlighted, ( QskAspect::FirstUserState << 2 ) )
+```
+
+The most significant state here is the `Highlighted` one, as it is defined by
+the more significant bit. This means that it will be removed first when
+searching for the right skin hint.
+
+The functionality for this is defined in the function
+link:../../files/QskSkinHintTable_8cpp[qskResolvedHint()].
