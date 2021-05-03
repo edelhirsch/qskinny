@@ -1,0 +1,12 @@
+---
+title: 6. The theming engine in depth
+layout: docs
+---
+
+:doctitle: 6. The theming engine in depth
+:notitle:
+
+== Defining skin hints
+
+== Resolving skin hints
+
