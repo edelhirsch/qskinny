@@ -75,7 +75,13 @@ Global skin hints are set on the skin rather than on the control, usually on an
 application-wide subclass of `QskSkin`, as described in the example above for
 `Control`.
 
-The logic described is defined in
+The following image shows the lookup logic; for an explanation how the skin
+hints are resolved see the chapter <<Resolving skin hints>>.
+
+.skin hint lookup logic
+image::../images/skin-hint-lookup.jpg[skin hint lookup]
+
+This logic is defined in
 link:../../files/QskSkinnable_8cpp[QskSkinnable::storedHint()].
 
 == Resolving skin hints
