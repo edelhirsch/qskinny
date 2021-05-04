@@ -137,5 +137,8 @@ The most significant state here is the `Highlighted` one, as it is defined by
 the more significant bit. This means that it will be removed first when
 searching for the right skin hint.
 
+.skin hint resolving logic
+image::../images/skin-hint-resolving.jpg[skin hint resolving]
+
 The functionality for this is defined in the function
 link:../../files/QskSkinHintTable_8cpp[qskResolvedHint()].
