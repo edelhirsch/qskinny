@@ -23,6 +23,10 @@ class ControlOldSkinlet : public QskSkinlet
             Subcontrol2Role,
             Subcontrol3Role,
             Subcontrol4Role,
+            Text1Role,
+            Text2Role,
+            Text3Role,
+            Text4Role,
         };
 
         Q_INVOKABLE ControlOldSkinlet( QskSkin* = nullptr );

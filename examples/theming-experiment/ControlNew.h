@@ -16,7 +16,8 @@ class ControlNew : public QskControl
         using Inherited = QskControl;
 
     public:
-        QSK_SUBCONTROLS( Subcontrol1, Subcontrol2, Subcontrol3, Subcontrol4 )
+        QSK_SUBCONTROLS( Subcontrol1, Subcontrol2, Subcontrol3, Subcontrol4,
+                         Text1, Text2, Text3, Text4 )
 
         ControlNew( QQuickItem* parent = nullptr );
         ~ControlNew() override;

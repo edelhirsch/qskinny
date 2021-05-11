@@ -10,6 +10,7 @@
 #include "QskColorFilter.h"
 #include "QskGraphic.h"
 #include "QskGraphicProviderMap.h"
+#include "QskPalette.h"
 #include "QskSkinHintTable.h"
 #include "QskStandardSymbol.h"
 
@@ -128,6 +129,7 @@ class QskSkin::PrivateData
     std::unordered_map< int, QskColorFilter > graphicFilters;
 
     QskGraphicProviderMap graphicProviders;
+    QskPalette palette;
 };
 
 QskSkin::QskSkin( QObject* parent )
@@ -288,6 +290,11 @@ const std::unordered_map< int, QFont >& QskSkin::fonts() const
 const std::unordered_map< int, QskColorFilter >& QskSkin::graphicFilters() const
 {
     return m_data->graphicFilters;
+}
+
+QskPalette QskSkin::palette() const
+{
+    return m_data->palette;
 }
 
 QskGraphic QskSkin::symbol( int symbolType ) const

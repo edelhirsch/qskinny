@@ -22,6 +22,8 @@ class QskColorFilter;
 class QskGraphic;
 class QskGraphicProvider;
 
+class QskPalette;
+
 class QskSkinHintTable;
 
 class QVariant;
@@ -86,6 +88,8 @@ class QSK_EXPORT QskSkin : public QObject
 
     const std::unordered_map< int, QFont >& fonts() const;
     const std::unordered_map< int, QskColorFilter >& graphicFilters() const;
+
+    QskPalette palette() const;
 
   private:
     void declareSkinlet( const QMetaObject* controlMetaObject,

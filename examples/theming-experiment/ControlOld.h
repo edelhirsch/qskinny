@@ -16,7 +16,8 @@ class ControlOld : public QskControl
         using Inherited = QskControl;
 
     public:
-        QSK_SUBCONTROLS( Subcontrol1, Subcontrol2, Subcontrol3, Subcontrol4 )
+        QSK_SUBCONTROLS( Subcontrol1, Subcontrol2, Subcontrol3, Subcontrol4,
+                         Text1, Text2, Text3, Text4 )
 
         ControlOld( QQuickItem* parent = nullptr );
         ~ControlOld() override;

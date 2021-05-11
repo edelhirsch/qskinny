@@ -7,7 +7,8 @@ SOURCES += \
     ControlOldSkinlet.cpp \
     main.cpp \
     Skin.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    MaterialPalette.cpp
 
 HEADERS += \
     ControlNew.h \
@@ -15,5 +16,6 @@ HEADERS += \
     ControlOld.h \
     ControlOldSkinlet.h \
     Skin.h \
-    MainWindow.h
+    MainWindow.h \
+    MaterialPalette.h
 

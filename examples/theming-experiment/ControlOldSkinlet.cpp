@@ -6,11 +6,14 @@
 #include "ControlOldSkinlet.h"
 #include "ControlOld.h"
 
+#include <QskTextOptions.h>
+
 ControlOldSkinlet::ControlOldSkinlet( QskSkin* skin )
     : QskSkinlet( skin )
 {
     setNodeRoles( { Subcontrol1Role, Subcontrol2Role, Subcontrol3Role,
-                    Subcontrol4Role } );
+                    Subcontrol4Role, Text1Role, Text2Role, Text3Role,
+                    Text4Role } );
 }
 
 ControlOldSkinlet::~ControlOldSkinlet()
@@ -23,17 +26,20 @@ QRectF ControlOldSkinlet::subControlRect(
 {
     qreal x, y;
 
-    if( subControl == ControlOld::Subcontrol1 )
+    if( subControl == ControlOld::Subcontrol1
+        || subControl == ControlOld::Text1 )
     {
         x = 0;
         y = 0;
     }
-    else if( subControl == ControlOld::Subcontrol2 )
+    else if( subControl == ControlOld::Subcontrol2
+             || subControl == ControlOld::Text2 )
     {
         x = 150;
         y = 0;
     }
-    else if( subControl == ControlOld::Subcontrol3 )
+    else if( subControl == ControlOld::Subcontrol3
+             || subControl == ControlOld::Text3 )
     {
         x = 0;
         y = 100;
@@ -50,27 +56,53 @@ QRectF ControlOldSkinlet::subControlRect(
 QSGNode* ControlOldSkinlet::updateSubNode(
     const QskSkinnable* skinnable, quint8 nodeRole, QSGNode* node ) const
 {
-    QskAspect::Subcontrol subcontrol;
-
     switch( nodeRole )
     {
         case Subcontrol1Role:
-            subcontrol = ControlOld::Subcontrol1;
-            break;
+            return updateBoxNode( skinnable, node, ControlOld::Subcontrol1 );
 
         case Subcontrol2Role:
-            subcontrol = ControlOld::Subcontrol2;
-            break;
+            return updateBoxNode( skinnable, node, ControlOld::Subcontrol2 );
 
         case Subcontrol3Role:
-            subcontrol = ControlOld::Subcontrol3;
-            break;
+            return updateBoxNode( skinnable, node, ControlOld::Subcontrol3 );
+
+        case Subcontrol4Role:
+            return updateBoxNode( skinnable, node, ControlOld::Subcontrol4 );
+
+        case Text1Role:
+            return updateTextNode( skinnable, node,
+                                   subControlRect( skinnable, {},
+                                                   ControlOld::Text1 ),
+                                   Qt::AlignCenter, "text", {},
+                                   ControlOld::Text1 );
+
+        case Text2Role:
+            return updateTextNode( skinnable, node,
+                                   subControlRect( skinnable, {},
+                                                   ControlOld::Text2 ),
+                                   Qt::AlignCenter, "text", {},
+                                   ControlOld::Text2 );
+
+        case Text3Role:
+            return updateTextNode( skinnable, node,
+                                   subControlRect( skinnable, {},
+                                                   ControlOld::Text3 ),
+                                   Qt::AlignCenter, "text", {},
+                                   ControlOld::Text3 );
+
+        case Text4Role:
+            return updateTextNode( skinnable, node,
+                                   subControlRect( skinnable, {},
+                                                   ControlOld::Text4 ),
+                                   Qt::AlignCenter, "text", {},
+                                   ControlOld::Text4 );
 
         default:
-            subcontrol = ControlOld::Subcontrol4;
+            ;
     }
 
-    return updateBoxNode( skinnable, node, subcontrol );
+    return nullptr;
 }
 
 #include "moc_ControlOldSkinlet.cpp"
