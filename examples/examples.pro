@@ -8,6 +8,7 @@ SUBDIRS += \
     listbox \
     messagebox \
     mycontrols \
+    theming-experiment \
     thumbnails \
     tabview
 
