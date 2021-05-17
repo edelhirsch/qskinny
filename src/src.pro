@@ -148,6 +148,7 @@ HEADERS += \
     controls/QskObjectTree.h \
     controls/QskPageIndicator.h \
     controls/QskPageIndicatorSkinlet.h \
+    controls/QskPalette.h \
     controls/QskPanGestureRecognizer.h \
     controls/QskPopup.h \
     controls/QskPopupSkinlet.h \
@@ -222,6 +223,7 @@ SOURCES += \
     controls/QskObjectTree.cpp \
     controls/QskPageIndicator.cpp \
     controls/QskPageIndicatorSkinlet.cpp \
+    controls/QskPalette.cpp \
     controls/QskPanGestureRecognizer.cpp \
     controls/QskPopup.cpp \
     controls/QskPopupSkinlet.cpp \

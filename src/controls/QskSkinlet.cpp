@@ -277,6 +277,14 @@ QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
 }
 
 QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
+    QSGNode* node, QskAspect::Subcontrol subControl,
+    QskAspect::Subcontrol paletteSubControl ) const
+{
+    const auto rect = qskSubControlRect( this, skinnable, subControl );
+    return updateBoxNode( skinnable, node, rect, paletteSubControl );
+}
+
+QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
     QSGNode* node, const QRectF& rect, QskAspect::Subcontrol subControl )
 {
     const auto fillGradient = skinnable->gradientHint( subControl );
@@ -407,6 +415,19 @@ QSGNode* QskSkinlet::updateTextNode(
 
     return updateTextNode( skinnable, node,
         rect, alignment, text, textOptions, subControl );
+}
+
+QSGNode* QskSkinlet::updateTextNode(
+    const QskSkinnable* skinnable, QSGNode* node,
+    const QString& text, const QskTextOptions& textOptions,
+    QskAspect::Subcontrol subControl,
+    QskAspect::Subcontrol paletteSubControl ) const
+{
+    const auto rect = qskSubControlRect( this, skinnable, subControl );
+    const auto alignment = skinnable->alignmentHint( subControl, Qt::AlignLeft );
+
+    return updateTextNode( skinnable, node,
+        rect, alignment, text, textOptions, paletteSubControl );
 }
 
 QSGNode* QskSkinlet::updateGraphicNode(
