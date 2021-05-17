@@ -44,6 +44,12 @@ void Skin::initHints()
     ed.setColor( ControlOld::Text3, Qt::white );
     ed.setColor( ControlOld::Text4, Qt::black );
 
+    ed.setAlignment( ControlOld::Text1, Qt::AlignCenter );
+    ed.setAlignment( ControlOld::Text2, Qt::AlignCenter );
+    ed.setAlignment( ControlOld::Text3, Qt::AlignCenter );
+    ed.setAlignment( ControlOld::Text4, Qt::AlignCenter );
+
+
     // new style: Define colors per style / palette:
     ed.setGradient( QskPalette::Primary, Qt::red );
     ed.setGradient( QskPalette::Secondary, Qt::green );
@@ -54,4 +60,9 @@ void Skin::initHints()
     ed.setColor( QskPalette::OnSecondary, Qt::black );
     ed.setColor( QskPalette::OnBackground, Qt::white );
     ed.setColor( QskPalette::OnSurface, Qt::black );
+
+    ed.setAlignment( ControlNew::Text1, Qt::AlignCenter );
+    ed.setAlignment( ControlNew::Text2, Qt::AlignCenter );
+    ed.setAlignment( ControlNew::Text3, Qt::AlignCenter );
+    ed.setAlignment( ControlNew::Text4, Qt::AlignCenter );
 }

@@ -71,31 +71,19 @@ QSGNode* ControlOldSkinlet::updateSubNode(
             return updateBoxNode( skinnable, node, ControlOld::Subcontrol4 );
 
         case Text1Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlOld::Text1 ),
-                                   Qt::AlignCenter, "text", {},
+            return updateTextNode( skinnable, node, "text", {},
                                    ControlOld::Text1 );
 
         case Text2Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlOld::Text2 ),
-                                   Qt::AlignCenter, "text", {},
+            return updateTextNode( skinnable, node, "text", {},
                                    ControlOld::Text2 );
 
         case Text3Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlOld::Text3 ),
-                                   Qt::AlignCenter, "text", {},
+            return updateTextNode( skinnable, node, "text", {},
                                    ControlOld::Text3 );
 
         case Text4Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlOld::Text4 ),
-                                   Qt::AlignCenter, "text", {},
+            return updateTextNode( skinnable, node, "text", {},
                                    ControlOld::Text4 );
 
         default:

@@ -76,32 +76,20 @@ QSGNode* ControlNewSkinlet::updateSubNode(
                                   QskPalette::Surface );
 
         case Text1Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlNew::Text1 ),
-                                   Qt::AlignCenter, "text", {},
-                                   ControlNew::Text1 );
+            return updateTextNode( skinnable, node, "text", {},
+                                   ControlNew::Text1, QskPalette::OnPrimary );
 
         case Text2Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlNew::Text2 ),
-                                   Qt::AlignCenter, "text", {},
-                                   ControlNew::Text2 );
+            return updateTextNode( skinnable, node, "text", {},
+                                   ControlNew::Text2, QskPalette::OnSecondary );
 
         case Text3Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlNew::Text3 ),
-                                   Qt::AlignCenter, "text", {},
-                                   ControlNew::Text3 );
+            return updateTextNode( skinnable, node, "text", {},
+                                   ControlNew::Text3, QskPalette::OnBackground );
 
         case Text4Role:
-            return updateTextNode( skinnable, node,
-                                   subControlRect( skinnable, {},
-                                                   ControlNew::Text4 ),
-                                   Qt::AlignCenter, "text", {},
-                                   ControlNew::Text4 );
+            return updateTextNode( skinnable, node, "text", {},
+                                   ControlNew::Text4, QskPalette::OnSurface );
 
         default:
             ;
