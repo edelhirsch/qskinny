@@ -85,6 +85,9 @@ class QSK_EXPORT QskSkinlet
     QSGNode* updateBoxNode( const QskSkinnable*, QSGNode*,
         QskAspect::Subcontrol ) const;
 
+    QSGNode* updateBoxNode( const QskSkinnable*, QSGNode*,
+        QskAspect::Subcontrol, QskAspect::Subcontrol ) const;
+
     QSGNode* updateBoxClipNode( const QskSkinnable*, QSGNode*,
         QskAspect::Subcontrol ) const;
 

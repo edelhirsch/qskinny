@@ -277,6 +277,14 @@ QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
 }
 
 QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
+    QSGNode* node, QskAspect::Subcontrol subControl,
+    QskAspect::Subcontrol fillSubControl ) const
+{
+    const auto rect = qskSubControlRect( this, skinnable, subControl );
+    return updateBoxNode( skinnable, node, rect, fillSubControl );
+}
+
+QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
     QSGNode* node, const QRectF& rect, QskAspect::Subcontrol subControl )
 {
     const auto fillGradient = skinnable->gradientHint( subControl );
