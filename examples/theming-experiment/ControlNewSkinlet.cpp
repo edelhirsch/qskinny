@@ -6,6 +6,7 @@
 #include "ControlNewSkinlet.h"
 #include "ControlNew.h"
 
+#include <QskPalette.h>
 #include <QskTextOptions.h>
 
 ControlNewSkinlet::ControlNewSkinlet( QskSkin* skin )
@@ -59,16 +60,34 @@ QSGNode* ControlNewSkinlet::updateSubNode(
     switch( nodeRole )
     {
         case Subcontrol1Role:
-            return updateBoxNode( skinnable, node, ControlNew::Subcontrol1 );
+            return updateBoxNode( skinnable, node,
+                                  subControlRect( skinnable, {},
+                                                  ControlNew::Subcontrol1 ),
+                                  skinnable->gradientHint( QskPalette::Primary ),
+                                  ControlNew::Subcontrol1 );
 
         case Subcontrol2Role:
-            return updateBoxNode( skinnable, node, ControlNew::Subcontrol2 );
+            return updateBoxNode( skinnable, node,
+                                  subControlRect( skinnable, {},
+                                                  ControlNew::Subcontrol2 ),
+                                  skinnable->gradientHint( QskPalette::Secondary ),
+                                  ControlNew::Subcontrol2 );
+
 
         case Subcontrol3Role:
-            return updateBoxNode( skinnable, node, ControlNew::Subcontrol3 );
+            return updateBoxNode( skinnable, node,
+                                  subControlRect( skinnable, {},
+                                                  ControlNew::Subcontrol3 ),
+                                  skinnable->gradientHint( QskPalette::Background ),
+                                  ControlNew::Subcontrol3 );
+
 
         case Subcontrol4Role:
-            return updateBoxNode( skinnable, node, ControlNew::Subcontrol4 );
+            return updateBoxNode( skinnable, node,
+                                  subControlRect( skinnable, {},
+                                                  ControlNew::Subcontrol4 ),
+                                  skinnable->gradientHint( QskPalette::Surface ),
+                                  ControlNew::Subcontrol4 );
 
         case Text1Role:
             return updateTextNode( skinnable, node,
