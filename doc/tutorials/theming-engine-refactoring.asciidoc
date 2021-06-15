@@ -1,0 +1,132 @@
+---
+title: Theming engine refactoring
+layout: docs
+---
+
+:doctitle: Theming engine refactoring
+:notitle:
+
+== Current situation
+
+Currently, defining an application skin in QSkinny works the following way:
+The user writes his skin in a subclass of QskSkin, which defines its look and
+feel, like colors, metrics, flags, fonts etc. The individual hints are a flat
+list which are entered through a skin hint table (`QskSkinHintTable`).
+
+Here are some examples from the DCU project:
+
+```
+using S = CtlSection;
+...
+setGradient( S::Separator, m_palette->separator );
+setPadding( S::Separator, QskMargins( 2, 30, 2, 50 ) );
+setMetric( S::Separator | QskAspect::Size, 2 );
+setGradient( S::SeparatorSmall, m_palette->separator );
+```
+
+This defines some skin hints for the `CtlSection` class. The palette above is
+defined in user code, and not on QSkinny level.
+
+As visible above, skin hints are usually defined for a subcontrol, optionally
+combined with a state or another aspect.
+
+=== Issues with the current situation
+
+* Colors (and metrics etc.) need to be defined for each control, as there is no
+concept of a global palette. E.g. in the DCU example above, the gradients for
+the `Separator` and `SeparatorSmall` subcontrols are the same, but need to be
+defined separately.
+* Each stylable part of a control, e.g. a subcontrol, needs to be defined by the
+user. Many controls have a `Panel` subcontrol defined just to make styling
+possible.
+* There is no support for themes (e.g. night vs. day theme) on a QSkinny level;
+as of now that logic needs to be defined by the user, including switching
+themes etc.
+
+
+== Comparison to other theming engines
+
+=== Flutter
+
+Flutter comes with so-called themes which are similar to skins in the QSkinny
+world. In Flutter, each app has an app-wide theme (class `ThemeData`) which
+contains descriptions for colors, fonts and more.
+
+Part of an application can have a different theme, either by creating a new
+instance of `ThemeData` or by extending the parent theme. For more information,
+see the https://flutter.dev/docs/cookbook/design/themes[Flutter documentation].
+
+The color roles defined by Flutter match the Material color scheme: E.g. the
+https://api.flutter.dev/flutter/material/ThemeData-class.html[ThemeData] class
+has color roles for `accentColor`, `backgroundColor` and so on; similar roles
+also exist in the
+https://material.io/design/color/the-color-system.html#color-theme-creation[Material color theme].
+
+Interestingly, it seems that Flutter themes are not extensible, i.e. it contains
+fixed attributes for colors like `backgroundColor`, `textButtonTheme` etc., but
+the user cannot add its own attributes. This makes it look like it is tailored
+to being used with the Material style.
+
+
+=== Qt theming
+
+==== QtWidgets theming
+
+QtWidgets can be styled with a `QPalette`, which contains a fixed list of color
+roles like `Foreground`, `Background` and `Base`. This seems similar to what
+Flutter is doing; also here there is no way to add user defined roles, which
+makes it hard to cover color roles for all controls, including user defined
+ones.
+
+==== Qt 6.2 theming
+
+There seems to be nothing new planned, at least the page about
+https://wiki.qt.io/New_Features_in_Qt_6.2[New features in Qt 6.2] does not
+mention a new styling architecture.
+
+
+== Proposed new architecture
+
+The proposed architecture should encompass the following principles:
+
+=== global palette
+
+A global palette like Flutter has would be a good thing to have in Qskinny as
+well: From a design point of view, it would be ideal if controls reused the
+same set of colors: E.g. the
+https://material.io/design/color/the-color-system.html#color-theme-creation[Material color theme]
+has controls for `Primary`, `Background`, `Error` and more.
+
+These colors could be used by many of the controls, for instance the background
+color of a push button would for many skins be the same as the background color
+for a radio button. In the DCU case, there are a handful of colors which are
+often reused across controls, so that project would profit from a global palette
+as well.
+
+=== named color roles (extensible)
+
+Named color roles for palettes (global and others) should make it easy to
+structure a skin logically. On a QSkinny level, we could only add a few basic
+names like foreground, background and so on, and leave it up to user written
+skins to define more roles. This means that an own style should be able to add
+its own color roles to a palette, similar to states or subcontrols in QSkinny.
+
+=== color roles overridable by controls
+
+Also, it should be possible to override color roles for controls: E.g. a push
+button could have a different background color than the global palette or other
+controls. However, in general there is no need to define colors for each
+controls because of the global palette. Overriding and defining new color names
+should be possible per class (e.g. for all push buttons) and for single
+instances.
+
+Below are architectural images of the proposed design:
+
+.Palette hierarchy
+image::../images/theming-engine-refactoring.jpg[Palette hierarchy]
+
+A lookup would just traverse the object inheritance hierarchy until it finds
+a matching hint, e.g. `QskPushButton` -> `QskAbstractButton` -> `QskControl`:
+
+.Palette lookup logic
+image::../images/theming-engine-refactoring-lookup.jpg[Palette hierarchy]
