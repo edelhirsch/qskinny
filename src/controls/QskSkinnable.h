@@ -168,6 +168,8 @@ class QSK_EXPORT QskSkinnable
     bool setGradientHint( QskAspect, const QskGradient& );
     QskGradient gradientHint( QskAspect, QskSkinHintStatus* = nullptr ) const;
 
+    QskGradient gradientHintNew( QskAspect::Primitive ) const;
+
     bool setBoxShapeHint( QskAspect, const QskBoxShapeMetrics& );
     bool resetBoxShapeHint( QskAspect );
     QskBoxShapeMetrics boxShapeHint( QskAspect, QskSkinHintStatus* = nullptr ) const;

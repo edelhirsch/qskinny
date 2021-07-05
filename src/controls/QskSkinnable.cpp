@@ -420,6 +420,14 @@ QskGradient QskSkinnable::gradientHint(
     return qskColor< QskGradient >( this, aspect, status );
 }
 
+QskGradient QskSkinnable::gradientHintNew( QskAspect::Primitive ) const
+{
+    // ###
+    const auto skin = effectiveSkin();
+    const auto& skinTable = skin->hintTable();
+    //return
+}
+
 bool QskSkinnable::setBoxShapeHint(
     const QskAspect aspect, const QskBoxShapeMetrics& shape )
 {

@@ -81,6 +81,9 @@ class QSK_EXPORT QskSkinHintTableEditor
     void setColor( QskAspect, const QColor& );
     QColor color( QskAspect ) const;
 
+    void setColorNew( const QMetaObject&, QskAspect::Primitive, const QColor& );
+    QskGradient colorNew( const QMetaObject&, QskAspect::Primitive );
+
     void setHGradient( QskAspect, const QColor&, const QColor& );
     void setVGradient( QskAspect, const QColor&, const QColor& );
     void setGradient( QskAspect, const QskGradient& );
@@ -142,6 +145,7 @@ class QSK_EXPORT QskSkinHintTableEditor
 
   private:
     QskSkinHintTable* m_table = nullptr;
+    QHash< QByteArray, QskGradient > m_tableNew;
 };
 
 // --- generic access ---

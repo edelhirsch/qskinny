@@ -74,6 +74,21 @@ void Editor::setup()
     setColor( c | A::OnSurfaceColor, { "#000000" } );
     setColor( c | A::OnErrorColor, { "#FFFFFF" } );
 
+    setColorNew( QskControl::staticMetaObject, A::PrimaryColor, { "#6200EE" } );
+    setColorNew( QskControl::staticMetaObject, A::PrimaryVariantColor, { "#3700B3" } );
+    setColorNew( QskControl::staticMetaObject, A::SecondaryColor, { "#03DAC6" } );
+    setColorNew( QskControl::staticMetaObject, A::SecondaryVariantColor, { "#018786" } );
+    setColorNew( QskControl::staticMetaObject, A::BackgroundColor, { "#FFFFFF" } );
+    setColorNew( QskControl::staticMetaObject, A::SurfaceColor, { "#FFFFFF" } );
+    setColorNew( QskControl::staticMetaObject, A::ErrorColor, { "#B00020" } );
+    setColorNew( QskControl::staticMetaObject, A::OnPrimaryColor, { "#FFFFFF" } );
+    setColorNew( QskControl::staticMetaObject, A::OnSecondaryColor, { "#000000" } );
+    setColorNew( QskControl::staticMetaObject, A::OnBackgroundColor, { "#000000" } );
+    setColorNew( QskControl::staticMetaObject, A::OnSurfaceColor, { "#000000" } );
+    setColorNew( QskControl::staticMetaObject, A::OnErrorColor, { "#FFFFFF" } );
+
+    QskGradient cNew = colorNew( QskPushButton::staticMetaObject, A::PrimaryColor );
+
     setupPushButton();
 }
 

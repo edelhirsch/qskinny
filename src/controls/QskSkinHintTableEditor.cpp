@@ -12,6 +12,8 @@
 #include "QskBoxBorderColors.h"
 #include "QskGradient.h"
 
+#include <QDebug>
+
 namespace
 {
     inline QskAspect aspectStrutSize( QskAspect aspect )
@@ -113,6 +115,45 @@ void QskSkinHintTableEditor::setColor( QskAspect aspect, const QColor& color )
 QColor QskSkinHintTableEditor::color( QskAspect aspect ) const
 {
     return colorHint<QColor>( aspect );
+}
+
+void QskSkinHintTableEditor::setColorNew(const QMetaObject& metaObject,
+                                         QskAspect::Primitive primitive,
+                                         const QColor& color )
+{
+    auto metaEnum = QMetaEnum::fromType< QskAspect::Primitive >();
+    auto primitiveString = metaEnum.key( primitive );
+    QByteArray ba(metaObject.className());
+    ba.append("::");
+    ba.append(primitiveString);
+
+    m_tableNew.insert( ba, color );
+}
+
+QskGradient QskSkinHintTableEditor::colorNew( const QMetaObject& metaObject, QskAspect::Primitive primitive )
+{
+    auto metaEnum = QMetaEnum::fromType< QskAspect::Primitive >();
+    auto primitiveString = metaEnum.key( primitive );
+
+    QByteArray key;
+    QskGradient ret;
+    const QMetaObject* klass = &metaObject;
+
+    while( klass != nullptr ) {
+        key = QByteArray( klass->className() ) + "::" + primitiveString;
+        qDebug() << "checking" << key;
+        ret = m_tableNew.value( key );
+
+        if(ret.isValid())
+        {
+            qDebug() << "found" << ret;
+            return ret;
+        }
+
+        klass = klass->superClass();
+    }
+
+    return QskGradient();
 }
 
 void QskSkinHintTableEditor::setHGradient(
