@@ -49,8 +49,6 @@ namespace
         void setup();
 
       private:
-        void setupControl();
-        
         void setupPushButton();
 
         const ColorPalette& m_pal;
@@ -76,21 +74,7 @@ void Editor::setup()
     setColor( c | A::OnSurfaceColor, { "#000000" } );
     setColor( c | A::OnErrorColor, { "#FFFFFF" } );
 
-    setupControl();
     setupPushButton();
-}
-
-void Editor::setupControl()
-{
-    using A = QskAspect;
-    using Q = QskControl;
-
-    setPadding( A::Control, 4 );
-
-    // ### do we need this?
-    auto color = m_pal.textColor;
-    color.setAlphaF( 0.6 );
-    setColor( A::Control | A::StyleColor | Q::Disabled, color );
 }
 
 void Editor::setupPushButton()
