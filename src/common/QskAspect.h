@@ -12,6 +12,8 @@
 #include <qmetaobject.h>
 #include <qnamespace.h>
 
+class QskControl;
+
 class QSK_EXPORT QskAspect
 {
     Q_GADGET
@@ -107,6 +109,7 @@ class QSK_EXPORT QskAspect
     constexpr QskAspect( Subcontrol ) noexcept;
     constexpr QskAspect( Type ) noexcept;
     constexpr QskAspect( Placement ) noexcept;
+    QskAspect( const QMetaObject& ) noexcept;
 
     constexpr QskAspect( const QskAspect& ) noexcept = default;
     constexpr QskAspect( QskAspect&& ) noexcept = default;

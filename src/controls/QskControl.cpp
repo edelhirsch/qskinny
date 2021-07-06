@@ -18,6 +18,7 @@
 
 #include <qlocale.h>
 #include <qvector.h>
+#include <QTimer>
 
 QSK_SYSTEM_STATE( QskControl, Disabled, QskAspect::FirstSystemState )
 QSK_SYSTEM_STATE( QskControl, Hovered, QskAspect::LastSystemState >> 1 )
@@ -32,6 +33,13 @@ static inline void qskSendEventTo( QObject* object, QEvent::Type type )
 QskControl::QskControl( QQuickItem* parent )
     : QskQuickItem( *( new QskControlPrivate() ), parent )
 {
+    // ### do this better
+    QTimer::singleShot(0, this, [this]()
+    {
+        QByteArray className = metaObject()->className();
+        auto subControl = QskAspect::nextSubcontrol( &staticMetaObject, className );
+    });
+
     Inherited::setActiveFocusOnTab( false );
 
     if ( parent )

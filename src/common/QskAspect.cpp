@@ -14,6 +14,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <QskControl.h>
+
 static_assert( sizeof( QskAspect ) == sizeof( quint64 ),
     "QskAspect::Aspect has to match quint64" );
 
@@ -36,6 +38,11 @@ namespace
 }
 
 static quint8 qskPrimitiveCount = QMetaEnum::fromType< QskAspect::Primitive >().keyCount();
+
+QskAspect::QskAspect( const QMetaObject &metaObject ) noexcept
+    : QskAspect( nextSubcontrol( &metaObject, metaObject.className() ) )
+{
+}
 
 quint8 QskAspect::primitiveCount()
 {
@@ -82,6 +89,9 @@ QskAspect::Subcontrol QskAspect::nextSubcontrol(
 {
     auto& names = qskAspectRegistry->subControlNames;
     auto& hashTable = qskAspectRegistry->subControlTable;
+
+    if(names.contains(name))
+        return Control;
 
     Q_ASSERT_X( names.size() <= LastSubcontrol, "QskAspect",
         "There are no free subcontrol aspects; please modify your"

@@ -87,6 +87,11 @@ void Editor::setup()
     setColorNew( QskControl::staticMetaObject, A::OnSurfaceColor, { "#000000" } );
     setColorNew( QskControl::staticMetaObject, A::OnErrorColor, { "#FFFFFF" } );
 
+    QskAspect aspect( QskControl::staticMetaObject );
+    setColor( aspect | A::PrimaryColor, { "#6200EE" } );
+    auto testColor = color( aspect | A::PrimaryColor );
+    qDebug() << "test:" << testColor;
+
     QskGradient cNew = colorNew( QskPushButton::staticMetaObject, A::PrimaryColor );
 
     setupPushButton();
