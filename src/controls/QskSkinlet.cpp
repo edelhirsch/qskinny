@@ -276,17 +276,6 @@ QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
     return updateBoxNode( skinnable, node, rect, subControl );
 }
 
-QSGNode* QskSkinlet::updateBoxNodeNew( const QskSkinnable* skinnable,
-    QSGNode* node ) const
-{
-    auto control = static_cast< const QskControl* >( skinnable );
-    const QMetaObject metaObject = ( control ) ? control->staticMetaObject
-                                               : QskControl::staticMetaObject;
-
-//    const auto fillGradient = skinnable->gradientHint( subControl );
-//    return updateBoxNode( skinnable, node, rect, fillGradient, subControl );
-}
-
 QSGNode* QskSkinlet::updateBoxNode( const QskSkinnable* skinnable,
     QSGNode* node, const QRectF& rect, QskAspect::Subcontrol subControl )
 {
