@@ -36,6 +36,7 @@ class QSK_EXPORT QskAbstractButton : public QskControl
     using Inherited = QskControl;
 
   public:
+    static const QskAspect::Subcontrol defaultSubcontrol;
     QSK_STATES( Flat, Checked, Pressed, Checkable )
 
     QskAbstractButton( QQuickItem* parent = nullptr );

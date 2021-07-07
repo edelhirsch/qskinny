@@ -53,6 +53,9 @@ class QskPushButton::PrivateData
     bool isGraphicSourceDirty : 1;
 };
 
+const QskAspect::Subcontrol QskPushButton::defaultSubcontrol
+    = QskAspect::nextSubcontrol( &QskPushButton::staticMetaObject, "QskPushButton" );
+
 QskPushButton::QskPushButton( QQuickItem* parent )
     : QskPushButton( QString(), parent )
 {

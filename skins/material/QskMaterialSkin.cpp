@@ -89,8 +89,9 @@ void Editor::setup()
     setColor( aspect | A::OnSurfaceColor, { "#000000" } );
     setColor( aspect | A::OnErrorColor, { "#FFFFFF" } );
 
-    auto testColor = color( aspect | A::PrimaryColor );
-    qDebug() << "test:" << testColor;
+//    qDebug() << "@@@ looking up the primary color";
+//    auto testColor = color( QskPushButton::defaultSubcontrol | A::PrimaryColor );
+//    qDebug() << "@@@ done:" << testColor;
 
     setupPushButton();
 }

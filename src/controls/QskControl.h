@@ -55,6 +55,7 @@ class QSK_EXPORT QskControl : public QskQuickItem, public QskSkinnable
     using Inherited = QskQuickItem;
 
   public:
+    static const QskAspect::Subcontrol defaultSubcontrol;
     QSK_STATES( Disabled, Hovered, Focused )
 
     enum LayoutHint

@@ -58,6 +58,9 @@ class QskAbstractButton::PrivateData
     bool autoRepeat : 1;
 };
 
+const QskAspect::Subcontrol QskAbstractButton::defaultSubcontrol
+    = QskAspect::nextSubcontrol( &QskAbstractButton::staticMetaObject, "QskAbstractButton" );
+
 QskAbstractButton::QskAbstractButton( QQuickItem* parent )
     : Inherited( parent )
     , m_data( new PrivateData() )

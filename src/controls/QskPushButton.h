@@ -39,6 +39,7 @@ class QSK_EXPORT QskPushButton : public QskAbstractButton
     using Inherited = QskAbstractButton;
 
   public:
+    static const QskAspect::Subcontrol defaultSubcontrol;
     QSK_SUBCONTROLS( Panel, Text, Graphic )
 
     QskPushButton( QQuickItem* parent = nullptr );
