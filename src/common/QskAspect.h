@@ -177,11 +177,13 @@ class QSK_EXPORT QskAspect
     static quint8 primitiveCount();
     static void reservePrimitives( quint8 count );
 
+    const QMetaObject* superClass() const;
+
   private:
     constexpr QskAspect( Subcontrol, Type, Placement ) noexcept;
 
-    constexpr QskAspect( uint subControl, uint type, bool isAnimator,
-        uint primitive, uint placement, uint states ) noexcept;
+    constexpr QskAspect(uint subControl, uint type, bool isAnimator,
+        uint primitive, uint placement, uint states , const QMetaObject* superClass) noexcept;
 
     struct Bits
     {
@@ -196,6 +198,7 @@ class QSK_EXPORT QskAspect
 
         uint states : 16;
         uint reserved2 : 16;
+        const QMetaObject* superClass;
     };
 
     union
@@ -229,13 +232,13 @@ inline constexpr QskAspect::QskAspect( Placement placement ) noexcept
 
 inline constexpr QskAspect::QskAspect(
         Subcontrol subControl, Type type, Placement placement ) noexcept
-    : QskAspect( subControl, type, false, 0, placement, NoState )
+    : QskAspect( subControl, type, false, 0, placement, NoState, nullptr )
 {
 }
 
-inline constexpr QskAspect::QskAspect( uint subControl, uint type, bool isAnimator,
-        uint primitive, uint placement, uint states ) noexcept
-    : m_bits { subControl, type, isAnimator, primitive, placement, 0, states, 0 }
+inline constexpr QskAspect::QskAspect(uint subControl, uint type, bool isAnimator,
+        uint primitive, uint placement, uint states, const QMetaObject *superClass ) noexcept
+    : m_bits { subControl, type, isAnimator, primitive, placement, 0, states, 0, superClass }
 {
 }
 
@@ -257,43 +260,43 @@ inline bool QskAspect::operator<( const QskAspect& other ) const noexcept
 inline constexpr QskAspect QskAspect::operator|( Subcontrol subControl ) const noexcept
 {
     return QskAspect( subControl, m_bits.type, m_bits.isAnimator,
-        m_bits.primitive, m_bits.placement, m_bits.states );
+        m_bits.primitive, m_bits.placement, m_bits.states, m_bits.superClass );
 }
 
 inline constexpr QskAspect QskAspect::operator|( Type type ) const noexcept
 {
     return QskAspect( m_bits.subControl, type, m_bits.isAnimator,
-        m_bits.primitive, m_bits.placement, m_bits.states );
+        m_bits.primitive, m_bits.placement, m_bits.states, m_bits.superClass );
 }
 
 inline constexpr QskAspect QskAspect::operator|( Primitive primitive ) const noexcept
 {
     return QskAspect( m_bits.subControl, m_bits.type, m_bits.isAnimator,
-        primitive, m_bits.placement, m_bits.states );
+        primitive, m_bits.placement, m_bits.states, m_bits.superClass );
 }
 
 inline constexpr QskAspect QskAspect::operator|( Placement placement ) const noexcept
 {
     return QskAspect( m_bits.subControl, m_bits.type, m_bits.isAnimator,
-        m_bits.primitive, placement, m_bits.states );
+        m_bits.primitive, placement, m_bits.states, m_bits.superClass );
 }
 
 inline constexpr QskAspect QskAspect::operator|( State state ) const noexcept
 {
     return QskAspect( m_bits.subControl, m_bits.type, m_bits.isAnimator,
-        m_bits.primitive, m_bits.placement, m_bits.states | state );
+        m_bits.primitive, m_bits.placement, m_bits.states | state, m_bits.superClass );
 }
 
 inline constexpr QskAspect QskAspect::stateless() const noexcept
 {
     return QskAspect( m_bits.subControl, m_bits.type, m_bits.isAnimator,
-        m_bits.primitive, m_bits.placement, 0 );
+        m_bits.primitive, m_bits.placement, 0, m_bits.superClass );
 }
 
 inline constexpr QskAspect QskAspect::trunk() const noexcept
 {
     return QskAspect( m_bits.subControl, m_bits.type, m_bits.isAnimator,
-        m_bits.primitive, 0, 0 );
+        m_bits.primitive, 0, 0, m_bits.superClass );
 }
 
 inline constexpr quint64 QskAspect::value() const noexcept

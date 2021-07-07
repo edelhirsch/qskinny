@@ -16,8 +16,8 @@
 
 #include <QskControl.h>
 
-static_assert( sizeof( QskAspect ) == sizeof( quint64 ),
-    "QskAspect::Aspect has to match quint64" );
+//static_assert( sizeof( QskAspect ) == sizeof( quint64 ),
+//    "QskAspect::Aspect has to match quint64" );
 
 namespace
 {
@@ -40,7 +40,7 @@ namespace
 static quint8 qskPrimitiveCount = QMetaEnum::fromType< QskAspect::Primitive >().keyCount();
 
 QskAspect::QskAspect( const QMetaObject &metaObject ) noexcept
-    : QskAspect( nextSubcontrol( &metaObject, metaObject.className() ) )
+    : m_bits { nextSubcontrol( &metaObject, metaObject.className() ), 0, false, 0, 0, 0, 0, 0, metaObject.superClass() }
 {
 }
 
@@ -67,6 +67,11 @@ void QskAspect::reservePrimitives( quint8 count )
 
     if ( count > qskPrimitiveCount )
         qskPrimitiveCount = count;
+}
+
+const QMetaObject* QskAspect::superClass() const
+{
+    return m_bits.superClass;
 }
 
 Q_GLOBAL_STATIC( AspectRegistry, qskAspectRegistry )
