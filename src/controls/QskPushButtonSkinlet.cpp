@@ -50,8 +50,6 @@ QSGNode* QskPushButtonSkinlet::updateSubNode(
     {
         case PanelRole:
         {
-            QskAspect::Subcontrol subcontrol = QskAspect::nextSubcontrol( &QskPushButton::staticMetaObject, "QskPushButton" );
-            qDebug() << "@@@ got ps sc" << subcontrol;
             return updateBoxNode( button, node, QskPushButton::Panel );
         }
 

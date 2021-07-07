@@ -93,6 +93,9 @@ void Editor::setup()
 //    auto testColor = color( QskPushButton::defaultSubcontrol | A::PrimaryColor );
 //    qDebug() << "@@@ done:" << testColor;
 
+    setGradient( QskControl::defaultSubcontrol, Qt::green );
+//    setGradient( QskAbstractButton::defaultSubcontrol, Qt::cyan );
+
     setupPushButton();
 }
 
@@ -110,7 +113,7 @@ void Editor::setupPushButton()
 
     QskAspect c = A::Color;
 
-    setGradient( Q::Panel, color( c | A::PrimaryColor ) );
+//    setGradient( Q::Panel, color( c | A::PrimaryColor ) );
     setGradient( Q::Panel | Q::Flat, color( c | A::BackgroundColor ) );
 
     setColor( Q::Text, color( c | A::OnPrimaryColor ) );

@@ -9,6 +9,7 @@
 #include <limits>
 
 #include <QDebug>
+#include <QskPushButton.h>
 
 const QVariant QskSkinHintTable::invalidHint;
 
@@ -20,21 +21,13 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
 
     Q_FOREVER
     {
-//        qDebug() << "looking up" << aspect;
-//        auto name = QskAspect::subControlName( aspect.subControl() );
-        if(aspect.superClass() != nullptr) {
-            QByteArray ba(aspect.superClass()->className());
-            if(!ba.isEmpty())
-                qDebug() << "looking up" << ba;
-        }
-
         auto it = hints.find( aspect );
         if ( it != hints.cend() )
         {
             if ( resolvedAspect )
                 *resolvedAspect = aspect;
 
-//            qDebug() << "... found" << aspect;
+            qDebug() << "... found" << aspect;
             return &it->second;
         }
 
@@ -53,7 +46,25 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
             continue;
         }
 
-//        qDebug() << "... didn't find" << aspect << ", returning nullptr";
+        if(QskAspect::subControlName( aspect.subControl() ) == "QskPushButton::Panel") {
+            auto oldAspect = aspect;
+            aspect.setSubControl( QskPushButton::defaultSubcontrol );
+            qDebug() << "... didn't find" << oldAspect << ", trying with" << aspect;
+            continue;
+        } else if(QskAspect::subControlName( aspect.subControl() ) == "QskPushButton") {
+            auto oldAspect = aspect;
+            aspect.setSubControl( QskAbstractButton::defaultSubcontrol );
+            qDebug() << "... didn't find" << oldAspect << ", trying with" << aspect;
+            continue;
+        } else if(QskAspect::subControlName( aspect.subControl() ) == "QskAbstractButton") {
+            auto oldAspect = aspect;
+            aspect.setSubControl( QskControl::defaultSubcontrol );
+            qDebug() << "... didn't find" << oldAspect << ", trying with" << aspect;
+            continue;
+        }
+
+        qDebug() << "didn't find anything for" << aspect;
+
         return nullptr;
     }
 }

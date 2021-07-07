@@ -31,7 +31,7 @@ static inline void qskSendEventTo( QObject* object, QEvent::Type type )
 }
 
 const QskAspect::Subcontrol QskControl::defaultSubcontrol
-    = QskAspect::nextSubcontrol( &QskControl::staticMetaObject, "QskControlButton" );
+    = QskAspect::nextSubcontrol( &QskControl::staticMetaObject, "QskControl" );
 
 QskControl::QskControl( QQuickItem* parent )
     : QskQuickItem( *( new QskControlPrivate() ), parent )
