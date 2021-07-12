@@ -62,6 +62,36 @@ void QskAspect::reservePrimitives( quint8 count )
         qskPrimitiveCount = count;
 }
 
+QList< QskAspect::State > QskAspect::allCombinations(
+    const QList< QskAspect::State >& states )
+{
+    QList< State > ret;
+
+    for( int i = 1; i <= states.size(); ++i )
+    {
+        std::string bitmask( i, 1 );
+        bitmask.resize( states.size(), 0 );
+
+        do
+        {
+            State state = NoState;
+
+            for( int j = 0; j < states.size(); ++j )
+            {
+                if ( bitmask[j] )
+                {
+                    state |= states[j];
+                }
+            }
+
+            ret.append( state );
+        }
+        while( std::prev_permutation( bitmask.begin(), bitmask.end() ) );
+    }
+
+    return ret;
+}
+
 Q_GLOBAL_STATIC( AspectRegistry, qskAspectRegistry )
 
 QskAspect::State QskAspect::registerState(

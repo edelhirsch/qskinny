@@ -161,6 +161,8 @@ class QSK_EXPORT QskAspect
     static quint8 primitiveCount();
     static void reservePrimitives( quint8 count );
 
+    static QList< State > allCombinations( const QList< State >& states );
+
   private:
     constexpr QskAspect( Subcontrol, Type, Placement ) noexcept;
 

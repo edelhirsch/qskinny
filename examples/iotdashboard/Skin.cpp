@@ -186,4 +186,11 @@ void Skin::initHints( const Palette& palette )
     ed.setColor( QskTextLabel::Text, palette.text );
     ed.setColor( WeekdayLabel::Text, palette.text );
     ed.setColor( ShadowPositioner::Panel, palette.shadow );
+
+    for( const auto &state : QskAspect::allCombinations( { QskControl::Disabled,
+        QskControl::Hovered, QskControl::Focused, QskAbstractButton::Flat,
+        QskAspect::NoState } ) )
+    {
+        ed.setBoxBorderColors( WeekdayBox::Panel | state, Qt::red );
+    }
 }
