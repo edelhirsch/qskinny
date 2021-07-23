@@ -33,6 +33,7 @@ class QSK_EXPORT QskLinearBox : public QskIndexedLayoutBox
     using Inherited = QskIndexedLayoutBox;
 
   public:
+    QSK_CONTROLS()
     explicit QskLinearBox( QQuickItem* parent = nullptr );
     explicit QskLinearBox( Qt::Orientation, QQuickItem* parent = nullptr );
 

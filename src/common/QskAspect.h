@@ -179,7 +179,8 @@ class QSK_EXPORT QskAspect
         uint reserved1 : 8;
 
         uint states : 16;
-        uint reserved2 : 16;
+        uint parentSubControl : 12;
+        uint reserved2 : 4;
     };
 
     union
@@ -219,7 +220,7 @@ inline constexpr QskAspect::QskAspect(
 
 inline constexpr QskAspect::QskAspect( uint subControl, uint type, bool isAnimator,
         uint primitive, uint placement, uint states ) noexcept
-    : m_bits { subControl, type, isAnimator, primitive, placement, 0, states, 0 }
+    : m_bits { subControl, type, isAnimator, primitive, placement, 0, states, 0, 0 }
 {
 }
 
@@ -539,6 +540,12 @@ QSK_EXPORT void qskDebugAspect( QDebug, const QMetaObject*, QskAspect );
         QskAspect::registerState( &type::staticMetaObject, value, #type "::" #name );
 
 #if !defined( _MSC_VER )
+
+#define QSK_CONTROLS() static const QskAspect::Subcontrol defaultSubcontrol;
+
+#define QSK_CONTROL( type ) \
+    const QskAspect::Subcontrol type::defaultSubcontrol = \
+        QskAspect::nextSubcontrol( &type::staticMetaObject, #type "::qsk_default" );
 
 #define QSK_SUBCONTROLS( ... ) static const QskAspect::Subcontrol __VA_ARGS__;
 #define QSK_STATES( ... ) static const QskAspect::State __VA_ARGS__;

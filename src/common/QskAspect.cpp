@@ -29,6 +29,8 @@ namespace
 
     struct AspectRegistry
     {
+        // ### if we keep looking up parent subcontrols, we should turn this
+        // into an unordered_map as well:
         QVector< QByteArray > subControlNames;
         unordered_map< const QMetaObject*, QVector< QskAspect::Subcontrol > > subControlTable;
         unordered_map< const QMetaObject*, QVector< StateInfo > > stateTable;
@@ -88,11 +90,35 @@ QskAspect::Subcontrol QskAspect::nextSubcontrol(
         " application to declare fewer aspects, or increase the mask size of"
         " QskAspect::Subcontrol in QskAspect.h." );
 
+//    const QByteArray genericSubcontrol = metaObject->className()
+//            + QByteArrayLiteral( "::qsk_default" );
+
+//    if(! names.contains( genericSubcontrol ) )
+//    {
+
+//    }
+
     names += name;
 
     // 0 is QskAspect::Control, so we have to start with 1
     const auto subControl = static_cast< Subcontrol >( names.size() );
     hashTable[ metaObject ] += subControl;
+
+    Subcontrol parentSubControl;
+
+    if( metaObject && metaObject->superClass() )
+    {
+        const QByteArray superClassName = metaObject->superClass()->className()
+                + QByteArrayLiteral( "::qsk_default" );
+        parentSubControl = static_cast< Subcontrol >( names.indexOf( superClassName ) + 1 );
+    }
+    else
+    {
+        parentSubControl = Control;
+    }
+
+    qDebug() << "@@@ registering" << name << "as" << (int) subControl
+             << ", parent subcontrol is" << parentSubControl;
 
     return subControl;
 }

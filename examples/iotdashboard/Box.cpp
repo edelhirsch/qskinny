@@ -8,6 +8,7 @@
 
 #include <QskTextLabel.h>
 
+QSK_CONTROL( Box )
 QSK_SUBCONTROL( Box, Panel )
 
 Box::Box( const QString& title, QQuickItem* parent )

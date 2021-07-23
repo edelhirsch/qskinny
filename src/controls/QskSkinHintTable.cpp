@@ -6,6 +6,8 @@
 #include "QskSkinHintTable.h"
 #include "QskAnimationHint.h"
 
+#include <QDebug>
+
 #include <limits>
 
 const QVariant QskSkinHintTable::invalidHint;
@@ -24,6 +26,7 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
             if ( resolvedAspect )
                 *resolvedAspect = aspect;
 
+            qDebug() << "looking up" << aspect.subControl();
             return &it->second;
         }
 
@@ -42,6 +45,9 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
             continue;
         }
 
+        //
+
+        qDebug() << "didn't find an entry for" << aspect;
         return nullptr;
     }
 }
