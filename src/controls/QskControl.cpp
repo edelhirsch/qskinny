@@ -19,6 +19,8 @@
 #include <qlocale.h>
 #include <qvector.h>
 
+QSK_SUBCONTROL( QskControl, QskDefault )
+
 QSK_SYSTEM_STATE( QskControl, Disabled, QskAspect::FirstSystemState )
 QSK_SYSTEM_STATE( QskControl, Hovered, QskAspect::LastSystemState >> 1 )
 QSK_SYSTEM_STATE( QskControl, Focused, QskAspect::LastSystemState )

@@ -13,6 +13,8 @@ class QskTextLabel;
 
 class PieChartPainted : public QskControl
 {
+    Q_OBJECT
+
   public:
     QSK_SUBCONTROLS( Panel )
 

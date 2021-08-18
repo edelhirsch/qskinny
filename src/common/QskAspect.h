@@ -542,13 +542,8 @@ QSK_EXPORT void qskDebugAspect( QDebug, const QMetaObject*, QskAspect );
 
 #if !defined( _MSC_VER )
 
-#define QSK_CONTROLS() static const QskAspect::Subcontrol defaultSubcontrol;
-
-#define QSK_CONTROL( type ) \
-    const QskAspect::Subcontrol type::defaultSubcontrol = \
-        QskAspect::nextSubcontrol( &type::staticMetaObject, #type "::QskDefault" );
-
 #define QSK_SUBCONTROLS( ... ) static const QskAspect::Subcontrol QskDefault, __VA_ARGS__;
+#define QSK_CONTROLS() static const QskAspect::Subcontrol QskDefault;
 #define QSK_STATES( ... ) static const QskAspect::State __VA_ARGS__;
 
 #else

@@ -48,8 +48,6 @@ class QskLinearBox::PrivateData
     QskLinearLayoutEngine engine;
 };
 
-QSK_CONTROL( QskLinearBox )
-
 QskLinearBox::QskLinearBox( QQuickItem* parent )
     : QskLinearBox( Qt::Horizontal, std::numeric_limits< uint >::max(), parent )
 {

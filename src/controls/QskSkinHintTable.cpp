@@ -44,22 +44,40 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
             continue;
         }
 
-        const QMetaObject* mo = QskAspect::metaObject( aspect.subControl() );
+        const QMetaObject* metaObject = QskAspect::metaObject( aspect.subControl() );
+        const QByteArray name = QskAspect::subControlName( aspect.subControl() );
 
-        if( !QskAspect::subControlName( aspect.subControl() ).endsWith( "::QskDefault" ) )
+        qDebug() << "couldn't find anything for" << aspect.subControl();
+
+        if( !name.endsWith( "::QskDefault" ) )
         {
-            qDebug() << "couldn't find anything for" << aspect.subControl();
-            auto subcontrols = QskAspect::subControls( mo );
-            auto newSubcontrol = subcontrols.at( 0 );
-            aspect.setSubControl( newSubcontrol );
-            qDebug() << "now trying again for" << aspect.subControl();
-            continue;
+            auto subcontrols = QskAspect::subControls( metaObject );
+
+            if( subcontrols.count() > 0 )
+            {
+                auto newSubcontrol = subcontrols.at( 0 );
+                Q_ASSERT( QskAspect::subControlName( newSubcontrol ).endsWith( "::QskDefault" ) );
+                aspect.setSubControl( newSubcontrol );
+                qDebug() << "now trying class wide settings:" << aspect.subControl();
+                continue;
+            }
         }
-
-        while( mo != nullptr )
+        else
         {
-            // ### here first check for QskDefault and then walk up subclasses
-            mo = mo->superClass();
+            while( metaObject != nullptr )
+            {
+                metaObject = metaObject->superClass();
+                auto subcontrols = QskAspect::subControls( metaObject );
+
+                if( subcontrols.count() > 0 )
+                {
+                    auto newSubcontrol = subcontrols.at( 0 );
+                    Q_ASSERT( QskAspect::subControlName( newSubcontrol ).endsWith( "::QskDefault" ) );
+                    aspect.setSubControl( newSubcontrol );
+                    qDebug() << "now trying superclass:" << aspect.subControl();
+                    continue;
+                }
+            }
         }
 
         return nullptr;

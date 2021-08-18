@@ -9,6 +9,8 @@
 
 class UsageDiagramLegend : public QskLinearBox
 {
+    Q_OBJECT
+
   public:
     QSK_SUBCONTROLS( Panel, Symbol )
     QSK_STATES( Water, Electricity, Gas )
