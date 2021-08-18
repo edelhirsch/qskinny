@@ -45,6 +45,17 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
         }
 
         const QMetaObject* mo = QskAspect::metaObject( aspect.subControl() );
+
+        if( !QskAspect::subControlName( aspect.subControl() ).endsWith( "::QskDefault" ) )
+        {
+            qDebug() << "couldn't find anything for" << aspect.subControl();
+            auto subcontrols = QskAspect::subControls( mo );
+            auto newSubcontrol = subcontrols.at( 0 );
+            aspect.setSubControl( newSubcontrol );
+            qDebug() << "now trying again for" << aspect.subControl();
+            continue;
+        }
+
         while( mo != nullptr )
         {
             // ### here first check for QskDefault and then walk up subclasses
