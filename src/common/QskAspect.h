@@ -157,6 +157,7 @@ class QSK_EXPORT QskAspect
     static QByteArray subControlName( Subcontrol );
     static QVector< QByteArray > subControlNames( const QMetaObject* = nullptr );
     static QVector< Subcontrol > subControls( const QMetaObject* );
+    static const QMetaObject* metaObject( Subcontrol );
 
     static quint8 primitiveCount();
     static void reservePrimitives( quint8 count );
@@ -545,9 +546,9 @@ QSK_EXPORT void qskDebugAspect( QDebug, const QMetaObject*, QskAspect );
 
 #define QSK_CONTROL( type ) \
     const QskAspect::Subcontrol type::defaultSubcontrol = \
-        QskAspect::nextSubcontrol( &type::staticMetaObject, #type "::qsk_default" );
+        QskAspect::nextSubcontrol( &type::staticMetaObject, #type "::QskDefault" );
 
-#define QSK_SUBCONTROLS( ... ) static const QskAspect::Subcontrol __VA_ARGS__;
+#define QSK_SUBCONTROLS( ... ) static const QskAspect::Subcontrol QskDefault, __VA_ARGS__;
 #define QSK_STATES( ... ) static const QskAspect::State __VA_ARGS__;
 
 #else

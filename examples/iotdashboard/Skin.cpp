@@ -170,7 +170,7 @@ void Skin::initHints( const Palette& palette )
     // palette dependent skin hints:
     ed.setGradient( MenuBar::Panel, palette.menuBar );
     ed.setGradient( MainContent::Panel, palette.mainContent );
-    ed.setGradient( Box::Panel, Qt::green );
+//    ed.setGradient( Box::Panel, Qt::green );
     ed.setGradient( BoxWithButtons::Panel, palette.box );
     ed.setGradient( UsageDiagramBox::Panel, palette.box );
     ed.setColor( LightDisplay::Panel, palette.lightDisplay );

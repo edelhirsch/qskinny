@@ -6,6 +6,7 @@
 #include "QskBox.h"
 #include "QskMargins.h"
 
+QSK_SUBCONTROL( QskBox, QskDefault )
 QSK_SUBCONTROL( QskBox, Panel )
 
 QskBox::QskBox( QQuickItem* parent )

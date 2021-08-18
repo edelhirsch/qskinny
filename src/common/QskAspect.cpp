@@ -33,6 +33,7 @@ namespace
         // into an unordered_map as well:
         QVector< QByteArray > subControlNames;
         unordered_map< const QMetaObject*, QVector< QskAspect::Subcontrol > > subControlTable;
+        unordered_map< const QskAspect::Subcontrol, const QMetaObject* > subControlTableReverse;
         unordered_map< const QMetaObject*, QVector< StateInfo > > stateTable;
     };
 }
@@ -84,6 +85,7 @@ QskAspect::Subcontrol QskAspect::nextSubcontrol(
 {
     auto& names = qskAspectRegistry->subControlNames;
     auto& hashTable = qskAspectRegistry->subControlTable;
+    auto& hashTableReverse = qskAspectRegistry->subControlTableReverse;
 
     Q_ASSERT_X( names.size() <= LastSubcontrol, "QskAspect",
         "There are no free subcontrol aspects; please modify your"
@@ -91,7 +93,7 @@ QskAspect::Subcontrol QskAspect::nextSubcontrol(
         " QskAspect::Subcontrol in QskAspect.h." );
 
 //    const QByteArray genericSubcontrol = metaObject->className()
-//            + QByteArrayLiteral( "::qsk_default" );
+//            + QByteArrayLiteral( "::QskDefault" );
 
 //    if(! names.contains( genericSubcontrol ) )
 //    {
@@ -103,13 +105,14 @@ QskAspect::Subcontrol QskAspect::nextSubcontrol(
     // 0 is QskAspect::Control, so we have to start with 1
     const auto subControl = static_cast< Subcontrol >( names.size() );
     hashTable[ metaObject ] += subControl;
+    hashTableReverse.insert( { subControl, metaObject } );
 
     Subcontrol parentSubControl;
 
     if( metaObject && metaObject->superClass() )
     {
         const QByteArray superClassName = metaObject->superClass()->className()
-                + QByteArrayLiteral( "::qsk_default" );
+                + QByteArrayLiteral( "::QskDefault" );
         parentSubControl = static_cast< Subcontrol >( names.indexOf( superClassName ) + 1 );
     }
     else
@@ -164,6 +167,17 @@ QVector< QskAspect::Subcontrol > QskAspect::subControls( const QMetaObject* meta
     }
 
     return QVector< Subcontrol >();
+}
+
+const QMetaObject* QskAspect::metaObject( QskAspect::Subcontrol subControl )
+{
+    const auto& hashTableReverse = qskAspectRegistry->subControlTableReverse;
+
+    auto it = hashTableReverse.find( subControl );
+    if ( it != hashTableReverse.end() )
+        return it->second;
+
+    return nullptr;
 }
 
 #ifndef QT_NO_DEBUG_STREAM

@@ -26,7 +26,6 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
             if ( resolvedAspect )
                 *resolvedAspect = aspect;
 
-            qDebug() << "looking up" << aspect.subControl();
             return &it->second;
         }
 
@@ -45,9 +44,13 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
             continue;
         }
 
-        //
+        const QMetaObject* mo = QskAspect::metaObject( aspect.subControl() );
+        while( mo != nullptr )
+        {
+            // ### here first check for QskDefault and then walk up subclasses
+            mo = mo->superClass();
+        }
 
-        qDebug() << "didn't find an entry for" << aspect;
         return nullptr;
     }
 }
