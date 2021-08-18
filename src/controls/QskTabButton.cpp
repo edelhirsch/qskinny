@@ -12,6 +12,7 @@
 #include <qfontmetrics.h>
 #include <qpointer.h>
 
+QSK_SUBCONTROL( QskTabButton, QskDefault )
 QSK_SUBCONTROL( QskTabButton, Panel )
 QSK_SUBCONTROL( QskTabButton, Text )
 

@@ -6,6 +6,7 @@
 #include "QskPageIndicator.h"
 #include "QskAspect.h"
 
+QSK_SUBCONTROL( QskPageIndicator, QskDefault )
 QSK_SUBCONTROL( QskPageIndicator, Panel )
 QSK_SUBCONTROL( QskPageIndicator, Bullet )
 QSK_SUBCONTROL( QskPageIndicator, Highlighted )

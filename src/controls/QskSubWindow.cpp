@@ -13,6 +13,7 @@
 
 #include <qurl.h>
 
+QSK_SUBCONTROL( QskSubWindow, QskDefault )
 QSK_SUBCONTROL( QskSubWindow, Panel )
 QSK_SUBCONTROL( QskSubWindow, TitleBarPanel )
 QSK_SUBCONTROL( QskSubWindow, TitleBarSymbol )

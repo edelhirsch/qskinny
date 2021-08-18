@@ -13,6 +13,7 @@
 
 #include <QPointer>
 
+QSK_SUBCONTROL( QskTabView, QskDefault )
 QSK_SUBCONTROL( QskTabView, TabBar )
 QSK_SUBCONTROL( QskTabView, Page )
 

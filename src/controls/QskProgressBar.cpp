@@ -11,6 +11,7 @@
 #include "QskAnimator.h"
 #include "QskAspect.h"
 
+QSK_SUBCONTROL( QskProgressBar, QskDefault )
 QSK_SUBCONTROL( QskProgressBar, Groove )
 QSK_SUBCONTROL( QskProgressBar, Bar )
 

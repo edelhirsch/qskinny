@@ -6,6 +6,7 @@
 #include "QskSeparator.h"
 #include "QskAspect.h"
 
+QSK_SUBCONTROL( QskSeparator, QskDefault )
 QSK_SUBCONTROL( QskSeparator, Panel )
 
 QskSeparator::QskSeparator( QQuickItem* parent )

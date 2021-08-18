@@ -11,6 +11,7 @@ QSK_QT_PRIVATE_BEGIN
 #include <private/qquicktextinput_p_p.h>
 QSK_QT_PRIVATE_END
 
+QSK_SUBCONTROL( QskTextInput, QskDefault )
 QSK_SUBCONTROL( QskTextInput, Panel )
 QSK_SUBCONTROL( QskTextInput, Text )
 QSK_SUBCONTROL( QskTextInput, PanelSelected )

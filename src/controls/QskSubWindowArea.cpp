@@ -10,6 +10,7 @@
 
 #include <qtimer.h>
 
+QSK_SUBCONTROL( QskSubWindowArea, QskDefault )
 QSK_SUBCONTROL( QskSubWindowArea, Panel )
 
 static void qskUpdateEventFilter( QskSubWindowArea* area )

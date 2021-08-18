@@ -10,6 +10,7 @@
 
 #include <qdebug.h>
 
+QSK_SUBCONTROL( QskStatusIndicator, QskDefault )
 QSK_SUBCONTROL( QskStatusIndicator, Graphic )
 
 namespace

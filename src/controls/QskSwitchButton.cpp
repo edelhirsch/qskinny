@@ -1,5 +1,6 @@
 #include "QskSwitchButton.h"
 
+QSK_SUBCONTROL( QskSwitchButton, QskDefault )
 QSK_SUBCONTROL( QskSwitchButton, Handle )
 QSK_SUBCONTROL( QskSwitchButton, Groove )
 

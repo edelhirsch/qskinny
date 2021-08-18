@@ -9,6 +9,7 @@
 #include "QskIntervalF.h"
 #include "QskEvent.h"
 
+QSK_SUBCONTROL( QskSlider, QskDefault )
 QSK_SUBCONTROL( QskSlider, Panel )
 QSK_SUBCONTROL( QskSlider, Groove )
 QSK_SUBCONTROL( QskSlider, Fill )

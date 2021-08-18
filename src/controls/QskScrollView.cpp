@@ -8,6 +8,7 @@
 #include "QskBoxBorderMetrics.h"
 #include "QskEvent.h"
 
+QSK_SUBCONTROL( QskScrollView, QskDefault )
 QSK_SUBCONTROL( QskScrollView, Panel )
 QSK_SUBCONTROL( QskScrollView, Viewport )
 QSK_SUBCONTROL( QskScrollView, HorizontalScrollBar )

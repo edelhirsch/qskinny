@@ -15,6 +15,7 @@ QSK_QT_PRIVATE_BEGIN
 #include <private/qquickitem_p.h>
 QSK_QT_PRIVATE_END
 
+QSK_SUBCONTROL( QskFocusIndicator, QskDefault )
 QSK_SUBCONTROL( QskFocusIndicator, Panel )
 
 static inline QRectF qskFocusIndicatorRect( const QQuickItem* item )

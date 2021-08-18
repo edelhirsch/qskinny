@@ -11,6 +11,7 @@
 #include "QskSetup.h"
 #include "QskSkin.h"
 
+QSK_SUBCONTROL( QskGraphicLabel, QskDefault )
 QSK_SUBCONTROL( QskGraphicLabel, Graphic )
 
 class QskGraphicLabel::PrivateData

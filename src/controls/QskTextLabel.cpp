@@ -7,6 +7,7 @@
 #include "QskAspect.h"
 #include "QskTextOptions.h"
 
+QSK_SUBCONTROL( QskTextLabel, QskDefault )
 QSK_SUBCONTROL( QskTextLabel, Panel )
 QSK_SUBCONTROL( QskTextLabel, Text )
 

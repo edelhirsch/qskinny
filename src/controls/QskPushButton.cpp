@@ -16,6 +16,7 @@
 
 #include <qfontmetrics.h>
 
+QSK_SUBCONTROL( QskPushButton, QskDefault )
 QSK_SUBCONTROL( QskPushButton, Panel )
 QSK_SUBCONTROL( QskPushButton, Text )
 QSK_SUBCONTROL( QskPushButton, Graphic )

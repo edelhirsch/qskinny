@@ -14,6 +14,7 @@
 
 #include <qquickwindow.h>
 
+QSK_SUBCONTROL( QskTabBar, QskDefault )
 QSK_SUBCONTROL( QskTabBar, Panel )
 
 static inline Qt::Orientation qskOrientation( int position )

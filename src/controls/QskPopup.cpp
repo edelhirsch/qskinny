@@ -15,6 +15,7 @@ QSK_QT_PRIVATE_BEGIN
 #include <private/qquickitem_p.h>
 QSK_QT_PRIVATE_END
 
+QSK_SUBCONTROL( QskPopup, QskDefault )
 QSK_SUBCONTROL( QskPopup, Overlay )
 QSK_SYSTEM_STATE( QskPopup, Closed, QskAspect::FirstSystemState << 1 )
 

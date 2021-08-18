@@ -7,6 +7,7 @@
 #include "QskAspect.h"
 #include "QskColorFilter.h"
 
+QSK_SUBCONTROL( QskListView, QskDefault )
 QSK_SUBCONTROL( QskListView, Cell )
 QSK_SUBCONTROL( QskListView, Text )
 QSK_SUBCONTROL( QskListView, CellSelected )
