@@ -8,6 +8,7 @@
 
 #include <QskTextLabel.h>
 
+QSK_SUBCONTROL( UsageBox, QskDefault )
 QSK_SUBCONTROL( UsageBox, Separator )
 
 namespace

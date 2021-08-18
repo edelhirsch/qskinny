@@ -18,6 +18,7 @@
 #include <QPainter>
 #include <QRadialGradient>
 
+QSK_SUBCONTROL( LightDisplay, QskDefault )
 QSK_SUBCONTROL( LightDisplay, Panel )
 QSK_SUBCONTROL( LightDisplay, ColdPart )
 QSK_SUBCONTROL( LightDisplay, WarmPart )

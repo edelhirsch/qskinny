@@ -10,6 +10,7 @@
 #include <QskSkin.h>
 #include <QskTextLabel.h>
 
+QSK_SUBCONTROL( UsageDiagramLegend, QskDefault )
 QSK_SUBCONTROL( UsageDiagramLegend, Panel )
 QSK_SUBCONTROL( UsageDiagramLegend, Symbol )
 
@@ -17,6 +18,7 @@ QSK_STATE( UsageDiagramLegend, Water, ( QskAspect::FirstUserState << 1 ) )
 QSK_STATE( UsageDiagramLegend, Electricity, ( QskAspect::FirstUserState << 2 ) )
 QSK_STATE( UsageDiagramLegend, Gas, ( QskAspect::FirstUserState << 3 ) )
 
+QSK_SUBCONTROL( UsageDiagramBox, QskDefault )
 QSK_SUBCONTROL( UsageDiagramBox, Panel )
 QSK_SUBCONTROL( UsageDiagramBox, DaysBox )
 QSK_SUBCONTROL( UsageDiagramBox, DayText )

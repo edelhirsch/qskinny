@@ -15,6 +15,7 @@ class Diagram::PrivateData
     QVector< Types > types;
 };
 
+QSK_SUBCONTROL( Diagram, QskDefault )
 QSK_SUBCONTROL( Diagram, Chart )
 QSK_SUBCONTROL( Diagram, Segments )
 QSK_SUBCONTROL( Diagram, ChartLine1 )

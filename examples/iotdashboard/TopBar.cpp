@@ -11,15 +11,19 @@
 
 #include <QTime>
 
+QSK_SUBCONTROL( TimeTitleLabel, QskDefault )
 QSK_SUBCONTROL( TimeTitleLabel, Text )
 
+QSK_SUBCONTROL( TimeLabel, QskDefault )
 QSK_SUBCONTROL( TimeLabel, Text )
 
+QSK_SUBCONTROL( TopBarItem, QskDefault )
 QSK_SUBCONTROL( TopBarItem, Item1 )
 QSK_SUBCONTROL( TopBarItem, Item2 )
 QSK_SUBCONTROL( TopBarItem, Item3 )
 QSK_SUBCONTROL( TopBarItem, Item4 )
 
+QSK_SUBCONTROL( TopBar, QskDefault )
 QSK_SUBCONTROL( TopBar, Panel )
 
 namespace

@@ -13,10 +13,15 @@
 
 #include <QImage>
 
+QSK_SUBCONTROL( MenuBarTopLabel, QskDefault )
 QSK_SUBCONTROL( MenuBarTopLabel, Graphic )
+QSK_SUBCONTROL( MenuBarGraphicLabel, QskDefault )
 QSK_SUBCONTROL( MenuBarGraphicLabel, Graphic )
+QSK_SUBCONTROL( MenuBarLabel, QskDefault )
 QSK_SUBCONTROL( MenuBarLabel, Text )
+QSK_SUBCONTROL( MenuItem, QskDefault )
 QSK_SUBCONTROL( MenuItem, Panel )
+QSK_SUBCONTROL( MenuBar, QskDefault )
 QSK_SUBCONTROL( MenuBar, Panel )
 
 QSK_STATE( MenuItem, Active, ( QskAspect::FirstUserState << 1 ) )

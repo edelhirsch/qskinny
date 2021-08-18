@@ -5,6 +5,7 @@
 
 #include "PieChart.h"
 
+QSK_SUBCONTROL( PieChart, QskDefault )
 QSK_SUBCONTROL( PieChart, Panel )
 QSK_SUBCONTROL( PieChart, Labels )
 

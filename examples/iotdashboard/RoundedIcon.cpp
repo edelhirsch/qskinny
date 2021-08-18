@@ -12,6 +12,7 @@
 #include <QImage>
 #include <QFile>
 
+QSK_SUBCONTROL( RoundedIcon, QskDefault )
 QSK_SUBCONTROL( RoundedIcon, Panel )
 QSK_SUBCONTROL( RoundedIcon, Icon )
 QSK_STATE( RoundedIcon, Bright, ( QskAspect::FirstUserState << 1 ) )

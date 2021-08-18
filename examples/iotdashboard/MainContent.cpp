@@ -27,9 +27,12 @@
 
 #include <QTimer>
 
+QSK_SUBCONTROL( ShadowPositioner, QskDefault )
 QSK_SUBCONTROL( ShadowPositioner, Panel )
 
+QSK_SUBCONTROL( MainContent, QskDefault )
 QSK_SUBCONTROL( MainContent, Panel )
+QSK_SUBCONTROL( MainContentGridBox, QskDefault )
 QSK_SUBCONTROL( MainContentGridBox, Panel )
 
 namespace

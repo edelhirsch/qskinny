@@ -18,6 +18,7 @@
 #include <QQuickPaintedItem>
 #include <QQuickWindow>
 
+QSK_SUBCONTROL( PieChartPainted, QskDefault )
 QSK_SUBCONTROL( PieChartPainted, Panel )
 
 namespace

@@ -11,6 +11,7 @@
 #include <QskTextLabel.h>
 #include <QskLinearBox.h>
 
+QSK_SUBCONTROL( BoxWithButtons, QskDefault )
 QSK_SUBCONTROL( BoxWithButtons, ValueText )
 QSK_SUBCONTROL( BoxWithButtons, ValuePanel )
 QSK_SUBCONTROL( BoxWithButtons, Panel )

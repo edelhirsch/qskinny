@@ -10,6 +10,7 @@
 
 #include <QImage>
 
+QSK_SUBCONTROL( RoundButton, QskDefault )
 QSK_SUBCONTROL( RoundButton, Panel )
 
 QSK_STATE( RoundButton, Top, ( QskAspect::FirstUserState << 1 ) )
