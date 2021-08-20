@@ -20,12 +20,14 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
 
     Q_FOREVER
     {
+        qDebug() << "looking up" << aspect;
         auto it = hints.find( aspect );
         if ( it != hints.cend() )
         {
             if ( resolvedAspect )
                 *resolvedAspect = aspect;
 
+            qDebug() << "found entry for" << aspect;
             return &it->second;
         }
 
@@ -47,7 +49,7 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
         const QMetaObject* metaObject = QskAspect::metaObject( aspect.subControl() );
         const QByteArray name = QskAspect::subControlName( aspect.subControl() );
 
-        qDebug() << "couldn't find anything for" << aspect.subControl();
+        qDebug() << "couldn't find anything for" << aspect;
 
         if( !name.endsWith( "::QskDefault" ) )
         {
@@ -58,7 +60,7 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
                 auto newSubcontrol = subcontrols.at( 0 );
                 Q_ASSERT( QskAspect::subControlName( newSubcontrol ).endsWith( "::QskDefault" ) );
                 aspect.setSubControl( newSubcontrol );
-                qDebug() << "now trying class wide settings:" << aspect.subControl();
+                qDebug() << "now trying class wide settings:" << aspect;
                 continue;
             }
         }
@@ -67,15 +69,19 @@ inline const QVariant* qskResolvedHint( QskAspect aspect,
             while( metaObject != nullptr )
             {
                 metaObject = metaObject->superClass();
+
                 auto subcontrols = QskAspect::subControls( metaObject );
+
+                if(metaObject!= nullptr)
+                    qDebug() << "going up superclass hierarchy:" << aspect << metaObject->className() << subcontrols.count();
 
                 if( subcontrols.count() > 0 )
                 {
                     auto newSubcontrol = subcontrols.at( 0 );
                     Q_ASSERT( QskAspect::subControlName( newSubcontrol ).endsWith( "::QskDefault" ) );
                     aspect.setSubControl( newSubcontrol );
-                    qDebug() << "now trying superclass:" << aspect.subControl();
-                    continue;
+                    qDebug() << "now trying superclass:" << aspect;
+                    continue; // ### exit 2 loops!
                 }
             }
         }

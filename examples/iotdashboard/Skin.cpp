@@ -167,14 +167,16 @@ void Skin::initHints( const Palette& palette )
     ed.setFontRole( LightDisplay::ValueText, QskSkin::LargeFont );
     ed.setColor( LightDisplay::ValueText, "#929cb2" );
 
+    ed.setGradient( QskControl::QskDefault, Qt::magenta );
+
     // palette dependent skin hints:
     ed.setGradient( MenuBar::Panel, palette.menuBar );
-    ed.setGradient( MainContent::Panel, palette.mainContent );
-    ed.setGradient( BoxWithButtons::Panel, palette.box );
-    ed.setGradient( UsageDiagramBox::Panel, palette.box );
+//    ed.setGradient( MainContent::Panel, palette.mainContent );
+//    ed.setGradient( BoxWithButtons::Panel, palette.box );
+//    ed.setGradient( UsageDiagramBox::Panel, palette.box );
     ed.setColor( LightDisplay::Panel, palette.lightDisplay );
     ed.setColor( PieChartPainted::Panel, palette.pieChart );
-    ed.setGradient( RoundButton::Panel, palette.roundButton );
+//    ed.setGradient( RoundButton::Panel, palette.roundButton );
     ed.setBoxBorderColors( UsageDiagramBox::DaysBox, palette.weekdayBox );
     ed.setColor( QskTextLabel::Text, palette.text );
     ed.setColor( UsageDiagramBox::DayText, palette.text );
