@@ -9,6 +9,8 @@
 #include "BoxWithButtons.h"
 #include "CircularProgressBar.h"
 #include "CircularProgressBarSkinlet.h"
+#include "Cube.h"
+#include "CubeSkinlet.h"
 #include "Diagram.h"
 #include "DiagramSkinlet.h"
 #include "LightDisplay.h"
@@ -54,6 +56,7 @@ Skin::Skin( const Palette& palette, QObject* parent )
     : QskSkin( parent )
 {
     declareSkinlet< CircularProgressBar, CircularProgressBarSkinlet >();
+    declareSkinlet< Cube, CubeSkinlet >();
     declareSkinlet< Diagram, DiagramSkinlet >();
     declareSkinlet< LightDisplay, LightDisplaySkinlet >();
 

@@ -7,6 +7,8 @@
 
 #include <QskWindow.h>
 
+class QskGestureEvent;
+
 class MainWindow : public QskWindow
 {
     Q_OBJECT

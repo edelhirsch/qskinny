@@ -54,7 +54,7 @@ void QskGraphicNode::paint( QPainter* painter, const QSize& size, const void* no
 
     if ( graphic.commandTypes() == QskGraphic::RasterData )
     {
-        qDebug() << size;
+//        qDebug() << size;
     }
 
     const QRectF rect( 0, 0, size.width(), size.height() );

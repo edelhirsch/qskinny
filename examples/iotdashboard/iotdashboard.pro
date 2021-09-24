@@ -8,12 +8,15 @@ SOURCES += \
     BoxWithButtons.cpp \
     CircularProgressBar.cpp \
     CircularProgressBarSkinlet.cpp \
+    Cube.cpp \
+    CubeSkinlet.cpp \
     Diagram.cpp \
     DiagramSkinlet.cpp \
     GraphicProvider.cpp \
     LightDisplaySkinlet.cpp \
     LightDisplay.cpp \
     MainContent.cpp \
+    MainItem.cpp \
     MenuBar.cpp \
     MyDevices.cpp \
     PieChart.cpp \
@@ -39,12 +42,15 @@ HEADERS += \
     BoxWithButtons.h \
     CircularProgressBar.h \
     CircularProgressBarSkinlet.h \
+    Cube.h \
+    CubeSkinlet.h \
     Diagram.h \
     DiagramSkinlet.h \
     GraphicProvider.h \
     LightDisplaySkinlet.h \
     LightDisplay.h \
     MainContent.h \
+    MainItem.h \
     MainWindow.h \
     MenuBar.h \
     MyDevices.h \
