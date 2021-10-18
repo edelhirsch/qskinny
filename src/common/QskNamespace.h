@@ -58,6 +58,13 @@ QSK_NAMESPACE( Qsk )
     };
     QSK_ENUM( Position )
 
+    enum ArcPosition
+    {
+        Outer,
+        Inner
+    };
+    QSK_ENUM( ArcPosition )
+
     enum TextStyle
     {
         Normal,
