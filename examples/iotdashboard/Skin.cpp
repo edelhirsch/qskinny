@@ -21,6 +21,8 @@
 #include "UsageBox.h"
 #include "UsageDiagram.h"
 
+#include <QskArcBorderColors.h>
+#include <QskArcBorderMetrics.h>
 #include <QskArcMetrics.h>
 #include <QskBoxShapeMetrics.h>
 #include <QskBoxBorderMetrics.h>
@@ -116,6 +118,8 @@ void Skin::initHints( const Palette& palette )
 
     // the bar gradient is defined through the top bar items above
     ed.setArcMetrics( CircularProgressBar::Groove, { 8.53, 90 * 16, -360 * 16 } );
+    ed.setArcBorderMetrics( CircularProgressBar::Groove, {1, 1} );
+    ed.setArcBorderColors( CircularProgressBar::Groove, { Qt::magenta, Qt::cyan } );
     // the span angle will be set in the progress bar, we just give a dummy
     // value here:
     ed.setArcMetrics( CircularProgressBar::Bar, { 8.53, 90 * 16, -180 * 16 } );
