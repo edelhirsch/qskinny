@@ -349,37 +349,30 @@ QSGNode* QskSkinlet::updateArcNode( const QskSkinnable* skinnable,
     QSGNode* node, const QRectF& rect, const QskGradient& fillGradient,
     const QskArcMetrics& arcMetrics, QskAspect::Subcontrol subControl )
 {
-    const auto control = skinnable->owningControl();
-    if ( control == nullptr )
-        return nullptr;
-
     const auto margins = skinnable->marginHint( subControl );
 
-    const auto arcRect = rect.marginsRemoved( margins );
-
-    if ( arcRect.isEmpty() )
+    const auto boxRect = rect.marginsRemoved( margins );
+    if ( boxRect.isEmpty() )
         return nullptr;
 
-    auto absoluteArcMetrics = arcMetrics.toAbsolute( arcRect.size() );
+    auto borderMetrics = skinnable->boxBorderMetricsHint( subControl );
+    borderMetrics = borderMetrics.toAbsolute( boxRect.size() );
 
-    auto arcBorderMetrics = skinnable->arcBorderMetricsHint( subControl );
-    arcBorderMetrics = arcBorderMetrics.toAbsolute( arcRect.size() );
+    const auto borderColors = skinnable->boxBorderColorsHint( subControl );
 
-    const auto arcBorderColors = skinnable->arcBorderColorsHint( subControl );
-
-    if ( !qskIsArcVisible( arcMetrics, arcBorderMetrics, arcBorderColors,
-        fillGradient ) )
+    if ( !qskIsBoxVisible( borderMetrics, borderColors, fillGradient ) )
         return nullptr;
 
-    auto arcNode = static_cast< QskArcNode* >( node );
+    auto shape = skinnable->boxShapeHint( subControl );
+    shape = shape.toAbsolute( boxRect.size() );
 
-    if ( arcNode == nullptr )
-        arcNode = new QskArcNode();
+    auto boxNode = static_cast< QskBoxNode* >( node );
+    if ( boxNode == nullptr )
+        boxNode = new QskBoxNode();
 
-    arcNode->setArcData( rect, absoluteArcMetrics, arcBorderMetrics,
-        arcBorderColors, fillGradient, control->window() );
+    boxNode->setBoxData( boxRect, shape, borderMetrics, borderColors, fillGradient, true );
 
-    return arcNode;
+    return boxNode;
 }
 
 QSGNode* QskSkinlet::updateArcNode( const QskSkinnable* skinnable,

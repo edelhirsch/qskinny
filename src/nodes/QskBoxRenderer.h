@@ -34,6 +34,10 @@ class QSK_EXPORT QskBoxRenderer
         const QskBoxShapeMetrics&, const QskBoxBorderMetrics&,
         const QskBoxBorderColors&, const QskGradient&, QSGGeometry& );
 
+    void renderArc( const QRectF&,
+        const QskBoxShapeMetrics&, const QskBoxBorderMetrics&,
+        const QskBoxBorderColors&, const QskGradient&, QSGGeometry& );
+
     class Quad
     {
       public:
@@ -131,6 +135,10 @@ class QSK_EXPORT QskBoxRenderer
         int lineCount, QskVertex::ColoredLine* );
 
     void renderRectFill( const Quad&, const QskGradient&, QskVertex::ColoredLine* );
+
+    void renderRectellipseArc( const QRectF&,
+        const QskBoxShapeMetrics&, const QskBoxBorderMetrics&,
+        const QskBoxBorderColors&, const QskGradient&, QSGGeometry& );
 };
 
 inline void QskBoxRenderer::renderBorder(
@@ -162,6 +170,17 @@ inline void QskBoxRenderer::renderBox( const QRectF& rect,
         renderRect( rect, shape, border, borderColors, gradient, geometry );
     else
         renderRectellipse( rect, shape, border, borderColors, gradient, geometry );
+}
+
+inline void QskBoxRenderer::renderArc( const QRectF& rect,
+    const QskBoxShapeMetrics& shape, const QskBoxBorderMetrics& border,
+    const QskBoxBorderColors& borderColors, const QskGradient& gradient,
+    QSGGeometry& geometry )
+{
+//    if ( shape.isRectangle() )
+//        renderRect( rect, shape, border, borderColors, gradient, geometry );
+//    else
+        renderRectellipseArc( rect, shape, border, borderColors, gradient, geometry );
 }
 
 #endif

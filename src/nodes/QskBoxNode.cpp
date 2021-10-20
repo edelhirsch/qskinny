@@ -54,9 +54,9 @@ void QskBoxNode::setBoxData( const QRectF& rect, const QskGradient& fillGradient
         QskBoxBorderColors(), fillGradient );
 }
 
-void QskBoxNode::setBoxData( const QRectF& rect,
+void QskBoxNode::setBoxData(const QRectF& rect,
     const QskBoxShapeMetrics& shape, const QskBoxBorderMetrics& borderMetrics,
-    const QskBoxBorderColors& borderColors, const QskGradient& fillGradient )
+    const QskBoxBorderColors& borderColors, const QskGradient& fillGradient , bool isArc)
 {
 #if 1
     const uint metricsHash = qskMetricsHash( shape, borderMetrics );
@@ -145,8 +145,13 @@ void QskBoxNode::setBoxData( const QRectF& rect,
     {
         setMonochrome( false );
 
-        renderer.renderBox( m_rect, shape, borderMetrics,
-            borderColors, fillGradient, *geometry() );
+            if(isArc) {
+                renderer.renderArc( m_rect, shape, borderMetrics,
+                    borderColors, fillGradient, *geometry() );
+            } else {
+                renderer.renderBox( m_rect, shape, borderMetrics,
+                    borderColors, fillGradient, *geometry() );
+            }
     }
     else
     {
@@ -163,6 +168,7 @@ void QskBoxNode::setBoxData( const QRectF& rect,
         else
         {
             flatMaterial->setColor( borderColors.color( Qsk::Left ).rgba() );
+
             renderer.renderBorder( m_rect, shape, borderMetrics, *geometry() );
         }
     }

@@ -22,7 +22,7 @@ class QSK_EXPORT QskBoxNode : public QSGGeometryNode
 
     void setBoxData( const QRectF&,
         const QskBoxShapeMetrics&, const QskBoxBorderMetrics&,
-        const QskBoxBorderColors&, const QskGradient& );
+        const QskBoxBorderColors&, const QskGradient&, bool isArc = false );
 
     void setBoxData( const QRectF& rect, const QskGradient& );
 

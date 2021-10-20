@@ -120,6 +120,19 @@ void Skin::initHints( const Palette& palette )
     // value here:
     ed.setArcMetrics( CircularProgressBar::Bar, { 8.53, 90 * 16, -180 * 16 } );
 
+
+
+    ed.setBoxShape( CircularProgressBar::Bar, 10 );
+    ed.setBoxBorderMetrics( CircularProgressBar::Bar, 3 );
+    ed.setBoxBorderColors(CircularProgressBar::Bar, Qt::magenta );
+
+    ed.setBoxShape( CircularProgressBar::Groove, 10 );
+    ed.setBoxBorderMetrics( CircularProgressBar::Groove, 3 );
+    ed.setBoxBorderColors(CircularProgressBar::Groove, Qt::cyan );
+
+
+
+
     ed.setFontRole( TimeTitleLabel::Text, Skin::TitleFont );
 
     ed.setFontRole( TimeLabel::Text, QskSkin::HugeFont );

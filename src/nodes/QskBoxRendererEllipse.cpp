@@ -11,6 +11,7 @@
 #include "QskBoxRendererColorMap.h"
 #include "QskBoxShapeMetrics.h"
 
+#include <qdebug.h>
 #include <qmath.h>
 #include <qsggeometry.h>
 
@@ -699,6 +700,175 @@ namespace
 #endif
         }
 
+        template< class BorderMap, class FillMap >
+        inline void createArcLines( Qt::Orientation orientation, Line* borderLines,
+            const BorderMap& borderMapTL, const BorderMap& borderMapTR,
+            const BorderMap& borderMapBL, const BorderMap& borderMapBR,
+            Line* fillLines, FillMap& fillMap )
+        {
+            qDebug() << Q_FUNC_INFO;
+
+            const auto& c = m_metrics.corner;
+#if 1
+            // TODO ...
+            const int stepCount = c[ 0 ].stepCount;
+#endif
+
+            Line* linesBR, * linesTR, * linesTL, * linesBL;
+            linesBR = linesTR = linesTL = linesBL = nullptr;
+
+            const int numCornerLines = stepCount + 1;
+            int numFillLines = fillLines ? 2 * numCornerLines : 0;
+
+            if ( orientation == Qt::Vertical )
+            {
+                if ( borderLines )
+                {
+                    linesBR = borderLines;
+                    linesTR = linesBR + numCornerLines;
+                    linesTL = linesTR + numCornerLines;
+                    linesBL = linesTL + numCornerLines;
+                }
+
+                if ( fillLines )
+                {
+                    if ( m_metrics.centerQuad.top >= m_metrics.centerQuad.bottom )
+                        numFillLines--;
+                }
+            }
+            else
+            {
+                if ( borderLines )
+                {
+                    linesTR = borderLines + 1;
+                    linesTL = linesTR + numCornerLines;
+                    linesBL = linesTL + numCornerLines;
+                    linesBR = linesBL + numCornerLines;
+                }
+
+                if ( fillLines )
+                {
+                    if ( m_metrics.centerQuad.left >= m_metrics.centerQuad.right )
+                        numFillLines--;
+                }
+            }
+
+            BorderValues v( m_metrics );
+
+            /*
+                It would be possible to run over [0, 0.5 * M_PI_2]
+                and create 8 values ( instead of 4 ) in each step. TODO ...
+             */
+            for ( ArcIterator it( stepCount, false ); !it.isDone(); ++it )
+            {
+                v.setAngle( it.cos(), it.sin() );
+
+                if ( borderLines )
+                {
+                    const int j = it.step();
+                    const int k = numCornerLines - it.step() - 1;
+
+                    {
+                        constexpr auto corner = TopLeft;
+
+                        linesTL[ j ].setLine(
+                            c[ corner ].centerX - v.dx1( corner ),
+                            c[ corner ].centerY - v.dy1( corner ),
+                            c[ corner ].centerX - v.dx2( corner ),
+                            c[ corner ].centerY - v.dy2( corner ),
+                            borderMapTL.colorAt( j ) );
+                    }
+
+                    {
+                        constexpr auto corner = TopRight;
+
+                        linesTR[ k ].setLine(
+                            c[ corner ].centerX + v.dx1( corner ),
+                            c[ corner ].centerY - v.dy1( corner ),
+                            c[ corner ].centerX + v.dx2( corner ),
+                            c[ corner ].centerY - v.dy2( corner ),
+                            borderMapTR.colorAt( k ) );
+                    }
+
+                    {
+                        constexpr auto corner = BottomLeft;
+
+                        linesBL[ k ].setLine(
+                            c[ corner ].centerX - v.dx1( corner ),
+                            c[ corner ].centerY + v.dy1( corner ),
+                            c[ corner ].centerX - v.dx2( corner ),
+                            c[ corner ].centerY + v.dy2( corner ),
+                            borderMapBL.colorAt( k ) );
+                    }
+
+                    {
+                        constexpr auto corner = BottomRight;
+
+                        linesBR[ j ].setLine(
+                            c[ corner ].centerX + v.dx1( corner ),
+                            c[ corner ].centerY + v.dy1( corner ),
+                            c[ corner ].centerX + v.dx2( corner ),
+                            c[ corner ].centerY + v.dy2( corner ),
+                            borderMapBR.colorAt( j ) );
+                    }
+                }
+
+                if ( fillLines )
+                {
+                    const auto& ri = m_metrics.innerQuad;
+
+                    if ( orientation == Qt::Vertical )
+                    {
+                        const int j = it.step();
+                        const int k = numFillLines - it.step() - 1;
+
+                        const qreal x11 = c[ TopLeft ].centerX - v.dx1( TopLeft );
+                        const qreal x12 = c[ TopRight ].centerX + v.dx1( TopRight );
+                        const qreal y1 = c[ TopLeft ].centerY - v.dy1( TopLeft );
+                        const auto c1 = fillMap.colorAt( ( y1 - ri.top ) / ri.height );
+
+                        const qreal x21 = c[ BottomLeft ].centerX - v.dx1( BottomLeft );
+                        const qreal x22 = c[ BottomRight ].centerX + v.dx1( BottomRight );
+                        const qreal y2 = c[ BottomLeft ].centerY + v.dy1( BottomLeft );
+                        const auto c2 = fillMap.colorAt( ( y2 - ri.top ) / ri.height );
+
+                        fillLines[ j ].setLine( x11, y1, x12, y1, c1 );
+                        fillLines[ k ].setLine( x21, y2, x22, y2, c2 );
+                    }
+                    else
+                    {
+                        const int j = stepCount - it.step();
+                        const int k = numFillLines - 1 - stepCount + it.step();
+
+                        const qreal x1 = c[ TopLeft ].centerX - v.dx1( TopLeft );
+                        const qreal y11 = c[ TopLeft ].centerY - v.dy1( TopLeft );
+                        const qreal y12 = c[ BottomLeft ].centerY + v.dy1( BottomLeft );
+                        const auto c1 = fillMap.colorAt( ( x1 - ri.left ) / ri.width );
+
+                        const qreal x2 = c[ TopRight ].centerX + v.dx1( TopRight );
+                        const qreal y21 = c[ TopRight ].centerY - v.dy1( TopRight );
+                        const qreal y22 = c[ BottomRight ].centerY + v.dy1( BottomRight );
+                        const auto c2 = fillMap.colorAt( ( x2 - ri.left ) / ri.width );
+
+                        fillLines[ j ].setLine( x1, y11, x1, y12, c1 );
+                        fillLines[ k ].setLine( x2, y21, x2, y22, c2 );
+                    }
+                }
+            }
+
+#if 1
+            if ( borderLines )
+            {
+                const int k = 4 * numCornerLines;
+
+                if ( orientation == Qt::Vertical )
+                    borderLines[ k ] = borderLines[ 0 ];
+                else
+                    borderLines[ 0 ] = borderLines[ k ];
+            }
+#endif
+        }
+
       private:
         const QskBoxRenderer::Metrics& m_metrics;
     };
@@ -814,6 +984,35 @@ static inline void qskRenderLines(
     }
 }
 
+// NEW
+template< class Line, class BorderMap, class FillMap >
+static inline void qskRenderArcLines(
+    const QskBoxRenderer::Metrics& metrics,
+    Qt::Orientation orientation, Line* borderLines,
+    const BorderMap& borderMapTL, const BorderMap& borderMapTR,
+    const BorderMap& borderMapBL, const BorderMap& borderMapBR,
+    Line* fillLines, const FillMap& fillMap )
+{
+    qDebug() << Q_FUNC_INFO;
+
+    if ( metrics.isBorderRegular && metrics.isRadiusRegular )
+    {
+        // the same border width for all edges
+
+        Stroker< Line, BorderValuesUniform > stroker( metrics );
+        stroker.createArcLines( orientation, borderLines,
+            borderMapTL, borderMapTR, borderMapBL, borderMapBR,
+            fillLines, fillMap );
+    }
+    else
+    {
+        Stroker< Line, BorderValues > stroker( metrics );
+        stroker.createArcLines( orientation, borderLines,
+            borderMapTL, borderMapTR, borderMapBL, borderMapBR,
+            fillLines, fillMap );
+    }
+}
+
 template< class Line, class BorderMap, class FillMap >
 static inline void qskRenderLines(
     const QskBoxRenderer::Metrics& metrics, Qt::Orientation orientation,
@@ -832,6 +1031,17 @@ static inline void qskRenderBorderLines(
     const BorderMap& borderMapBL, const BorderMap& borderMapBR )
 {
     qskRenderLines( metrics, orientation, lines, borderMapTL, borderMapTR,
+        borderMapBL, borderMapBR, static_cast< Line* >( nullptr ), ColorMapNone() );
+}
+
+template< class Line, class BorderMap >
+static inline void qskRenderArcLines(
+    const QskBoxRenderer::Metrics& metrics,
+    Qt::Orientation orientation, Line* lines,
+    const BorderMap& borderMapTL, const BorderMap& borderMapTR,
+    const BorderMap& borderMapBL, const BorderMap& borderMapBR )
+{
+    qskRenderArcLines( metrics, orientation, lines, borderMapTL, borderMapTR,
         borderMapBL, borderMapBR, static_cast< Line* >( nullptr ), ColorMapNone() );
 }
 
@@ -871,6 +1081,29 @@ static inline void qskRenderBorder( const QskBoxRenderer::Metrics& metrics,
             BorderMapGradient( stepCount, c.rgb( Qsk::Left ), c.rgb( Qsk::Bottom ) ),
             BorderMapGradient( stepCount, c.rgb( Qsk::Bottom ), c.rgb( Qsk::Right ) ) );
     }
+}
+
+// NEW, move to a new class QskRenderer?
+static inline void qskRenderArcLines( const QskBoxRenderer::Metrics& metrics,
+    Qt::Orientation orientation, const QskBoxBorderColors& colors, ColoredLine* line )
+{
+    qDebug() << Q_FUNC_INFO;
+    const auto& c = colors;
+
+//    if ( colors.isMonochrome() )
+//    {
+//        qskRenderArcLines( metrics, orientation, line, BorderMapSolid( c.rgb( Qsk::Left ) ) );
+//    }
+//    else
+//    {
+        const int stepCount = metrics.corner[ 0 ].stepCount;
+
+        qskRenderArcLines( metrics, orientation, line,
+            BorderMapGradient( stepCount, c.rgb( Qsk::Top ), c.rgb( Qsk::Left ) ),
+            BorderMapGradient( stepCount, c.rgb( Qsk::Right ), c.rgb( Qsk::Top ) ),
+            BorderMapGradient( stepCount, c.rgb( Qsk::Left ), c.rgb( Qsk::Bottom ) ),
+            BorderMapGradient( stepCount, c.rgb( Qsk::Bottom ), c.rgb( Qsk::Right ) ) );
+//    }
 }
 
 static inline void qskRenderFillRandom(
@@ -1326,6 +1559,176 @@ void QskBoxRenderer::renderRectellipse( const QRectF& rect,
             border colors, we could treat it like filling without border. TODO ...
          */
 #endif
+        qskRenderBorder( metrics, Qt::Vertical, borderColors, line );
+    }
+}
+
+void QskBoxRenderer::renderRectellipseArc( const QRectF& rect,
+    const QskBoxShapeMetrics& shape, const QskBoxBorderMetrics& border,
+    const QskBoxBorderColors& borderColors, const QskGradient& gradient,
+    QSGGeometry& geometry )
+{
+    qDebug() << "@@@ rendering ARC!";
+    const Metrics metrics( rect, shape, border );
+
+    int fillLineCount = 0;
+
+    if ( !metrics.innerQuad.isEmpty() && gradient.isVisible() )
+    {
+        if ( metrics.isTotallyCropped )
+        {
+            // degenerated to a rectangle
+
+            fillLineCount = gradient.stops().count();
+
+#if 1
+            // code copied from QskBoxRendererRect.cpp TODO ...
+
+            if ( gradient.orientation() == QskGradient::Diagonal )
+            {
+                if ( metrics.centerQuad.width == metrics.centerQuad.height )
+                {
+                    if ( !gradient.hasStopAt( 0.5 ) )
+                        fillLineCount++;
+                }
+                else
+                {
+                    // we might need extra lines for the corners
+                    fillLineCount += 2;
+                }
+            }
+#endif
+        }
+        else
+        {
+            fillLineCount = qskFillLineCount( metrics, gradient );
+        }
+    }
+
+    const int stepCount = metrics.corner[ 0 ].stepCount;
+
+    int borderLineCount = 0;
+    if ( borderColors.isVisible() && metrics.innerQuad != metrics.outerQuad )
+        borderLineCount = 4 * ( stepCount + 1 ) + 1;
+
+    int lineCount = borderLineCount + fillLineCount;
+
+    bool extraLine = false;
+    if ( borderLineCount > 0 && fillLineCount > 0 )
+    {
+        if ( !gradient.isMonochrome() &&
+            ( gradient.orientation() == QskGradient::Diagonal ) )
+        {
+            /*
+                The filling ends at 45° and we have no implementation
+                for creating the border from there. So we need to
+                insert an extra dummy line to connect fill and border
+             */
+            extraLine = true;
+            lineCount++;
+        }
+    }
+
+    auto line = allocateLines< ColoredLine >( geometry, lineCount );
+
+    bool fillRandom = true;
+    if ( fillLineCount > 0 )
+    {
+        if ( metrics.isTotallyCropped )
+        {
+            fillRandom = false;
+        }
+        else if ( !gradient.isMonochrome() )
+        {
+            if ( gradient.stops().count() > 2 ||
+                gradient.orientation() == QskGradient::Diagonal )
+            {
+                fillRandom = false;
+            }
+        }
+
+        if ( fillRandom )
+        {
+            if ( !metrics.isRadiusRegular )
+            {
+                /*
+                    When we have a combination of corners with the same
+                    or no radius we could use the faster random algo: TODO ...
+                 */
+                fillRandom = false;
+            }
+        }
+    }
+
+    if ( ( fillLineCount > 0 ) && ( borderLineCount > 0 ) )
+    {
+        if ( fillRandom )
+        {
+            qskRenderBoxRandom( metrics, borderColors,
+                gradient, line, line + fillLineCount );
+        }
+        else
+        {
+            if ( metrics.isTotallyCropped )
+            {
+                renderRectFill( metrics.innerQuad, gradient, line );
+            }
+            else if ( gradient.orientation() == QskGradient::Diagonal )
+            {
+                renderDiagonalFill( metrics, gradient, fillLineCount, line );
+            }
+            else
+            {
+                qskRenderFillOrdered( metrics, gradient, line );
+            }
+
+            auto borderLines = line + fillLineCount;
+            if ( extraLine )
+                borderLines++;
+
+            const auto orientation = qskQtOrientation( gradient );
+            qDebug() << "@@@ rendering border 1";
+            qskRenderArcLines( metrics, orientation, borderColors, borderLines );
+
+            if ( extraLine )
+            {
+                const auto l = line + fillLineCount;
+                l[ 0 ].p1 = l[ -1 ].p2;
+                l[ 0 ].p2 = l[ 1 ].p1;
+            }
+        }
+    }
+    else if ( fillLineCount > 0 )
+    {
+        if ( fillRandom )
+        {
+            qskRenderFillRandom( metrics, gradient, line );
+        }
+        else
+        {
+            if ( metrics.isTotallyCropped )
+            {
+                renderRectFill( metrics.innerQuad, gradient, line );
+            }
+            else if ( gradient.orientation() == QskGradient::Diagonal )
+            {
+                renderDiagonalFill( metrics, gradient, fillLineCount, line );
+            }
+            else
+            {
+                qskRenderFillOrdered( metrics, gradient, line );
+            }
+        }
+    }
+    else if ( borderLineCount > 0 )
+    {
+#if 1
+        /*
+            In case of having an empty innerQuad and monochrome
+            border colors, we could treat it like filling without border. TODO ...
+         */
+#endif
+        qDebug() << "@@@ rendering border 2";
         qskRenderBorder( metrics, Qt::Vertical, borderColors, line );
     }
 }
