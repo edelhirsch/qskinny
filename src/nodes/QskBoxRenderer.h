@@ -86,7 +86,8 @@ class QSK_EXPORT QskBoxRenderer
     class Metrics
     {
       public:
-        Metrics( const QRectF&, const QskBoxShapeMetrics&, const QskBoxBorderMetrics& );
+        Metrics( const QRectF&, const QskBoxShapeMetrics&, const QskBoxBorderMetrics&,
+            double angle = 90.0 );
 
         Quad outerQuad;
         Quad innerQuad;

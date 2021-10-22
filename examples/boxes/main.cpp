@@ -423,9 +423,13 @@ static void addArc( QskLinearBox* parent )
 {
     auto* arc = new Arc( parent );
     arc->setArcMetricsHint( Arc::Panel, { 30, 0, 100 } );
-    arc->setGradientHint( Arc::Panel, Qt::magenta );
+    arc->setGradientHint( Arc::Panel, { Qt::Horizontal, { { 0.0, Qt::magenta }, { 0.5, Qt::cyan }, { 1.0, Qt::green } } } );
     arc->setArcBorderColorsHint( Arc::Panel, { Qt::cyan, Qt::darkBlue } );
     arc->setArcBorderMetricsHint( Arc::Panel, 3 );
+
+    arc->setBoxBorderMetricsHint( Arc::Panel, 3 );
+    arc->setBoxBorderColorsHint( Arc::Panel, { Qt::darkBlue, Qt::darkCyan, Qt::darkMagenta, Qt::darkYellow } );
+    arc->setBoxShapeHint( Arc::Panel, 30 );
 }
 
 class TabView : public QskTabView
@@ -471,6 +475,7 @@ class TabView : public QskTabView
         auto* tab5 = new QskLinearBox( Qt::Horizontal, 5 );
         addArc( tab5 );
         addTab( tab5 );
+        setCurrentIndex( 4 );
     }
 
   private:

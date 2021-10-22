@@ -81,9 +81,9 @@ namespace
 
         inline void operator++() { increment(); }
 
-        static int segmentHint( double radius )
+        static int segmentHint( double radius, double angle )
         {
-            const double arcLength = radius * M_PI_2;
+            const double arcLength = 2 * radius * M_PI * ( angle / 360 );
             return qBound( 3, qCeil( arcLength / 3.0 ), 18 ); // every 3 pixels
         }
 
@@ -779,38 +779,38 @@ namespace
                             borderMapTL.colorAt( j ) );
                     }
 
-                    {
-                        constexpr auto corner = TopRight;
+//                    {
+//                        constexpr auto corner = TopRight;
 
-                        linesTR[ k ].setLine(
-                            c[ corner ].centerX + v.dx1( corner ),
-                            c[ corner ].centerY - v.dy1( corner ),
-                            c[ corner ].centerX + v.dx2( corner ),
-                            c[ corner ].centerY - v.dy2( corner ),
-                            borderMapTR.colorAt( k ) );
-                    }
+//                        linesTR[ k ].setLine(
+//                            c[ corner ].centerX + v.dx1( corner ),
+//                            c[ corner ].centerY - v.dy1( corner ),
+//                            c[ corner ].centerX + v.dx2( corner ),
+//                            c[ corner ].centerY - v.dy2( corner ),
+//                            borderMapTR.colorAt( k ) );
+//                    }
 
-                    {
-                        constexpr auto corner = BottomLeft;
+//                    {
+//                        constexpr auto corner = BottomLeft;
 
-                        linesBL[ k ].setLine(
-                            c[ corner ].centerX - v.dx1( corner ),
-                            c[ corner ].centerY + v.dy1( corner ),
-                            c[ corner ].centerX - v.dx2( corner ),
-                            c[ corner ].centerY + v.dy2( corner ),
-                            borderMapBL.colorAt( k ) );
-                    }
+//                        linesBL[ k ].setLine(
+//                            c[ corner ].centerX - v.dx1( corner ),
+//                            c[ corner ].centerY + v.dy1( corner ),
+//                            c[ corner ].centerX - v.dx2( corner ),
+//                            c[ corner ].centerY + v.dy2( corner ),
+//                            borderMapBL.colorAt( k ) );
+//                    }
 
-                    {
-                        constexpr auto corner = BottomRight;
+//                    {
+//                        constexpr auto corner = BottomRight;
 
-                        linesBR[ j ].setLine(
-                            c[ corner ].centerX + v.dx1( corner ),
-                            c[ corner ].centerY + v.dy1( corner ),
-                            c[ corner ].centerX + v.dx2( corner ),
-                            c[ corner ].centerY + v.dy2( corner ),
-                            borderMapBR.colorAt( j ) );
-                    }
+//                        linesBR[ j ].setLine(
+//                            c[ corner ].centerX + v.dx1( corner ),
+//                            c[ corner ].centerY + v.dy1( corner ),
+//                            c[ corner ].centerX + v.dx2( corner ),
+//                            c[ corner ].centerY + v.dy2( corner ),
+//                            borderMapBR.colorAt( j ) );
+//                    }
                 }
 
                 if ( fillLines )
@@ -1195,7 +1195,8 @@ static inline void qskRenderFillOrdered(
 }
 
 QskBoxRenderer::Metrics::Metrics( const QRectF& rect,
-        const QskBoxShapeMetrics& shape, const QskBoxBorderMetrics& border )
+        const QskBoxShapeMetrics& shape, const QskBoxBorderMetrics& border,
+        double angle )
     : outerQuad( rect )
 {
     isRadiusRegular = shape.isRectellipse();
@@ -1207,7 +1208,8 @@ QskBoxRenderer::Metrics::Metrics( const QRectF& rect,
         const QSizeF radius = shape.radius( static_cast< Qt::Corner >( i ) );
         c.radiusX = qBound( 0.0, radius.width(), 0.5 * outerQuad.width );
         c.radiusY = qBound( 0.0, radius.height(), 0.5 * outerQuad.height );
-        c.stepCount = ArcIterator::segmentHint( qMax( c.radiusX, c.radiusY ) );
+        c.stepCount = ArcIterator::segmentHint( qMax( c.radiusX, c.radiusY ), angle );
+        qDebug() << "step count:" << c.stepCount;
 
         switch ( i )
         {
@@ -1664,6 +1666,7 @@ void QskBoxRenderer::renderRectellipseArc( const QRectF& rect,
     {
         if ( fillRandom )
         {
+            qDebug() << "rendering box randomly";
             qskRenderBoxRandom( metrics, borderColors,
                 gradient, line, line + fillLineCount );
         }
@@ -1671,6 +1674,7 @@ void QskBoxRenderer::renderRectellipseArc( const QRectF& rect,
         {
             if ( metrics.isTotallyCropped )
             {
+                qDebug() << "rendering rect fill";
                 renderRectFill( metrics.innerQuad, gradient, line );
             }
             else if ( gradient.orientation() == QskGradient::Diagonal )
@@ -1679,7 +1683,8 @@ void QskBoxRenderer::renderRectellipseArc( const QRectF& rect,
             }
             else
             {
-                qskRenderFillOrdered( metrics, gradient, line );
+//                qDebug() << "rendering fill ordered";
+//                qskRenderFillOrdered( metrics, gradient, line );
             }
 
             auto borderLines = line + fillLineCount;
