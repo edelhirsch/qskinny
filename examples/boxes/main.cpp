@@ -12,6 +12,11 @@
 #include <QskTabView.h>
 #include <QskWindow.h>
 
+#include <QskArcBorderColors.h>
+#include <QskArcBorderMetrics.h>
+#include <QskArcMetrics.h>
+#include <QskSkinlet.h>
+
 #include <QskBoxBorderColors.h>
 #include <QskBoxBorderMetrics.h>
 #include <QskBoxShapeMetrics.h>
@@ -21,6 +26,61 @@
 #include <QskObjectCounter.h>
 
 #include <QGuiApplication>
+
+namespace {
+
+    class Arc : public QskControl
+    {
+    public:
+        QSK_SUBCONTROLS( Panel )
+
+        Arc( QQuickItem* parentItem );
+    };
+
+    QSK_SUBCONTROL( Arc, Panel )
+
+    class ArcSkinlet : public QskSkinlet
+    {
+      public:
+        enum NodeRole { PanelRole };
+
+        ArcSkinlet()
+            : QskSkinlet()
+        {
+            setNodeRoles( { PanelRole } );
+        }
+
+        QRectF subControlRect( const QskSkinnable*,
+            const QRectF& contentsRect, QskAspect::Subcontrol subControl ) const override
+        {
+            if ( subControl == Arc::Panel )
+            {
+                return contentsRect;
+            }
+
+            return QRectF();
+        }
+
+        QSGNode* updateSubNode( const QskSkinnable* skinnable, quint8 nodeRole, QSGNode* node ) const override
+        {
+            switch( nodeRole )
+            {
+                case PanelRole:
+                {
+                    return updateArcNode( skinnable, node, Arc::Panel );
+                }
+                default:
+                    return nullptr;
+            }
+        }
+    };
+
+    Arc::Arc( QQuickItem* parentItem )
+        : QskControl( parentItem )
+    {
+        setSkinlet( new ArcSkinlet );
+    }
+}
 
 class MyRectangle : public Box
 {
@@ -359,6 +419,15 @@ static void addRectanglesRest( QskLinearBox* parent )
     box->setGradient( QskGradient::Vertical, "Gainsboro", "Seashell", "LightGray" );
 }
 
+static void addArc( QskLinearBox* parent )
+{
+    auto* arc = new Arc( parent );
+    arc->setArcMetricsHint( Arc::Panel, { 30, 0, 100 } );
+    arc->setGradientHint( Arc::Panel, Qt::magenta );
+    arc->setArcBorderColorsHint( Arc::Panel, { Qt::cyan, Qt::darkBlue } );
+    arc->setArcBorderMetricsHint( Arc::Panel, 3 );
+}
+
 class TabView : public QskTabView
 {
   public:
@@ -399,6 +468,9 @@ class TabView : public QskTabView
         addTab( tab4 );
         //setCurrentIndex( count() - 1 ); // setCurrentTab( tab4 ) -> TODO
 #endif
+        auto* tab5 = new QskLinearBox( Qt::Horizontal, 5 );
+        addArc( tab5 );
+        addTab( tab5 );
     }
 
   private:
