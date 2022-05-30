@@ -62,6 +62,9 @@ class QSK_MATERIAL_EXPORT QskMaterialPalette
     const qreal focused = 0.4;
     const qreal pressed = 0.5;
 
+    // Material 3:
+    QRgb onSurface;
+
   private:
     const qreal m_disabled = 0.3;
 

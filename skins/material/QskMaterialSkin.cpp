@@ -52,6 +52,13 @@ static const int qskDuration = 150;
 
 namespace
 {
+    inline QFont qskFont( qreal pointSize )
+    {
+        QFont font( "Roboto" );
+        font.setPointSizeF( pointSize / qskDpiScaled( 1.0 ) );
+        return font;
+    }
+
     class Editor : private QskSkinHintTableEditor
     {
       public:
@@ -406,8 +413,7 @@ void Editor::setupPushButton()
     using namespace QskRgb;
     using Q = QskPushButton;
 
-    setStrutSize( Q::Panel, qskDpiScaled( 75.0 ), qskDpiScaled( 23.0 ) );
-    setSpacing( Q::Panel, qskDpiScaled( 4 ) );
+    setStrutSize( Q::Panel, qskDpiScaled( 75.0 ), qskDpiScaled( 34.0 ) );
 
     const QskMargins margin( 4, 3 );
     const QskMargins padding( 10, 6 );
@@ -415,18 +421,21 @@ void Editor::setupPushButton()
     setMargin( Q::Panel, margin );
     setPadding( Q::Panel, padding );
 
-    setBoxShape( Q::Panel, 5 );
+    setBoxShape( Q::Panel, 100, Qt::RelativeSize );
 
-    setColor( Q::Text, m_pal.primary );
-    setColor( Q::Text | Q::Disabled, toTransparentF( m_pal.primary, 0.6 ) );
+    setGradient( Q::Panel, m_pal.primary );
+    setGradient( Q::Panel | Q::Disabled, 0x1f1f1f1f );
+
+    setColor( Q::Text, m_pal.onPrimary );
+    setColor( Q::Text | Q::Flat, m_pal.primary );
+    setColor( Q::Text | Q::Disabled, QskRgb::toTransparentF( m_pal.onSurface, 0.5 ) );
+
     setFontRole( Q::Text, ButtonFontRole );
     setAlignment( Q::Text, Qt::AlignCenter );
 
     setBoxBorderMetrics( Q::Panel, 1 );
     setBoxBorderColors( Q::Panel, m_pal.primary );
-
-    setBoxBorderColors( Q::Panel | Q::Disabled, m_pal.toDisabled( m_pal.onBackground ) );
-    setColor( Q::Text | Q::Disabled, m_pal.toDisabled( m_pal.onBackground ) );
+    setBoxBorderColors( Q::Panel | Q::Disabled, 0x1f1f1f1f );
 
     setGradient( Q::Panel | Q::Hovered, toTransparentF( m_pal.primary, m_pal.hover ) );
     setGradient( Q::Panel | Q::Focused, toTransparentF( m_pal.primary, m_pal.focused ) );
@@ -434,7 +443,7 @@ void Editor::setupPushButton()
     setGradient( Q::Panel | Q::Flat, White & ColorMask );
 
     setAlignment( Q::Graphic | A::Alignment, Qt::AlignLeft );
-    setPadding( Q::Graphic, 5 );
+    setPadding( Q::Graphic, { 11, 9, 0, 7 } );
 
     setAnimation( Q::Panel | A::Color, qskDuration );
     setAnimation( Q::Panel | A::Metric, qskDuration );
@@ -839,8 +848,9 @@ QskMaterialSkin::QskMaterialSkin( const QskMaterialPalette& palette, QObject* pa
     // Default theme colors
     setupFonts( QStringLiteral( "Roboto" ) );
 
+    setFont( QskSkin::DefaultFont, qskFont( 10 ) );
+
     auto buttonFont = font( QskSkin::DefaultFont );
-    buttonFont.setCapitalization( QFont::AllUppercase );
     setFont( ButtonFontRole, buttonFont );
 
     Editor editor( &hintTable(), palette );

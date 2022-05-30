@@ -63,9 +63,9 @@ QskSkin* QskMaterialSkinFactory::createSkin( const QString& skinName )
 {
     if ( QString::compare( skinName, materialLightSkinName, Qt::CaseInsensitive ) == 0 )
     {
-        QskMaterialPalette pal( QskMaterialPalette::Light );;
+        QskMaterialPalette pal( QskMaterialPalette::Light );
 
-        pal.primary = 0xff6200ee;
+        pal.primary = 0xff6750A4;
         pal.primaryVariant = 0xff3700b3;
         pal.onPrimary = QskRgb::White;
         pal.secondary = 0xff03dac6;
@@ -75,6 +75,7 @@ QskSkin* QskMaterialSkinFactory::createSkin( const QString& skinName )
         pal.onBackground = QskRgb::Black;
         pal.error = 0xffb00020;
         pal.onError = QskRgb::White;
+        pal.onSurface = 0xff1C1B1F;
 
         pal.primaryNoSaturation = toUnsaturated( pal.primary );
         pal.secondaryNoSaturation = toUnsaturated( pal.secondary );

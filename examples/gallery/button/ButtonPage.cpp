@@ -29,7 +29,7 @@ namespace
       private:
         void populate()
         {
-            const char* texts[] = { "Press Me", "Check Me" };
+            const char* texts[] = { "Press me", "Check me" };
             const char* graphics[] = { "diamond/khaki", "ellipse/sandybrown" };
 
             for ( int i = 0; i < 6; i++ )
