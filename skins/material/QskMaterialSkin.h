@@ -38,7 +38,6 @@ class QSK_MATERIAL_EXPORT QskMaterialPalette
 
   public:
     QRgb primary;
-    QRgb primaryVariant;
     QRgb onPrimary;
 
     QRgb secondary;

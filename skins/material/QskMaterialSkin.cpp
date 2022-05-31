@@ -831,7 +831,7 @@ void Editor::setupSubWindow()
         Q::TitleBar | Q::Title | Q::Symbol );
 
     setGradient( Q::TitleBarPanel, m_pal.primary );
-    setGradient( Q::TitleBarPanel | Q::Focused, m_pal.primaryVariant );
+    setGradient( Q::TitleBarPanel | Q::Focused, QskRgb::toTransparentF( m_pal.primary, m_pal.focused ) );
 
     // TitleBarText
     setFontRole( Q::TitleBarText, QskSkin::SmallFont );

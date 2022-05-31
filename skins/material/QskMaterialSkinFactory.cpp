@@ -66,7 +66,6 @@ QskSkin* QskMaterialSkinFactory::createSkin( const QString& skinName )
         QskMaterialPalette pal( QskMaterialPalette::Light );
 
         pal.primary = 0xff6750A4;
-        pal.primaryVariant = 0xff3700b3;
         pal.onPrimary = QskRgb::White;
         pal.secondary = 0xff03dac6;
         pal.secondaryVariant = 0xff018786;
@@ -89,7 +88,6 @@ QskSkin* QskMaterialSkinFactory::createSkin( const QString& skinName )
         QskMaterialPalette pal( QskMaterialPalette::Dark );
 
         pal.primary = 0xffbb86fc;
-        pal.primaryVariant = 0xff3700b3;
         pal.onPrimary = QskRgb::Black;
         pal.secondary = 0xff03dac6;
         pal.secondaryVariant = 0xff018786;
