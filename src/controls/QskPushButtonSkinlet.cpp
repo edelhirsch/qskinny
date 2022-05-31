@@ -195,6 +195,21 @@ QSGNode* QskPushButtonSkinlet::updateTextNode(
         button->text(), button->textOptions(), QskPushButton::Text );
 }
 
+QSizeF QskPushButtonSkinlet::textSize( const QskPushButton* button ) const
+{
+    using Q = QskPushButton;
+    const auto font = button->effectiveFont( Q::Text );
+    const QFontMetrics fm( font );
+    const qreal w = fm.horizontalAdvance( button->text() );
+    const qreal h = fm.height();
+    return { w, h };
+}
+
+QSizeF QskPushButtonSkinlet::graphicSize(const QskPushButton* button ) const
+{
+
+}
+
 QSizeF QskPushButtonSkinlet::sizeHint( const QskSkinnable* skinnable,
     Qt::SizeHint which, const QSizeF& ) const
 {
