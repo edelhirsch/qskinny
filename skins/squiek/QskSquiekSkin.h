@@ -20,6 +20,8 @@ class QSK_SQUIEK_EXPORT QskSquiekSkin : public QskSkin
     QskSquiekSkin( QObject* parent = nullptr );
     ~QskSquiekSkin() override;
 
+    virtual QskGraphic symbol( int symbolType ) const override;
+
   private:
     void resetColors( const QColor& accent ) override;
 

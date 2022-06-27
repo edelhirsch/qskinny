@@ -8,7 +8,10 @@
 #include <QskSwitchButton.h>
 #include <QskPushButton.h>
 #include <QskCheckBox.h>
+#include <QskGraphic.h>
 #include <QskSeparator.h>
+#include <QskSkin.h>
+#include <QskStandardSymbol.h>
 #include <QskLinearBox.h>
 
 namespace
@@ -30,7 +33,7 @@ namespace
         void populate()
         {
             const char* texts[] = { "Press Me", "Check Me", "Outlined", "Text" };
-            const char* graphics[] = { "diamond/khaki", "ellipse/sandybrown" };
+            const QskStandardSymbol::Type graphics[] = { QskStandardSymbol::Ok, QskStandardSymbol::Cancel };
 
             for ( int i = 0; i < 8; i++ )
             {
@@ -42,8 +45,9 @@ namespace
 
                 if ( i > 1 && i < 6 )
                 {
-                    auto src = QStringLiteral( "image://shapes/" ) + graphics[ index ];
-                    button->setGraphicSource( src );
+                    auto type = graphics[ index ];
+                    auto graphic = effectiveSkin()->symbol( type );
+                    button->setGraphic( graphic );
                 }
                 if ( i < 2 || ( i > 3 && i < 6 ) )
                 {

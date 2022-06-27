@@ -21,3 +21,5 @@ OTHER_FILES += metadata.json
 target.path    = $${QSK_INSTALL_PLUGINS}/$${QSK_PLUGIN_SUBDIR}
 INSTALLS       = target
 
+RESOURCES += \
+    icons.qrc

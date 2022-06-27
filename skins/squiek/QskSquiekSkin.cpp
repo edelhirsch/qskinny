@@ -12,6 +12,8 @@
 #include <QskDialogButton.h>
 #include <QskDialogButtonBox.h>
 #include <QskFocusIndicator.h>
+#include <QskGraphic.h>
+#include <QskGraphicProvider.h>
 #include <QskInputPanelBox.h>
 #include <QskInputPredictionBar.h>
 #include <QskListView.h>
@@ -24,6 +26,7 @@
 #include <QskSeparator.h>
 #include <QskSegmentedBar.h>
 #include <QskSlider.h>
+#include <QskStandardSymbol.h>
 #include <QskSubWindow.h>
 #include <QskSwitchButton.h>
 #include <QskSwitchButtonSkinlet.h>
@@ -1038,6 +1041,21 @@ QskSquiekSkin::QskSquiekSkin( QObject* parent )
 
 QskSquiekSkin::~QskSquiekSkin()
 {
+}
+
+QskGraphic QskSquiekSkin::symbol( int symbolType ) const
+{
+    switch( symbolType )
+    {
+    case QskStandardSymbol::Ok:
+        return Qsk::loadGraphic( QStringLiteral( "image://shapes/diamond/khaki" ) );
+    case QskStandardSymbol::Cancel:
+        return Qsk::loadGraphic( QStringLiteral( "image://shapes/ellipse/sandybrown" ) );
+    case QskStandardSymbol::Critical:
+        return Qsk::loadGraphic( QStringLiteral( "image://shapes/triangleup" ) );
+    default:
+        return Inherited::symbol( symbolType );
+    }
 }
 
 void QskSquiekSkin::resetColors( const QColor& accent )

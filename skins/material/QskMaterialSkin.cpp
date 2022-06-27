@@ -12,6 +12,8 @@
 #include <QskDialogButton.h>
 #include <QskDialogButtonBox.h>
 #include <QskFocusIndicator.h>
+#include <QskGraphic.h>
+#include <QskGraphicIO.h>
 #include <QskInputPanelBox.h>
 #include <QskListView.h>
 #include <QskMenu.h>
@@ -23,6 +25,7 @@
 #include <QskSeparator.h>
 #include <QskShadowMetrics.h>
 #include <QskSlider.h>
+#include <QskStandardSymbol.h>
 #include <QskSubWindow.h>
 #include <QskSwitchButton.h>
 #include <QskSwitchButtonSkinlet.h>
@@ -935,6 +938,21 @@ QskMaterialSkin::QskMaterialSkin( const QskMaterialTheme& palette, QObject* pare
 
 QskMaterialSkin::~QskMaterialSkin()
 {
+}
+
+QskGraphic QskMaterialSkin::symbol( int symbolType ) const
+{
+    switch( symbolType )
+    {
+    case QskStandardSymbol::Ok:
+        return QskGraphicIO::read( QStringLiteral( ":/icons/check_24px" ) );
+    case QskStandardSymbol::Cancel:
+        return QskGraphicIO::read( QStringLiteral( ":/icons/cancel_24px" ) );
+    case QskStandardSymbol::Critical:
+        return QskGraphicIO::read( QStringLiteral( ":/icons/error_24px" ) );
+    default:
+        return Inherited::symbol( symbolType );
+    }
 }
 
 void QskMaterialSkin::setupFonts()

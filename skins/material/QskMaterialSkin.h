@@ -101,6 +101,8 @@ class QSK_MATERIAL_EXPORT QskMaterialSkin : public QskSkin
         M3LabelLarge,
     };
 
+    virtual QskGraphic symbol( int symbolType ) const override;
+
   private:
     void setupFonts();
 };
