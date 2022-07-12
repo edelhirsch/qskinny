@@ -15,6 +15,7 @@
 #include <SkinnyShapeProvider.h>
 #include <SkinnyNamespace.h>
 
+#include <QskApplicationView.h>
 #include <QskFocusIndicator.h>
 #include <QskObjectCounter.h>
 #include <QskTabView.h>
@@ -122,14 +123,12 @@ namespace
         void enabledToggled( bool );
     };
 
-    class ApplicationView : public QskLinearBox
+    class ApplicationView : public QskApplicationView
     {
       public:
         ApplicationView( QQuickItem* parent = nullptr )
-            : QskLinearBox( Qt::Vertical, parent )
+            : QskApplicationView( parent )
         {
-            setSpacing( 0 );
-
             auto header = new Header( this );
 
             auto tabView = new TabView( this );
@@ -143,6 +142,9 @@ namespace
 
             connect( header, &Header::enabledToggled,
                 tabView, &TabView::setTabsEnabled );
+
+            setHeader( header );
+            setFooter( tabView );
         }
     };
 }
@@ -162,7 +164,7 @@ int main( int argc, char* argv[] )
 
     SkinnyShortcut::enable( SkinnyShortcut::AllShortcuts );
 
-    auto mainView = new ApplicationView();
+    auto mainView = new ApplicationView;
 
     QSize size( 800, 600 );
     size = size.expandedTo( mainView->sizeHint().toSize() );
