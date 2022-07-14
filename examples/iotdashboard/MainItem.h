@@ -23,6 +23,7 @@ class MainItem : public QskControl
 
     private:
         QskLinearBox* m_mainLayout;
+        QskLinearBox* m_otherLayout;
         QQuickWindow m_offscreenWindow;
         Cube* m_cube;
         QskPanGestureRecognizer m_panRecognizer;

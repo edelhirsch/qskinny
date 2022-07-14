@@ -23,5 +23,5 @@ class UsageDiagramBox : public Box
   public:
     QSK_SUBCONTROLS( Panel, DaysBox, DayText )
 
-    UsageDiagramBox( QQuickItem* parent = nullptr );
+    UsageDiagramBox( const QString& title, QQuickItem* parent = nullptr );
 };

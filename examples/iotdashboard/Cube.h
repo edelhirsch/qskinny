@@ -32,6 +32,9 @@ public:
 
     void startAnimation();
 
+Q_SIGNALS:
+    void animationFinished();
+
 private:
     class PrivateData;
     std::unique_ptr< PrivateData > m_data;

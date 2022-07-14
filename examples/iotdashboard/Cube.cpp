@@ -30,6 +30,11 @@ namespace
             m_cube->setMetric( Cube::FrontControl | QskAspect::Position, value );
         }
 
+        virtual void done() override
+        {
+            Q_EMIT m_cube->animationFinished();
+        }
+
     private:
         Cube* m_cube;
     };

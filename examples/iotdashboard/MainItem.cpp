@@ -3,6 +3,7 @@
 #include "Cube.h"
 #include "DashboardPage.h"
 #include "MenuBar.h"
+#include "RoomsPage.h"
 
 #include <QskGesture.h>
 #include <QskEvent.h>
@@ -28,15 +29,16 @@ MainItem::MainItem( QQuickItem* parent )
 
     m_mainLayout->setSpacing( 0 );
 
-    auto b = new QskBox( m_offscreenWindow.contentItem() );
-    b->setSize( 1024, 600 );
-    b->setBackgroundColor( Qt::blue );
-    b->setPanel( true );
+    m_otherLayout = new QskLinearBox( Qt::Horizontal, m_offscreenWindow.contentItem() );
+    m_otherLayout->setSpacing( 0 );
+    new MenuBar( m_otherLayout );
+    new RoomsPage( m_otherLayout );
 
     connect( window(), &QWindow::widthChanged, this, [ this ]()
     {
         m_offscreenWindow.setGeometry( window()->geometry() );
         m_offscreenWindow.create();
+        m_otherLayout->setSize( m_offscreenWindow.size() );
     } );
 
 //    QTimer::singleShot( 1000, this, [this]() {
@@ -49,6 +51,11 @@ MainItem::MainItem( QQuickItem* parent )
 
     (void) new MenuBar( m_mainLayout );
     (void) new DashboardPage( m_mainLayout );
+
+    connect( m_cube, &Cube::animationFinished, this, [ this ]()
+    {
+        m_otherLayout->setParentItem( window()->contentItem() );
+    } );
 }
 
 void MainItem::gestureEvent( QskGestureEvent* event )

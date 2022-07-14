@@ -72,19 +72,16 @@ RoomsPage::RoomsPage( QQuickItem* parent )
     setDefaultAlignment( Qt::AlignTop );
     setSpacing( 24 );
 
-    auto topBar = new TopBar();
-
     auto gridBox = new MainContentGridBox();
+    gridBox->setPadding( 30 );
     gridBox->setPanel( true );
     gridBox->setSpacing( 15 );
 
-    gridBox->addItem( new UsageBox(), 0, 0, 2, 1 );
+    gridBox->addItem( new UsageDiagramBox( "Living Room" ), 0, 0 );
+    gridBox->addItem( new UsageDiagramBox( "Bedroom" ), 0, 1 );
+    gridBox->addItem( new UsageDiagramBox( "Bathroom" ), 1, 0 );
+    gridBox->addItem( new UsageDiagramBox( "Kitchen" ), 1, 1 );
 
-    gridBox->setColumnStretchFactor( 0, 37 ); // factors add up to 100
-    gridBox->setColumnStretchFactor( 1, 37 );
-    gridBox->setColumnStretchFactor( 2, 26 );
-
-    addItem( topBar );
     addItem( gridBox );
 }
 

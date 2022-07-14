@@ -145,8 +145,8 @@ UsageDiagramLegend::UsageDiagramLegend( QQuickItem* parent )
     addItem( new LegendItem( UsageDiagramLegend::Gas ) );
 }
 
-UsageDiagramBox::UsageDiagramBox( QQuickItem* parent )
-    : Box( QString(), parent )
+UsageDiagramBox::UsageDiagramBox( const QString &title, QQuickItem* parent )
+    : Box( title, parent )
 {
     setSubcontrolProxy( QskBox::Panel, Panel );
 
