@@ -15,7 +15,7 @@
 #include "DiagramSkinlet.h"
 #include "LightDisplay.h"
 #include "LightDisplaySkinlet.h"
-#include "MainContent.h"
+#include "DashboardPage.h"
 #include "MenuBar.h"
 #include "PieChartPainted.h"
 #include "RoundedIcon.h"
@@ -209,7 +209,7 @@ void Skin::initHints( const Palette& palette )
 
     // palette dependent skin hints:
     ed.setGradient( MenuBar::Panel, palette.menuBar );
-    ed.setGradient( MainContent::Panel, palette.mainContent );
+    ed.setGradient( DashboardPage::Panel, palette.mainContent );
     ed.setGradient( Box::Panel, palette.box );
     ed.setGradient( BoxWithButtons::Panel, palette.box );
     ed.setGradient( UsageDiagramBox::Panel, palette.box );

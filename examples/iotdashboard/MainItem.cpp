@@ -1,7 +1,7 @@
 #include "MainItem.h"
 
 #include "Cube.h"
-#include "MainContent.h"
+#include "DashboardPage.h"
 #include "MenuBar.h"
 
 #include <QskGesture.h>
@@ -48,7 +48,7 @@ MainItem::MainItem( QQuickItem* parent )
     m_cube->setVisible( false );
 
     (void) new MenuBar( m_mainLayout );
-    (void) new MainContent( m_mainLayout );
+    (void) new DashboardPage( m_mainLayout );
 }
 
 void MainItem::gestureEvent( QskGestureEvent* event )
