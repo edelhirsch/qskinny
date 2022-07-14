@@ -13,6 +13,7 @@
 #include "CubeSkinlet.h"
 #include "Diagram.h"
 #include "DiagramSkinlet.h"
+#include "GridBox.h"
 #include "LightDisplay.h"
 #include "LightDisplaySkinlet.h"
 #include "DashboardPage.h"
