@@ -9,7 +9,7 @@
 
 #include <array>
 
-QSK_SUBCONTROL( Cube, FrontControl )
+QSK_SUBCONTROL( Cube, Panel )
 
 namespace
 {
@@ -27,7 +27,7 @@ namespace
 
         virtual void advance( qreal value ) override
         {
-            m_cube->setMetric( Cube::FrontControl | QskAspect::Position, value );
+            m_cube->setMetric( Cube::Panel | QskAspect::Position, value );
         }
 
         virtual void done() override
@@ -45,6 +45,7 @@ class Cube::PrivateData
   public:
     std::array< QImage, NumPositions > images;
     CubeAnimator animator;
+    Position pos;
 };
 
 Cube::Cube( QQuickItem* parent )
@@ -52,7 +53,7 @@ Cube::Cube( QQuickItem* parent )
     , m_data( new PrivateData() )
 {
     m_data->animator.setCube( this );
-    m_data->animator.setDuration( 1500 );
+    m_data->animator.setDuration( 1250 );
     m_data->animator.setWindow( window() );
 }
 
@@ -69,6 +70,16 @@ void Cube::setImage( Position pos, const QImage &image )
 void Cube::startAnimation()
 {
     m_data->animator.start();
+}
+
+Cube::Position Cube::currentPosition() const
+{
+    return m_data->pos;
+}
+
+void Cube::setCurrentPosition( Position pos )
+{
+    m_data->pos = pos;
 }
 
 #include "moc_Cube.cpp"

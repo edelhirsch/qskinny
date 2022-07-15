@@ -12,7 +12,7 @@ class Cube : public QskControl
     Q_OBJECT
 
 public:
-    QSK_SUBCONTROLS( FrontControl )
+    QSK_SUBCONTROLS( Panel )
 
     Cube( QQuickItem* parent );
 
@@ -29,6 +29,9 @@ public:
 
     QImage image( Position pos ) const;
     void setImage( Position pos, const QImage& image );
+
+    Position currentPosition() const;
+    void setCurrentPosition( Position pos );
 
     void startAnimation();
 

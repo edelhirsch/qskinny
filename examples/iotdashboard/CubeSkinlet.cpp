@@ -97,7 +97,7 @@ QSGNode* CubeSkinlet::updateFrontNode( const Cube* cube, QSGNode* node ) const
 
     QTransform transformFront, transformOther;
     const auto cr = cube->contentsRect();
-    const qreal ratio = cube->metric( Cube::FrontControl | QskAspect::Position );
+    const qreal ratio = cube->metric( Cube::Panel | QskAspect::Position );
 
     const bool scalingInitially = ( ratio < 1 - m_scale );
     const bool scalingAtEnd = ( ratio > m_scale );
@@ -114,22 +114,40 @@ QSGNode* CubeSkinlet::updateFrontNode( const Cube* cube, QSGNode* node ) const
     transformOther.scale( scale, scale );
 
     const auto rotateRatio = ( ratio - ( 1 - m_scale ) ) / ( 1 - ( 1 - m_scale ) * 2 );
+    const auto pos = cube->currentPosition();
 
     if( rotating )
     {
-        const qreal frontAngle = rotateRatio * 90;
+        qreal frontAngle, otherAngle, tfx1, tfx2, tox2;
+        const qreal h = cr.height() / 2;
 
-        transformFront.translate( -cr.width() * rotateRatio, 0 );
-        transformFront.translate( cr.width(), cr.height() / 2 );
+        if( pos == Cube::Right )
+        {
+            frontAngle = rotateRatio * 90;
+            otherAngle = ( 1 - rotateRatio ) * -90;
+
+            tfx1 = cr.width() * ( 1 - rotateRatio );
+            tfx2 = -cr.width();
+            tox2 = 0;
+        }
+        else
+        {
+            frontAngle = rotateRatio * -90;
+            otherAngle = ( 1 - rotateRatio ) * 90;
+
+            tfx1 = cr.width() * rotateRatio;
+            tfx2 = 0;
+            tox2 = -cr.width();
+        }
+
+
+        transformFront.translate( tfx1, h );
         transformFront.rotate( frontAngle, Qt::YAxis );
-        transformFront.translate( -cr.width(), -cr.height() / 2 );
+        transformFront.translate( tfx2, -h );
 
-        const qreal otherAngle = ( 1 - rotateRatio ) * -90;
-
-        transformOther.translate( cr.width(), cr.height() / 2 );
-        transformOther.translate( -cr.width() * rotateRatio, 0 );
+        transformOther.translate( tfx1, h );
         transformOther.rotate( otherAngle, Qt::YAxis );
-        transformOther.translate( 0, -cr.height() / 2 );
+        transformOther.translate( tox2, -h );
     }
 
     transformNodeFront->setMatrix( transformFront );
@@ -139,13 +157,13 @@ QSGNode* CubeSkinlet::updateFrontNode( const Cube* cube, QSGNode* node ) const
     {
         const auto imageFront = cube->image( Cube::Front );
         const auto graphicFront = QskGraphic::fromImage( imageFront );
-        updateGraphicNode( cube, graphicNodeFront, graphicFront, Cube::FrontControl );
+        updateGraphicNode( cube, graphicNodeFront, graphicFront, Cube::Panel );
     }
     else
     {
-        const auto imageOther = cube->image( Cube::Right );
+        const auto imageOther = cube->image( pos );
         const auto graphicOther = QskGraphic::fromImage( imageOther );
-        updateGraphicNode( cube, graphicNodeOther, graphicOther, Cube::FrontControl );
+        updateGraphicNode( cube, graphicNodeOther, graphicOther, Cube::Panel );
     }
 
     return node;

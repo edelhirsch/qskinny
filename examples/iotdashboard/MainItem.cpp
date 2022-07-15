@@ -16,7 +16,7 @@
 
 MainItem::MainItem( QQuickItem* parent )
     : QskControl( parent )
-    , m_mainLayout( new QskLinearBox( Qt::Horizontal, this ) )
+    , m_dashboardLayout( new QskLinearBox( Qt::Horizontal, this ) )
     , m_cube( new Cube( this ) )
 {
     setAutoLayoutChildren( true );
@@ -27,50 +27,76 @@ MainItem::MainItem( QQuickItem* parent )
     m_panRecognizer.setMinDistance( 50 );
     m_panRecognizer.setWatchedItem( this );
 
-    m_mainLayout->setSpacing( 0 );
+    m_dashboardLayout->setSpacing( 0 );
 
-    m_otherLayout = new QskLinearBox( Qt::Horizontal, m_offscreenWindow.contentItem() );
-    m_otherLayout->setSpacing( 0 );
-    new MenuBar( m_otherLayout );
-    new RoomsPage( m_otherLayout );
+    m_roomsLayout = new QskLinearBox( Qt::Horizontal, m_offscreenWindow.contentItem() );
+    m_roomsLayout->setSpacing( 0 );
+    new MenuBar( m_roomsLayout );
+    new RoomsPage( m_roomsLayout );
+
+    m_frontLayout = m_dashboardLayout;
+    m_otherLayout = m_roomsLayout;
 
     connect( window(), &QWindow::widthChanged, this, [ this ]()
     {
         m_offscreenWindow.setGeometry( window()->geometry() );
         m_offscreenWindow.create();
-        m_otherLayout->setSize( m_offscreenWindow.size() );
+        m_roomsLayout->setSize( m_offscreenWindow.size() );
     } );
-
-//    QTimer::singleShot( 1000, this, [this]() {
-//        auto i = m_offscreenWindow.grabWindow();
-//        qDebug()  << i << m_offscreenWindow.size();
-//        i.save("/tmp/other.png");
-//    });
 
     m_cube->setVisible( false );
 
-    (void) new MenuBar( m_mainLayout );
-    (void) new DashboardPage( m_mainLayout );
+    (void) new MenuBar( m_dashboardLayout );
+    (void) new DashboardPage( m_dashboardLayout );
 
     connect( m_cube, &Cube::animationFinished, this, [ this ]()
     {
-        m_otherLayout->setParentItem( window()->contentItem() );
+        if( m_frontLayout == m_dashboardLayout )
+        {
+            m_dashboardLayout->setParentItem( m_offscreenWindow.contentItem() );
+            m_roomsLayout->setParentItem( window()->contentItem() );
+
+            m_frontLayout = m_roomsLayout;
+            m_otherLayout = m_dashboardLayout;
+        }
+        else
+        {
+            m_dashboardLayout->setParentItem( window()->contentItem() );
+            m_roomsLayout->setParentItem( m_offscreenWindow.contentItem() );
+
+            m_frontLayout = m_dashboardLayout;
+            m_otherLayout = m_roomsLayout;
+        }
+
+        m_cube->setVisible( false );
+        m_frontLayout->setVisible( true );
     } );
 }
 
 void MainItem::gestureEvent( QskGestureEvent* event )
 {
-    if( event->gesture()->state() == QskGesture::Finished )
+    if( event->gesture()->state() == QskGesture::Finished
+            && event->gesture()->type() == QskGesture::Pan )
     {
+        auto* panGesture = static_cast< const QskPanGesture* >( event->gesture().get() );
+        const Cube::Position pos = ( panGesture->origin().x() < panGesture->position().x() )
+                ? Cube::Left : Cube::Right;
+
+        m_cube->setCurrentPosition( pos );
+
+        m_otherLayout->setVisible( true );
+
         const auto frontImage = window()->grabWindow();
         m_cube->setImage( Cube::Front, frontImage );
 
         const auto otherImage = m_offscreenWindow.grabWindow();
-        m_cube->setImage( Cube::Right, otherImage );
+        m_cube->setImage( pos, otherImage );
 
-        m_mainLayout->setVisible( false );
+        m_frontLayout->setVisible( false );
+
         m_cube->setVisible( true );
         m_cube->startAnimation();
+
     }
 }
 

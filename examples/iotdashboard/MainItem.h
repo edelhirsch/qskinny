@@ -22,8 +22,10 @@ class MainItem : public QskControl
         void gestureEvent( QskGestureEvent* ) override final;
 
     private:
-        QskLinearBox* m_mainLayout;
-        QskLinearBox* m_otherLayout;
+        QskLinearBox* m_dashboardLayout;
+        QskLinearBox* m_roomsLayout;
+        QskLinearBox* m_frontLayout; // points to one of the above
+        QskLinearBox* m_otherLayout; // points to one of the above
         QQuickWindow m_offscreenWindow;
         Cube* m_cube;
         QskPanGestureRecognizer m_panRecognizer;
