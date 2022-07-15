@@ -7,6 +7,7 @@
 
 #include "Box.h"
 #include "BoxWithButtons.h"
+#include "Diagram.h"
 #include "GridBox.h"
 #include "LightDisplay.h"
 #include "MyDevices.h"
@@ -30,33 +31,44 @@ QSK_SUBCONTROL( RoomsPage, Panel )
 
 namespace
 {
-    class IndoorTemperature : public BoxWithButtons
+    class RoomsDiagram : public Diagram
     {
       public:
-        IndoorTemperature( QQuickItem* parent = nullptr )
-            : BoxWithButtons( "Indoor Temperature", "+24", true, parent )
+        RoomsDiagram( QQuickItem* parent = nullptr )
+            : Diagram( parent )
         {
-        }
-    };
+            const qreal water[] =
+            {
+                10, 20, 30, 40, 50, 60, 70
+            };
 
-    class Humidity : public BoxWithButtons
-    {
-      public:
-        Humidity( QQuickItem* parent = nullptr )
-            : BoxWithButtons( "Humidity", "30%", false, parent )
-        {
-        }
-    };
+            const qreal electricity[] =
+            {
+                10, 20, 30, 40, 50, 60, 70
+            };
 
-    class LightIntensity : public Box
-    {
-      public:
-        LightIntensity( QQuickItem* parent = nullptr )
-            : Box( "Light intensity", parent )
+            const qreal gas[] =
+            {
+                10, 20, 30, 40, 50, 60, 70
+            };
+
+            addCurve( water, sizeof( water ) / sizeof( qreal ) );
+            addCurve( electricity, sizeof( electricity ) / sizeof( qreal ) );
+            addCurve( gas, sizeof( gas ) / sizeof( qreal ) );
+
+            setYMax( 100 );
+        }
+
+      private:
+        void addCurve( const qreal values[], const size_t count )
         {
-            addSpacer( 5 );
-            auto* lightDisplay = new LightDisplay( this );
-            lightDisplay->setValue( 50.0 );
+            QVector< QPointF > points;
+            points.reserve( count );
+
+            for( size_t i = 0; i < count; i++ )
+                points += QPointF( i, values[i] );
+
+            addDataPoints( points, Diagram::Bar );
         }
     };
 }
@@ -77,10 +89,10 @@ RoomsPage::RoomsPage( QQuickItem* parent )
     gridBox->setPanel( true );
     gridBox->setSpacing( 15 );
 
-    gridBox->addItem( new UsageDiagramBox( "Living Room" ), 0, 0 );
-    gridBox->addItem( new UsageDiagramBox( "Bedroom" ), 0, 1 );
-    gridBox->addItem( new UsageDiagramBox( "Bathroom" ), 1, 0 );
-    gridBox->addItem( new UsageDiagramBox( "Kitchen" ), 1, 1 );
+    gridBox->addItem( new UsageDiagramBox( "Living Room", new RoomsDiagram() ), 0, 0 );
+    gridBox->addItem( new UsageDiagramBox( "Bedroom", new RoomsDiagram() ), 0, 1 );
+    gridBox->addItem( new UsageDiagramBox( "Bathroom", new RoomsDiagram() ), 1, 0 );
+    gridBox->addItem( new UsageDiagramBox( "Kitchen", new RoomsDiagram() ), 1, 1 );
 
     addItem( gridBox );
 }
