@@ -12,10 +12,21 @@
 #include <QQuickFramebufferObject>
 #include <QGuiApplication>
 #include <QQuickWindow>
+#include <QTimer>
 
 Cube::Cube( QQuickItem* parent )
     : QskStackBox( false, parent )
 {
+    static QTimer t;
+    connect( &t, &QTimer::timeout, this, [this]() {
+        static int count = 0;
+        qDebug() << "starting animation" << ( count + 1 );
+        startAnimation( static_cast< Qsk::Direction >( count ) );
+        count++;
+        if( count > 4 )
+            QCoreApplication::exit();
+    });
+    t.start( 2000 );
 }
 
 void Cube::startAnimation( Qsk::Direction direction )
