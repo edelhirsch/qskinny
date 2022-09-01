@@ -151,10 +151,10 @@ namespace
         const QskMaterial3Theme& m_pal;
     };
 
-    QFont createFont( int pixelSize, qreal tracking, QFont::Weight weight )
+    QFont createFont( int pointSize, qreal tracking, QFont::Weight weight )
     {
         QFont font( "Roboto" );
-        font.setPixelSize( pixelSize );
+        font.setPointSize( pointSize );
 
         if( !qskFuzzyCompare( tracking, 0.0 ) )
         {
@@ -206,6 +206,9 @@ void Editor::setup()
     setupTabView();
     setupTextLabel();
     setupTextInput();
+
+    for( auto* s : qGuiApp->screens() )
+        qDebug() << "@@@" << s << s->devicePixelRatio();
 }
 
 void Editor::setupControl()
@@ -510,7 +513,7 @@ void Editor::setupPushButton()
     using Q = QskPushButton;
 
     setFlagHint( Q::Panel | QskAspect::Direction, Qsk::LeftToRight );
-    setStrutSize( Q::Panel, -1, 31_dp );
+    setStrutSize( Q::Panel, -1, 40_dp );
     setSpacing( Q::Panel, 4_dp );
     setPadding( Q::Panel, { 24_dp, 0, 20_dp, 0 } );
 
