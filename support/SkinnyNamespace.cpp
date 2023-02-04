@@ -49,7 +49,7 @@ static bool pluginPath = initPluginPath();
 
 #if defined( ENSURE_SKINS )
 
-    #include <squiek/QskSquiekSkinFactory.h>
+//    #include <squiek/QskSquiekSkinFactory.h>
     #include <material3/QskMaterial3SkinFactory.h>
 
     static void initSkins()
@@ -61,7 +61,7 @@ static bool pluginPath = initPluginPath();
                 we manually add them here.
              */
 
-            qskSkinManager->registerFactory( "SquiekFactory", new QskSquiekSkinFactory() );
+//            qskSkinManager->registerFactory( "SquiekFactory", new QskSquiekSkinFactory() );
             qskSkinManager->registerFactory( "Material3Factory", new QskMaterial3SkinFactory() );
 
             qWarning() << "Couldn't find skin plugins, adding some manually.";
