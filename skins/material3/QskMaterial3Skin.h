@@ -148,11 +148,11 @@ class QSK_MATERIAL3_EXPORT QskMaterial3Skin : public QskSkin
         M3LabelLarge,
     };
 
-    static constexpr QskAspect::Emphasis Filled = QskAspect::NoEmphasis;
-    static constexpr QskAspect::Emphasis Tonal = QskAspect::VeryHighEmphasis;
-    static constexpr QskAspect::Emphasis Elevated = QskAspect::HighEmphasis;
-    static constexpr QskAspect::Emphasis Outlined = QskAspect::LowEmphasis;
-    static constexpr QskAspect::Emphasis Text = QskAspect::VeryLowEmphasis;
+    static constexpr QskAspect::Variation Filled = QskAspect::NoVariation;
+    static constexpr QskAspect::Variation Tonal = QskAspect::Huge;
+    static constexpr QskAspect::Variation Elevated = QskAspect::Large;
+    static constexpr QskAspect::Variation Outlined = QskAspect::Small;
+    static constexpr QskAspect::Variation Text = QskAspect::Tiny;
 
   private:
     void setupFonts();

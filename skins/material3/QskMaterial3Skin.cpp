@@ -837,7 +837,7 @@ void Editor::setupSpinBox()
 
         const auto hoverColor = flattenedColor( m_pal.onPrimary, m_pal.primary, 0.08 );
         setGradient( state | Q::Hovered, hoverColor );
-        setShadowMetrics( state | Q::Hovered, m_pal.elevationLight1 );
+        setShadowMetrics( state | Q::Hovered, m_pal.elevation1 );
         setShadowColor( state | Q::Hovered, m_pal.shadow );
     }
 
