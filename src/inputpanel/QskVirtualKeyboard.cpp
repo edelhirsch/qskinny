@@ -386,6 +386,9 @@ void QskVirtualKeyboard::ensureButtons()
                 connect( button, &QskPushButton::pressed,
                     this, &QskVirtualKeyboard::buttonPressed );
 
+                connect( button, &QskPushButton::clicked,
+                    this, &QskVirtualKeyboard::buttonClicked );
+
                 m_data->keyButtons += button;
             }
         }
@@ -401,8 +404,40 @@ void QskVirtualKeyboard::ensureButtons()
 void QskVirtualKeyboard::buttonPressed()
 {
     const auto button = static_cast< const Button* >( sender() );
+
     if ( button == nullptr )
+    {
         return;
+    }
+
+    const int key = button->key();
+
+    // Mode-switching keys
+    switch ( key )
+    {
+        case Qt::Key_CapsLock:
+        case Qt::Key_Kana_Lock:
+        case Qt::Key_Shift:
+        case Qt::Key_Kana_Shift:
+        case Qt::Key_Mode_switch:
+        {
+            return;
+        }
+        default:
+        {
+            Q_EMIT keySelected( key );
+        }
+    }
+}
+
+void QskVirtualKeyboard::buttonClicked()
+{
+    const auto button = static_cast< const Button* >( sender() );
+
+    if ( button == nullptr )
+    {
+        return;
+    }
 
     const int key = button->key();
 
@@ -433,7 +468,7 @@ void QskVirtualKeyboard::buttonPressed()
         }
         default:
         {
-            Q_EMIT keySelected( key );
+            break;
         }
     }
 }
