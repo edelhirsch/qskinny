@@ -41,11 +41,14 @@ namespace
     static bool qskIsAutorepeat( int key )
     {
         return (
+            ( key != Qt::Key_Yes ) &&
+            ( key != Qt::Key_Cancel ) &&
             ( key != Qt::Key_Return ) &&
             ( key != Qt::Key_Enter ) &&
             ( key != Qt::Key_Shift ) &&
             ( key != Qt::Key_CapsLock ) &&
-            ( key != Qt::Key_Mode_switch ) );
+            ( key != Qt::Key_Mode_switch ) &&
+            ( key != Qt::Key_Multi_key ) );
     }
 }
 
