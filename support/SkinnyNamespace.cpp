@@ -49,7 +49,6 @@ static bool pluginPath = initPluginPath();
 
 #if defined( ENSURE_SKINS )
 
-    #include <material3/QskMaterial3SkinFactory.h>
     #include <windows/QskWindowsSkinFactory.h>
 
     static void initSkins()
@@ -61,7 +60,6 @@ static bool pluginPath = initPluginPath();
                 we manually add them here.
              */
 
-            qskSkinManager->registerFactory( "Material3Factory", new QskMaterial3SkinFactory() );
             qskSkinManager->registerFactory( "WindowsFactory", new QskWindowsSkinFactory() );
 
             qWarning() << "Couldn't find skin plugins, adding some manually.";
