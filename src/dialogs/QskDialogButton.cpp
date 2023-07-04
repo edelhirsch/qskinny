@@ -4,15 +4,13 @@
  *****************************************************************************/
 
 #include "QskDialogButton.h"
-#include "QskDialogButtonBox.h"
 #include "QskSkin.h"
 
 QskDialogButton::QskDialogButton(
         QskDialog::Action action, QQuickItem* parent )
     : QskPushButton( parent )
-    , m_action( action )
 {
-    resetButton();
+    setAction( action );
 }
 
 QskDialogButton::QskDialogButton( QQuickItem* parent )
