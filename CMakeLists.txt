@@ -116,3 +116,26 @@ endif()
 if(BUILD_PLAYGROUND)
     add_subdirectory(playground)
 endif()
+
+if( QT_VERSION_MAJOR VERSION_GREATER_EQUAL 6 )
+    set( DEBIAN_PACKAGE "libqt6quick6" )
+else()
+    set( DEBIAN_PACKAGE "libqt5quick5" )
+endif()
+
+set( CPACK_DEBIAN_PACKAGE_DEPENDS "${DEBIAN_PACKAGE} (>= ${QT_VERSION})" )
+set( CPACK_PACKAGE_CONTACT "Uwe Rathmann" )
+
+set( CPACK_BUNDLE_NAME QSkinny )
+set( CPACK_BUNDLE_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/package_data/Info.plist" )
+set( CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/package_data/icon.png" )
+
+set( PACKAGE_FILE "libqskinny-qt${QT_VERSION_MAJOR}${QT_VERSION_MINOR}" )
+
+if (CMAKE_BUILD_TYPE MATCHES Debug )
+    set( PACKAGE_FILE "${PACKAGE_FILE}-dbg" )
+endif()
+
+set( CPACK_PACKAGE_NAME ${PACKAGE_FILE} )
+set( CPACK_PACKAGE_FILE_NAME ${PACKAGE_FILE} )
+include(CPack)
