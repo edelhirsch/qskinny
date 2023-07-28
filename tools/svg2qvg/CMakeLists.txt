@@ -40,5 +40,3 @@ endif()
 target_link_libraries(${target} PRIVATE Qt::Svg)
 
 set_target_properties(${target} PROPERTIES FOLDER tools)
-
-install(TARGETS ${target})

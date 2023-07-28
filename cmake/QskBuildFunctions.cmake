@@ -14,6 +14,8 @@ function(qsk_add_executable target)
     set_target_properties(${target} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
+    install(TARGETS ${target})
+
 endfunction()
 
 function(qsk_add_library target)
