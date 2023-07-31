@@ -12,10 +12,17 @@ function(qsk_add_executable target)
     endif()
 
     set_target_properties(${target} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        MACOSX_BUNDLE_GUI_IDENTIFIER io.github.qskinny
+        BUNDLE true)
 
     install( TARGETS ${target}
-        BUNDLE DESTINATION bin )
+            BUNDLE DESTINATION . COMPONENT Runtime
+            RUNTIME DESTINATION bin COMPONENT Runtime
+    )
+
+    get_property( APPS GLOBAL PROPERTY APPS )
+    set_property( GLOBAL PROPERTY APPS "${APPS} \${CMAKE_INSTALL_PREFIX}/${target}.app" )
 
 endfunction()
 

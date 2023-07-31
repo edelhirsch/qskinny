@@ -136,6 +136,32 @@ if (CMAKE_BUILD_TYPE MATCHES Debug )
     set( PACKAGE_FILE "${PACKAGE_FILE}-dbg" )
 endif()
 
+
+
+### if(apple) or so
+# Note Mac specific extension .app
+#set(APPS "\${CMAKE_INSTALL_PREFIX}/${APP_NAME}.app")
+
+# Directories to look for dependencies
+set( DIRS ${CMAKE_BINARY_DIR} )
+set( LIBS
+    "\${CMAKE_INSTALL_PREFIX}/lib/libqskinny.0.8.0.dylib"
+    "\${CMAKE_INSTALL_PREFIX}/lib/libqsqmlexport.0.8.0.dylib"
+    "\${CMAKE_INSTALL_PREFIX}/lib/libqsktestsupport.0.8.0.dylib"
+)
+
+get_property( APPS GLOBAL PROPERTY APPS )
+message("apps in top dir: ${APPS} ${DIRS}")
+
+set(CPACK_GENERATOR "DragNDrop")
+
+install(CODE "include(BundleUtilities)
+    fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/iotdashboard.app\" \"${LIBS}\" \"${DIRS}\")")
+
+### end if(apple)
+
+
+
 set( CPACK_PACKAGE_NAME ${PACKAGE_FILE} )
 set( CPACK_PACKAGE_FILE_NAME ${PACKAGE_FILE} )
 include(CPack)
