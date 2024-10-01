@@ -105,7 +105,9 @@ class QSK_MATERIAL3_EXPORT QskMaterial3Skin : public QskSkin
   public:
     enum GraphicRole
     {
+        GraphicRoleError,
         GraphicRoleOnError,
+        GraphicRoleOnErrorContainer,
         GraphicRoleOnPrimary,
         GraphicRoleOnSecondaryContainer,
         GraphicRoleOnSurface,
