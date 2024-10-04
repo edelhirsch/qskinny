@@ -517,6 +517,7 @@ void QskTextInput::updateLayout()
 void QskTextInput::updateNode( QSGNode* node )
 {
     m_data->textInput->updateColors();
+    m_data->textInput->updateMetrics();
     Inherited::updateNode( node );
 }
 
