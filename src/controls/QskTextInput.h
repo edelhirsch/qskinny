@@ -54,6 +54,9 @@ class QSK_EXPORT QskTextInput : public QskControl
     Q_PROPERTY( bool panel READ hasPanel
         WRITE setPanel NOTIFY panelChanged )
 
+    Q_PROPERTY( Emphasis emphasis READ emphasis
+        WRITE setEmphasis NOTIFY emphasisChanged )
+
     using Inherited = QskControl;
 
   public:
@@ -62,6 +65,13 @@ class QSK_EXPORT QskTextInput : public QskControl
         CharacterCount )
 
     QSK_STATES( ReadOnly, Editing, Selected, Error, TextEmpty )
+
+    enum Emphasis
+    {
+        LowEmphasis      = -1,
+        NoEmphasis       = 0,
+    };
+    Q_ENUM( Emphasis )
 
     enum ActivationMode
     {
@@ -94,6 +104,9 @@ class QSK_EXPORT QskTextInput : public QskControl
     ~QskTextInput() override;
 
     void setupFrom( const QQuickItem* );
+
+    void setEmphasis( Emphasis );
+    Emphasis emphasis() const;
 
     QString inputText() const;
 
@@ -172,6 +185,8 @@ class QSK_EXPORT QskTextInput : public QskControl
 
     void ensureVisible( int position );
 
+    QskAspect::Variation effectiveVariation() const override;
+
   public Q_SLOTS:
     void setInputText( const QString& );
     void setLabelText( const QString& );
@@ -179,6 +194,8 @@ class QSK_EXPORT QskTextInput : public QskControl
     void setEditing( bool );
 
   Q_SIGNALS:
+    void emphasisChanged( Emphasis );
+
     void editingChanged( bool );
 
     void activationModesChanged();
