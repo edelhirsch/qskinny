@@ -131,6 +131,7 @@ class QSK_MATERIAL3_EXPORT QskMaterial3Skin : public QskSkin
     void initHints() override;
 
   private:
+    void setupSkinlets();
     void setupFonts();
     void setupGraphicFilters( const QskMaterial3Theme& );
     void setGraphicColor( GraphicRole, QRgb );
