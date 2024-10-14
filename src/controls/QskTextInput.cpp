@@ -27,7 +27,7 @@ QSK_SYSTEM_STATE( QskTextInput, ReadOnly, QskAspect::FirstSystemState << 1 )
 QSK_SYSTEM_STATE( QskTextInput, Editing, QskAspect::FirstSystemState << 2 )
 QSK_SYSTEM_STATE( QskTextInput, Selected, QskAspect::FirstSystemState << 3 )
 QSK_SYSTEM_STATE( QskTextInput, Error, QskAspect::FirstSystemState << 4 )
-QSK_SYSTEM_STATE( QskTextInput, TextEmpty, QskAspect::LastUserState << 1 )
+QSK_SYSTEM_STATE( QskTextInput, TextPopulated, QskAspect::LastUserState << 1 )
 
 static inline void qskPropagateReadOnly( QskTextInput* input )
 {
@@ -334,11 +334,9 @@ QskTextInput::QskTextInput( QQuickItem* parent )
 
     initSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Fixed );
 
-    setSkinStateFlag( TextEmpty );
-
     connect( m_data->textInput, &QQuickTextInput::textChanged, this, [this]()
     {
-        setSkinStateFlag( TextEmpty, m_data->textInput->text().isEmpty() );
+        setSkinStateFlag( TextPopulated, !m_data->textInput->text().isEmpty() );
         update(); // character count might have changed
     } );
 }
@@ -568,7 +566,7 @@ QSizeF QskTextInput::layoutSizeHint( Qt::SizeHint which, const QSizeF& ) const
 
     if( emphasis() == LowEmphasis )
     {
-        const auto fontHeight = effectiveFontHeight( LabelText | TextEmpty );
+        const auto fontHeight = effectiveFontHeight( LabelText | Focused );
         hint.rheight() += fontHeight / 2;
     }
 
