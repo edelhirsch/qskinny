@@ -442,7 +442,7 @@ void QskTextInput::keyReleaseEvent( QKeyEvent* event )
 
 void QskTextInput::mousePressEvent( QMouseEvent* event )
 {
-    if( !isReadOnly() && subControlContentsRect( TrailingIcon ).contains( event->position() ) )
+    if( !isReadOnly() && subControlContentsRect( TrailingIcon ).contains( event->pos() ) )
     {
         setInputText( {} );
     }
