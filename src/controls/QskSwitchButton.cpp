@@ -5,8 +5,9 @@
 
 #include "QskSwitchButton.h"
 
-QSK_SUBCONTROL( QskSwitchButton, Handle )
 QSK_SUBCONTROL( QskSwitchButton, Groove )
+QSK_SUBCONTROL( QskSwitchButton, Handle )
+QSK_SUBCONTROL( QskSwitchButton, Icon )
 QSK_SUBCONTROL( QskSwitchButton, Halo )
 
 struct QskSwitchButton::PrivateData

@@ -107,12 +107,14 @@ class QSK_MATERIAL3_EXPORT QskMaterial3Skin : public QskSkin
     {
         GraphicRoleOnError,
         GraphicRoleOnPrimary,
+        GraphicRoleOnPrimaryContainer,
         GraphicRoleOnSecondaryContainer,
         GraphicRoleOnSurface,
         GraphicRoleOnSurface38,
         GraphicRoleOnSurfaceVariant,
         GraphicRolePrimary,
         GraphicRoleSurface,
+        GraphicRoleSurfaceContainerHighest,
     };
 
     QskMaterial3Skin( QObject* parent = nullptr );

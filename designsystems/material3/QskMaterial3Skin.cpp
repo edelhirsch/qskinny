@@ -40,7 +40,6 @@
 #include <QskStandardSymbol.h>
 #include <QskSubWindow.h>
 #include <QskSwitchButton.h>
-#include <QskSwitchButtonSkinlet.h>
 #include <QskTabBar.h>
 #include <QskTabButton.h>
 #include <QskTabView.h>
@@ -1033,12 +1032,23 @@ void Editor::setupSwitchButton()
     setStrutSize( Q::Handle, 16_dp, 16_dp );
     setStrutSize( Q::Handle | Q::Checked, 24_dp, 24_dp,
         { QskStateCombination::CombinationNoState, Q::Disabled } );
+    setStrutSize( Q::Handle | Q::Pressed, 28_dp, 28_dp,
+        { QskStateCombination::CombinationNoState, QskAspect::AllStates } );
 
     setGradient( Q::Handle, m_pal.outline );
     setGradient( Q::Handle | Q::Checked, m_pal.primaryContainer );
 
     setGradient( Q::Handle | Q::Disabled, m_pal.onSurface38 );
     setGradient( Q::Handle | Q::Disabled | Q::Checked, m_pal.surface );
+
+    const QskStateCombination allStates ( QskStateCombination::CombinationNoState, QskAspect::AllStates );
+    setStrutSize( Q::Icon, { 16_dp, 16_dp } );
+    setPadding( Q::Icon, 4_dp ); // make the handle 24_dp
+    setPadding( Q::Icon | Q::Checked, 6_dp, allStates ); // make the handle 28_dp
+    setSymbol( Q::Icon, symbol( "switchbox-unchecked" ) );
+    setSymbol( Q::Icon | Q::Checked, symbol( "switchbox-checked" ), allStates );
+    setGraphicRole( Q::Icon, QskMaterial3Skin::GraphicRoleSurfaceContainerHighest );
+    setGraphicRole( Q::Icon | Q::Checked, QskMaterial3Skin::GraphicRoleOnPrimary, allStates );
 
     // just to keep the strut size the same at all times:
     setStrutSize( Q::Halo, 40_dp, 40_dp );
@@ -1573,6 +1583,7 @@ void QskMaterial3Skin::setGraphicColor( GraphicRole role, QRgb rgb )
 void QskMaterial3Skin::setupGraphicFilters( const QskMaterial3Theme& theme )
 {
     setGraphicColor( GraphicRoleOnPrimary, theme.onPrimary );
+    setGraphicColor( GraphicRoleOnPrimaryContainer, theme.onPrimaryContainer );
     setGraphicColor( GraphicRoleOnSecondaryContainer, theme.onSecondaryContainer );
     setGraphicColor( GraphicRoleOnError, theme.onError );
     setGraphicColor( GraphicRoleOnSurface, theme.onSurface );
@@ -1580,6 +1591,7 @@ void QskMaterial3Skin::setupGraphicFilters( const QskMaterial3Theme& theme )
     setGraphicColor( GraphicRoleOnSurfaceVariant, theme.onSurfaceVariant );
     setGraphicColor( GraphicRolePrimary, theme.primary );
     setGraphicColor( GraphicRoleSurface, theme.surface );
+    setGraphicColor( GraphicRoleSurfaceContainerHighest, theme.surfaceContainerHighest );
 }
 
 void QskMaterial3Skin::initHints()
