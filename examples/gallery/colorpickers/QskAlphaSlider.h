@@ -1,7 +1,6 @@
 #ifndef ALPHASLIDER_H_
 #define ALPHASLIDER_H_
 
-#include "QskQuickItem.h"
 #include <QskSlider.h>
 
 class QskAlphaSlider : public QskSlider

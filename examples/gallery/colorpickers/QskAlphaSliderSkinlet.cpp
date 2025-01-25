@@ -1,9 +1,7 @@
 #include "QskAlphaSliderSkinlet.h"
 #include "QskAlphaSlider.h"
 
-#include "QskSlider.h"
 #include <QskBoxBorderMetrics.h>
-#include <QskBoxFillNode.h>
 #include <QskBoxRenderer.h>
 #include <QskBoxShapeMetrics.h>
 #include <QskGradient.h>
@@ -13,6 +11,13 @@
 #include <QSGMaterial>
 #include <QSGMaterialShader>
 #include <QSGVertexColorMaterial>
+
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+    #include <QSGMaterialRhiShader>
+    using RhiShader = QSGMaterialRhiShader;
+#else
+    using RhiShader = QSGMaterialShader;
+#endif
 
 namespace
 {
@@ -25,14 +30,18 @@ namespace
             return &type;
         }
 
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
         QSGMaterialShader* createShader() const override;
+#else
+        QSGMaterialShader* createShader( QSGRendererInterface::RenderMode renderMode ) const override;
+#endif
 
         QColor m_colorA;
         QColor m_colorB;
         float m_gridSize;
     };
 
-    class Shader : public QSGMaterialShader
+    class Shader : public RhiShader
     {
       public:
         const char* vertexShader() const
@@ -75,7 +84,9 @@ namespace
 
         void initialize()
         {
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
             QSGMaterialShader::initialize();
+#endif
             m_id.matrix = program()->uniformLocation( "matrix" );
             m_id.opacity = program()->uniformLocation( "opacity" );
             m_id.color_a = program()->uniformLocation( "colorA" );
@@ -115,10 +126,15 @@ namespace
         } m_id;
     };
 
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
     QSGMaterialShader* Material::createShader() const
+#else
+    QSGMaterialShader* Material::createShader( QSGRendererInterface::RenderMode ) const
+#endif
     {
         return new Shader;
     }
+
 
     class GridNode : public QSGGeometryNode
     {
@@ -132,11 +148,12 @@ namespace
             setFlag( QSGGeometryNode::OwnsMaterial, false );
         }
 
-        void update( const QRectF& rect, const QskBoxShapeMetrics& shape,
+        void update( QQuickWindow* window, const QRectF& rect, const QskBoxShapeMetrics& shape,
             const QskBoxBorderMetrics& border, const QColor& color1, const QColor& color2,
             const float gridSize )
         {
-            QskBoxRenderer::renderFillGeometry( rect, shape, border, m_geometry );
+            QskBoxRenderer renderer( window );
+            renderer.setFillLines( rect, shape, border, m_geometry );
             m_material.m_colorA = color1;
             m_material.m_colorB = color2;
             m_material.m_gridSize = gridSize;
@@ -159,7 +176,7 @@ using Q = QskAlphaSlider;
 QskAlphaSliderSkinlet::QskAlphaSliderSkinlet( QskSkin* skin )
     : Inherited( skin )
 {
-    setNodeRoles( { PanelRole, GridRole, GrooveRole, FillRole, HandleRole, RippleRole } );
+    setNodeRoles( { PanelRole, GridRole, GrooveRole, FillRole, HandleRole } );
 }
 
 QSGNode* QskAlphaSliderSkinlet::updateSubNode(
@@ -175,7 +192,7 @@ QSGNode* QskAlphaSliderSkinlet::updateSubNode(
         const auto gridSize = q->metric( Q::Grid | QskAspect::Size );
 
         auto* const grid = QskSGNode::ensureNode< GridNode >( node );
-        grid->update( rect, shape, border, gradient.startColor(), gradient.endColor(), gridSize );
+        grid->update( q->window(), rect, shape, border, gradient.startColor(), gradient.endColor(), gridSize );
         return grid;
     }
 
