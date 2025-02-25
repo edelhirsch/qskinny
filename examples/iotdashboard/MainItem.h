@@ -64,14 +64,14 @@ class Cube : public QskStackBox
     static Edge s_edgeTransformations[ NumEdges ][ NumEdges ];
 };
 
-class MainItem : public QskControl
+class MainBox : public QskControl
 {
     Q_OBJECT
 
     using Inherited = QskControl;
 
   public:
-    MainItem( QQuickItem* parent = nullptr );
+    MainBox( QQuickItem* parent = nullptr );
 
   protected:
     void keyPressEvent( QKeyEvent* ) override final;
