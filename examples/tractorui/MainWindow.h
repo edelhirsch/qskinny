@@ -3,17 +3,14 @@
  *           SPDX-License-Identifier: BSD-3-Clause
  *****************************************************************************/
 
-#include "MainItem.h"
-#include "MainWindow.h"
+#pragma once
 
-#include <QskLinearBox.h>
+#include <QskWindow.h>
 
-MainWindow::MainWindow()
+class MainWindow : public QskWindow
 {
-    setPreferredSize( QSize( 1024, 600 ) );
-    setTitle( "IOT dashboard" );
+    Q_OBJECT
 
-    (void) new MainBox( contentItem() );
-}
-
-#include "moc_MainWindow.cpp"
+  public:
+    MainWindow();
+};

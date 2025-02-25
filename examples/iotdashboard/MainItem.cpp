@@ -25,7 +25,7 @@ namespace
     class PanRecognizer final : public QskPanGestureRecognizer
     {
       public:
-        PanRecognizer( MainItem* mainItem )
+        PanRecognizer( MainBox* mainItem )
             : QskPanGestureRecognizer( mainItem )
         {
             setOrientations( Qt::Horizontal | Qt::Vertical );
@@ -252,7 +252,7 @@ void Cube::updateEdge( Qsk::Direction direction, Position position )
     }
 }
 
-MainItem::MainItem( QQuickItem* parent )
+MainBox::MainBox( QQuickItem* parent )
     : QskControl( parent )
     , m_mainLayout( new QskLinearBox( Qt::Horizontal, this ) )
     , m_menuBar( new MenuBar( m_mainLayout ) )
@@ -292,7 +292,7 @@ MainItem::MainItem( QQuickItem* parent )
     m_cube->setCurrentItem( dashboardPage );
 }
 
-void MainItem::gestureEvent( QskGestureEvent* event )
+void MainBox::gestureEvent( QskGestureEvent* event )
 {
     if( event->gesture()->state() == QskGesture::Finished
         && event->gesture()->type() == QskGesture::Pan )
@@ -316,7 +316,7 @@ void MainItem::gestureEvent( QskGestureEvent* event )
     }
 }
 
-void MainItem::keyPressEvent( QKeyEvent* event )
+void MainBox::keyPressEvent( QKeyEvent* event )
 {
     // maybe using shortcuts ?
 

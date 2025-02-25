@@ -3,15 +3,15 @@
  *           SPDX-License-Identifier: BSD-3-Clause
  *****************************************************************************/
 
-#include "MainItem.h"
+#include "MainBox.h"
 #include "MainWindow.h"
 
 #include <QskLinearBox.h>
 
 MainWindow::MainWindow()
 {
-    setPreferredSize( QSize( 1024, 600 ) );
-    setTitle( "IOT dashboard" );
+    setPreferredSize( QSize( 1280, 800 ) );
+    setTitle( "Tractor UI" );
 
     (void) new MainBox( contentItem() );
 }
