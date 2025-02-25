@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/Calistoga-Regular.ttf</file>
+        <file>fonts/Agbalumo-Regular.ttf</file>
+    </qresource>
+</RCC>

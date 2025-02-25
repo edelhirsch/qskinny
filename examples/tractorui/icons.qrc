@@ -1,0 +1,11 @@
+<RCC>
+    <qresource>
+        <file>icons/qvg/logo.qvg</file>
+
+        <file>icons/qvg/bars.qvg</file>
+        <file>icons/qvg/bluetooth.qvg</file>
+        <file>icons/qvg/map-location.qvg</file>
+        <file>icons/qvg/user.qvg</file>
+        <file>icons/qvg/wifi.qvg</file>
+    </qresource>
+</RCC>

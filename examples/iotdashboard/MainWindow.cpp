@@ -13,7 +13,7 @@ MainWindow::MainWindow()
     setPreferredSize( QSize( 1024, 600 ) );
     setTitle( "IOT dashboard" );
 
-    (void) new MainItem( contentItem() );
+    (void) new MainBox( contentItem() );
 }
 
 #include "moc_MainWindow.cpp"

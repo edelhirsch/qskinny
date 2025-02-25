@@ -15,7 +15,7 @@ ShadowedBox::ShadowedBox( QQuickItem* parentItem )
     : QskBox( true, parentItem )
 {
     setGradientHint( Panel, Qt::darkRed );
-    setBoxShapeHint( Panel, QskBoxShapeMetrics( 40, 0, 15, 0 ) );
+    setBoxShapeHint( Panel, QskBoxShapeMetrics( 100, Qt::RelativeSize ) );
 
     setBoxBorderMetricsHint( Panel, 0 );
     setShadowColorHint( Panel, Qt::black );
