@@ -19,6 +19,7 @@
 #include <QskColorFilter.h>
 #include <QskFontRole.h>
 #include <QskRgbValue.h>
+#include <QskSeparator.h>
 #include <QskShadowMetrics.h>
 #include <QskSkinHintTableEditor.h>
 #include <QskSwitchButton.h>
@@ -92,7 +93,7 @@ class Skin::PrivateData
   public:
     PrivateData()
     {
-        colors.primary = 0xff005cbb;
+        colors.primary = 0xff002b5e;
         colors.secondary = 0xff5CC061;
         colors.tertiary = 0xff98a6ff;
 
@@ -171,7 +172,7 @@ void Skin::initHints()
         ed.setGradient( Q::Panel | A::Left, g );
         ed.setGradient( Q::Panel | A::Right, g.reversed() );
 
-        auto s1 = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.10 ); // ### own function
+        auto s1 = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
         ed.setShadowColor( Q::Panel, s1 );
         ed.setShadowMetrics( Q::Panel, 1, 3, { 1, 1 } );
 
@@ -191,6 +192,19 @@ void Skin::initHints()
 
         ed.setStrutSize( Q::Graphic, { -1, 46 } );
         ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
+    }
+
+    {
+        using Q = QskGraphicLabel;
+
+        ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
+    }
+
+    {
+        using Q = QskSeparator;
+
+        ed.setMetric( Q::Panel | A::Size, 1 );
+        ed.setGradient( Q::Panel, t.surface );
     }
 
     {
