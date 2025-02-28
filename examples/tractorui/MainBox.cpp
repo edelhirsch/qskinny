@@ -8,10 +8,9 @@
 #include "Button.h"
 #include "Switch.h"
 
-#include <QskBoxShapeMetrics.h>
 #include <QskGraphicLabel.h>
 #include <QskLinearBox.h>
-#include <QskShadowMetrics.h>
+#include <QskSeparator.h>
 #include <QskTextLabel.h>
 
 QSK_SUBCONTROL( HeaderElementsBackgroundBox, Panel )
@@ -39,6 +38,8 @@ HeaderElementsBox::HeaderElementsBox( HeaderElementsBox::Position pos, QQuickIte
 {
     setPanel( true );
     setPolishOnResize( true );
+
+    setSpacing( 30 ); // ### style
 
     setSubcontrolProxy( QskLinearBox::Panel, Panel );
 
@@ -95,26 +96,41 @@ MainBox::MainBox( QQuickItem* parent )
 void MainBox::setupHeaderBox()
 {
     m_data->headerBox = new QskLinearBox( Qt::Horizontal, this );
+    m_data->headerBox->setSpacing( 20 );
 
     m_data->leftElements = new HeaderElementsBox( HeaderElementsBox::Position::Left, m_data->headerBox );
+    m_data->leftElements->setPadding( { 0, 10, 25, 10 } );
 
     auto* logo = new QskGraphicLabel( "logo", m_data->headerBox );
     logo->setAlignment( Qt::AlignCenter );
+    logo->setMargins( 15 );
 
     m_data->rightElements = new HeaderElementsBox( HeaderElementsBox::Position::Right, m_data->headerBox );
+    m_data->rightElements->setPadding( m_data->leftElements->padding() );
 
 
     auto* date = new QskTextLabel( m_data->leftElements );
+    date->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
     date->setText( "day\ndate\ntime");
 
+    new QskSeparator( Qt::Vertical, m_data->leftElements );
+
     auto* bluetoothSwitch = new Switch( "bluetooth", m_data->leftElements );
+
+    new QskSeparator( Qt::Vertical, m_data->leftElements );
 
     auto* userButton = new Button( "user", m_data->leftElements );
     userButton->setText( "Hans" );
 
 
     auto* wifiSwitch = new Switch( "wifi", m_data->rightElements );
+
+    new QskSeparator( Qt::Vertical, m_data->rightElements );
+
     auto* mapsSwitch = new Switch( "map-location", m_data->rightElements );
+
+    new QskSeparator( Qt::Vertical, m_data->rightElements );
+
     auto* settingsButton = new Button( "bars", m_data->rightElements );
     settingsButton->setText( "settings" );
 }
