@@ -17,6 +17,7 @@ QSK_SUBCONTROL( Button, Text )
 
 Button::Button( const QString& iconSource, QQuickItem* parent )
     : QskPushButton( parent )
+    , m_type( Type::Normal )
 {
     if( !iconSource.isEmpty() )
     {
@@ -28,6 +29,21 @@ Button::Button( const QString& iconSource, QQuickItem* parent )
     setSubcontrolProxy( QskPushButton::Panel, Panel );
     setSubcontrolProxy( QskPushButton::Icon, Icon );
     setSubcontrolProxy( QskPushButton::Text, Text );
+}
+
+Button::Type Button::type() const
+{
+    return m_type;
+}
+
+void Button::setType( Type type )
+{
+    m_type = type;
+}
+
+QskAspect::Variation Button::effectiveVariation() const
+{
+    return static_cast< QskAspect::Variation >( m_type );
 }
 
 #include "moc_Button.cpp"

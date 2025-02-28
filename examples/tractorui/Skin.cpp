@@ -41,7 +41,7 @@ namespace
     {
         QskGradient g( {
             { 0.0, theme.surfaceVariant },
-            { 0.5, theme.onSecondary },
+            { 0.5, theme.onPrimary },
             { 1.0, theme.surfaceVariant },
         } );
         g.setLinearDirection( Qt::Horizontal );
@@ -131,11 +131,14 @@ void Skin::initHints()
     {
         using Q = Button;
 
+        // normal buttons:
+
         ed.setStrutSize( Q::Panel, { 75, 75 } );
         ed.setBoxShape( Q::Panel, 100, Qt::RelativeSize );
         ed.setGradient( Q::Panel, buttonGradient( m_data->colors.secondary ) );
-        ed.setShadowColor( Q::Panel, m_data->colors.secondary );
-        ed.setShadowMetrics( Q::Panel, 1, 4, { 0, 0 } );
+        ed.setShadowColor( Q::Panel, QskRgb::toTransparentF( m_data->colors.secondary, 0.3 ) );
+        ed.setShadowMetrics( Q::Panel, 0, 4, { 0, 4 } );
+        ed.setShadowMetrics( Q::Panel | Q::Hovered, 2, 4, { 0, 4 } );
         ed.setSpacing( Q::Panel, 5 );
 
         ed.setStrutSize( Q::InnerPanel1, { 72, 72 } );
@@ -152,9 +155,32 @@ void Skin::initHints()
 
         ed.setStrutSize( Q::Icon, { 35, 35 } );
         ed.setGraphicRole( Q::Icon, GraphicRolePrimary );
+        ed.setGraphicRole( Q::Icon | Q::Pressed, GraphicRoleOnSurfaceVariant );
 
         ed.setFontRole( Q::Text, { QskFontRole::Body } );
         ed.setColor( Q::Text, t.primary );
+
+
+        // sidebar buttons:
+
+        const auto s = Q::Sidebar;
+
+        ed.setStrutSize( Q::Panel | s, { 85, 85 } );
+        ed.setBoxShape( Q::Panel | s, 100, Qt::RelativeSize );
+
+        QskGradient sg( t.onPrimary, t.surfaceVariant );
+        sg.setLinearDirection( 0, 0, 1, 1 );
+
+        ed.setGradient( Q::Panel | s, sg );
+        ed.setGradient( Q::Panel | s | Q::Pressed, sg.reversed() );
+        ed.setShadowColor( Q::Panel | s, QskRgb::toTransparentF( t.inverseSurface, 0.2 ) );
+        ed.setShadowMetrics( Q::Panel | s, 0, 4, { 0, 4 } );
+        ed.setShadowMetrics( Q::Panel | s | Q::Hovered, 2, 4, { 0, 4 } );
+
+        ed.setStrutSize( Q::InnerPanel1 | s, { 75, 75 } );
+        ed.setGradient( Q::InnerPanel1 | s, sg.reversed() );
+
+        ed.setStrutSize( Q::InnerPanel2 | s, { 0, 0 } );
     }
 
     {
@@ -184,7 +210,7 @@ void Skin::initHints()
     {
         using Q = MainBox;
 
-        ed.setGradient( Q::Panel, backgroundGradient( *m_data->theme ) );
+        ed.setGradient( Q::Panel, backgroundGradient( t ) );
     }
 
     {
@@ -256,5 +282,6 @@ void Skin::setGraphicColor( GraphicRole role, QRgb rgb )
 
 void Skin::setupGraphicFilters( const QskMaterial3Theme& theme )
 {
+    setGraphicColor( GraphicRoleOnSurfaceVariant, theme.onSurfaceVariant );
     setGraphicColor( GraphicRolePrimary, theme.primary );
 }

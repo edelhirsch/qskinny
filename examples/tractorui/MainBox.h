@@ -53,7 +53,10 @@ class MainBox : public QskLinearBox
 
   private:
     void setupHeaderBox();
+
     void setupContentBox();
+    void setupSidebar();
+    void setupTileArea();
 
     class PrivateData;
     std::unique_ptr< PrivateData > m_data;
