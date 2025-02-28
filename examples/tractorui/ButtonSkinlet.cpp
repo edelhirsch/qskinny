@@ -35,6 +35,9 @@ QRectF ButtonSkinlet::subControlRect( const QskSkinnable* skinnable,
 
     if( subControl == Q::Panel )
     {
+        if( q->type() != Q::Type::Normal )
+            return contentsRect;
+
         auto r = contentsRect;
 
         const auto tr = q->subControlRect( Q::Text );
@@ -61,6 +64,9 @@ QRectF ButtonSkinlet::subControlRect( const QskSkinnable* skinnable,
 
     if( subControl == Q::Text )
     {
+        if( q->type() != Q::Type::Normal )
+            return {};
+
         auto r = contentsRect;
         const auto f = q->effectiveFont( subControl );
 
@@ -87,9 +93,13 @@ QSizeF ButtonSkinlet::sizeHint( const QskSkinnable* skinnable, Qt::SizeHint, con
     auto textW = qskHorizontalAdvance( f, q->text() );
 
     const auto w = qMax( sh.width(), textW );
+    auto h = sh.height();
 
-    const QFontMetricsF fm( f );
-    const auto h = sh.height() + q->spacingHint( Q::Panel ) + fm.height();
+    if( q->type() == Q::Type::Normal )
+    {
+        const QFontMetricsF fm( f );
+        h = sh.height() + q->spacingHint( Q::Panel ) + fm.height();
+    }
 
     return { w, h };
 }
