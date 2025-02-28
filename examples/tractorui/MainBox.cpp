@@ -9,6 +9,7 @@
 #include "Switch.h"
 
 #include <QskGraphicLabel.h>
+#include <QskGridBox.h>
 #include <QskLinearBox.h>
 #include <QskSeparator.h>
 #include <QskTextLabel.h>
@@ -77,6 +78,8 @@ class MainBox::PrivateData
     HeaderElementsBox* rightElements;
 
     QskLinearBox* contentBox;
+    QskLinearBox* sidebarBox;
+    QskGridBox* tileArea;
 };
 
 MainBox::MainBox( QQuickItem* parent )
@@ -88,6 +91,7 @@ MainBox::MainBox( QQuickItem* parent )
     setSubcontrolProxy( QskLinearBox::Panel, Panel );
 
     setPadding( 20 ); // ### style?
+    setSpacing( 15 );
 
     setupHeaderBox();
     setupContentBox();
@@ -139,6 +143,27 @@ void MainBox::setupContentBox()
 {
     m_data->contentBox = new QskLinearBox( Qt::Horizontal, this );
     m_data->contentBox->setSizePolicy( Qt::Vertical, QskSizePolicy::Expanding );
+
+    setupSidebar();
+    setupTileArea();
+}
+
+void MainBox::setupSidebar()
+{
+    m_data->sidebarBox = new QskLinearBox( Qt::Vertical, m_data->contentBox );
+
+    const auto buttonIcons = { "house", "car-battery", "grip", "square-poll-vertical", "tractor", "road" };
+
+    for( const auto& icon : buttonIcons )
+    {
+        auto* b = new Button( icon, m_data->sidebarBox );
+        b->setType( Button::Type::Sidebar );
+    }
+}
+
+void MainBox::setupTileArea()
+{
+
 }
 
 #include "moc_MainBox.cpp"

@@ -11,10 +11,28 @@
 
 class Button : public QskPushButton
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        QSK_SUBCONTROLS( Panel, InnerPanel1, InnerPanel2, InnerPanel3, Icon, Text )
+  public:
+    QSK_SUBCONTROLS( Panel, InnerPanel1, InnerPanel2, InnerPanel3, Icon, Text )
 
-        Button( const QString& iconSource, QQuickItem* parent = nullptr );
+    static constexpr QskAspect::Variation Normal = QskAspect::NoVariation;
+    static constexpr QskAspect::Variation Sidebar = QskAspect::Left;
+
+    enum class Type
+    {
+        Normal = Normal,
+        Sidebar = Sidebar,
+    };
+
+    Button( const QString& iconSource, QQuickItem* parent = nullptr );
+
+    Type type() const;
+    void setType( Type type );
+
+  protected:
+    QskAspect::Variation effectiveVariation() const override;
+
+  private:
+    Type m_type;
 };
