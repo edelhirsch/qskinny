@@ -7,6 +7,7 @@
 
 #include "Button.h"
 #include "Switch.h"
+#include "Tile.h"
 
 #include <QskGraphicLabel.h>
 #include <QskGridBox.h>
@@ -91,7 +92,7 @@ MainBox::MainBox( QQuickItem* parent )
     setSubcontrolProxy( QskLinearBox::Panel, Panel );
 
     setPadding( 20 ); // ### style?
-    setSpacing( 15 );
+    setSpacing( 25 );
 
     setupHeaderBox();
     setupContentBox();
@@ -143,6 +144,7 @@ void MainBox::setupContentBox()
 {
     m_data->contentBox = new QskLinearBox( Qt::Horizontal, this );
     m_data->contentBox->setSizePolicy( Qt::Vertical, QskSizePolicy::Expanding );
+    m_data->contentBox->setSpacing( 20 );
 
     setupSidebar();
     setupTileArea();
@@ -163,7 +165,29 @@ void MainBox::setupSidebar()
 
 void MainBox::setupTileArea()
 {
+    m_data->tileArea = new QskGridBox( m_data->contentBox );
+    m_data->tileArea->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Expanding );
+    m_data->tileArea->setSpacing( 20 );
 
+    auto* engineContent = new QskTextLabel( "here engine content" );
+    auto* engineTile = new Tile( engineContent, "engine", m_data->tileArea );
+
+    m_data->tileArea->addItem( engineTile, 0, 0 );
+
+    auto* quickAccessContent = new QskTextLabel( "here quick access content" );
+    auto* quickAccessTile = new Tile( quickAccessContent, "quick access", m_data->tileArea );
+
+    m_data->tileArea->addItem( quickAccessTile, 0, 1 );
+
+    auto* powerLiftContent = new QskTextLabel( "here power lift content" );
+    auto* powerLiftTile = new Tile( powerLiftContent, "power lift", m_data->tileArea );
+
+    m_data->tileArea->addItem( powerLiftTile, 1, 0 );
+
+    auto* cabinContent = new QskTextLabel( "here cabin content" );
+    auto* cabinTile = new Tile( cabinContent, "cabin", m_data->tileArea );
+
+    m_data->tileArea->addItem( cabinTile, 1, 1 );
 }
 
 #include "moc_MainBox.cpp"

@@ -19,6 +19,7 @@ class Skin : public QskSkin
   public:
     enum GraphicRole
     {
+        GraphicRoleOnPrimaryContainer,
         GraphicRoleOnSurfaceVariant,
         GraphicRolePrimary,
     };

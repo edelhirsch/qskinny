@@ -11,6 +11,7 @@ set(SOURCES
     MainWindow.h MainWindow.cpp
     Skin.h Skin.cpp
     Switch.h Switch.cpp
+    Tile.h Tile.cpp
     main.cpp
 )
 qt_add_resources(SOURCES icons.qrc fonts.qrc)
