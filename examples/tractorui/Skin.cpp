@@ -11,6 +11,7 @@
 #include "MainBox.h"
 
 #include "Switch.h"
+#include "Tile.h"
 
 #include <SkinnyNamespace.h>
 
@@ -155,10 +156,10 @@ void Skin::initHints()
 
         ed.setStrutSize( Q::Icon, { 35, 35 } );
         ed.setGraphicRole( Q::Icon, GraphicRolePrimary );
-        ed.setGraphicRole( Q::Icon | Q::Pressed, GraphicRoleOnSurfaceVariant );
+        ed.setGraphicRole( Q::Icon | Q::Pressed, GraphicRoleOnPrimaryContainer );
 
         ed.setFontRole( Q::Text, { QskFontRole::Body } );
-        ed.setColor( Q::Text, t.primary );
+        ed.setColor( Q::Text, t.onPrimaryContainer );
 
 
         // sidebar buttons:
@@ -221,6 +222,34 @@ void Skin::initHints()
     }
 
     {
+        using Q = Tile;
+
+        ed.setBoxShape( Q::Panel, 20 );
+        QskGradient g( t.surfaceVariant, t.onSecondary );
+        g.setLinearDirection( Qt::Vertical );
+        ed.setGradient( Q::Panel, g );
+
+        ed.setShadowMetrics( Q::Panel, 2, 4, { 0, 2 } );
+        auto s1 = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
+        ed.setShadowColor( Q::Panel, s1 );
+    }
+
+    {
+        using Q = TileLabel;
+
+        ed.setBoxShape( Q::Panel, { 0, 0, 20, 20 } );
+        ed.setPadding( Q::Panel, 0, 5, 0, 5 );
+
+        QskGradient g( t.primary, t.onSurfaceVariant );
+        g.setLinearDirection( Qt::Vertical );
+        ed.setGradient( Q::Panel, g );
+
+        ed.setFontRole( Q::Text, { QskFontRole::Title } );
+        ed.setColor( Q::Text, t.onPrimary );
+        ed.setAlignment( Q::Text, Qt::AlignCenter );
+    }
+
+    {
         using Q = QskGraphicLabel;
 
         ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
@@ -258,7 +287,7 @@ void Skin::initHints()
         using Q = QskTextLabel;
 
         ed.setFontRole( Q::Text, { QskFontRole::Body } );
-        ed.setColor( Q::Text, t.primary );
+        ed.setColor( Q::Text, t.onPrimaryContainer );
     }
 }
 
@@ -267,6 +296,7 @@ void Skin::setupFonts()
     using F = QskFontRole;
 
     setFont( { F::Body, F::Normal }, createFont( 16, QFont::Medium ) );
+    setFont( { F::Title, F::Normal }, createFont( 24, QFont::Medium ) );
 
     QskSkin::completeFontTable();
 }
@@ -282,6 +312,7 @@ void Skin::setGraphicColor( GraphicRole role, QRgb rgb )
 
 void Skin::setupGraphicFilters( const QskMaterial3Theme& theme )
 {
+    setGraphicColor( GraphicRoleOnPrimaryContainer, theme.onPrimaryContainer );
     setGraphicColor( GraphicRoleOnSurfaceVariant, theme.onSurfaceVariant );
     setGraphicColor( GraphicRolePrimary, theme.primary );
 }
