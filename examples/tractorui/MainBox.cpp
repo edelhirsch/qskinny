@@ -6,6 +6,7 @@
 #include "MainBox.h"
 
 #include "Button.h"
+#include "EngineTile.h"
 #include "Switch.h"
 #include "Tile.h"
 
@@ -169,23 +170,25 @@ void MainBox::setupTileArea()
     m_data->tileArea->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Expanding );
     m_data->tileArea->setSpacing( 20 );
 
-    auto* engineContent = new QskTextLabel( "here engine content" );
-    auto* engineTile = new Tile( engineContent, "engine", m_data->tileArea );
+    auto* engineTile = new EngineTile( m_data->tileArea );
 
     m_data->tileArea->addItem( engineTile, 0, 0 );
 
     auto* quickAccessContent = new QskTextLabel( "here quick access content" );
-    auto* quickAccessTile = new Tile( quickAccessContent, "quick access", m_data->tileArea );
+    auto* quickAccessTile = new Tile( "quick access", m_data->tileArea );
+    quickAccessTile->setContent( quickAccessContent );
 
     m_data->tileArea->addItem( quickAccessTile, 0, 1 );
 
     auto* powerLiftContent = new QskTextLabel( "here power lift content" );
-    auto* powerLiftTile = new Tile( powerLiftContent, "power lift", m_data->tileArea );
+    auto* powerLiftTile = new Tile( "power lift", m_data->tileArea );
+    powerLiftTile->setContent( powerLiftContent );
 
     m_data->tileArea->addItem( powerLiftTile, 1, 0 );
 
     auto* cabinContent = new QskTextLabel( "here cabin content" );
-    auto* cabinTile = new Tile( cabinContent, "cabin", m_data->tileArea );
+    auto* cabinTile = new Tile( "cabin", m_data->tileArea );
+    cabinTile->setContent( cabinContent );
 
     m_data->tileArea->addItem( cabinTile, 1, 1 );
 }

@@ -19,7 +19,7 @@ TileLabel::TileLabel( const QString& text, QQuickItem* parent )
     setPanel( true );
 }
 
-Tile::Tile( QskControl* content, const QString &title, QQuickItem* parent )
+Tile::Tile( const QString &title, QQuickItem* parent )
     : QskLinearBox( Qt::Vertical, parent )
     , m_label( new TileLabel( title, nullptr ) )
 {
@@ -27,11 +27,21 @@ Tile::Tile( QskControl* content, const QString &title, QQuickItem* parent )
     setAutoAddChildren( false );
     setPolishOnResize( true );
 
-    content->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Expanding );
-    addItem( content );
-
     m_label->setParent( this );
     m_label->setParentItem( this );
+}
+
+void Tile::setContent( QskControl* content )
+{
+    if( m_content != nullptr )
+    {
+        removeItem( m_content );
+        m_content->deleteLater();
+    }
+
+    content->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Expanding );
+    m_content = content;
+    addItem( content );
 }
 
 void Tile::updateLayout()

@@ -23,11 +23,14 @@ class Tile : public QskLinearBox
     Q_OBJECT
 
   public:
-    Tile( QskControl* content, const QString& title, QQuickItem* parent = nullptr );
+    Tile( const QString& title, QQuickItem* parent = nullptr );
+
+    void setContent( QskControl* content );
 
   protected:
     void updateLayout();
 
   private:
     TileLabel* const m_label;
+    QskControl* m_content = nullptr;
 };
