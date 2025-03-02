@@ -6,10 +6,13 @@
 set(SOURCES
     Button.h Button.cpp
     ButtonSkinlet.h ButtonSkinlet.cpp
+    EngineTile.h EngineTile.cpp
     GraphicProvider.h GraphicProvider.cpp
     MainBox.h MainBox.cpp
     MainWindow.h MainWindow.cpp
     Skin.h Skin.cpp
+    Speedometer.h Speedometer.cpp
+    SpeedometerSkinlet.h SpeedometerSkinlet.cpp
     Switch.h Switch.cpp
     Tile.h Tile.cpp
     main.cpp
