@@ -10,6 +10,9 @@
 
 #include "MainBox.h"
 
+#include "Speedometer.h"
+#include "SpeedometerSkinlet.h"
+
 #include "Switch.h"
 #include "Tile.h"
 
@@ -110,6 +113,7 @@ Skin::Skin( QObject* parent )
     , m_data( new PrivateData )
 {
     declareSkinlet< Button, ButtonSkinlet >();
+    declareSkinlet< Speedometer, SpeedometerSkinlet >();
 
     setColorScheme( LightScheme );
 }
@@ -215,6 +219,31 @@ void Skin::initHints()
     }
 
     {
+        using Q = Speedometer;
+
+        ed.setStrutSize( Q::Panel1, { 160, 160 } );
+        ed.setBoxShape( Q::Panel1, 100, Qt::RelativeSize );
+        ed.setGradient( Q::Panel1, buttonGradient( m_data->colors.secondary ) );
+
+        ed.setStrutSize( Q::Panel2, { 140, 140 } );
+        ed.setBoxShape( Q::Panel2, 100, Qt::RelativeSize );
+        const auto g = buttonGradient( t.onPrimary, t.primaryContainer );
+        ed.setGradient( Q::Panel2, g );
+
+        ed.setStrutSize( Q::Panel3, { 125, 125 } );
+        ed.setBoxShape( Q::Panel3, 100, Qt::RelativeSize );
+        ed.setGradient( Q::Panel3, g.reversed() );
+        auto s = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
+        ed.setShadowMetrics( Q::Panel3, 0, 1, { 0, 1 } );
+        ed.setShadowColor( Q::Panel3, s );
+
+        ed.setAlignment( Q::ValueText, Qt::AlignCenter );
+        ed.setFontRole( Q::ValueText, QskFontRole::Display );
+
+        ed.setAlignment( Q::UnitText, Qt::AlignCenter );
+    }
+
+    {
         using Q = SwitchLabel;
 
         ed.setStrutSize( Q::Graphic, { -1, 46 } );
@@ -297,6 +326,7 @@ void Skin::setupFonts()
 
     setFont( { F::Body, F::Normal }, createFont( 16, QFont::Medium ) );
     setFont( { F::Title, F::Normal }, createFont( 24, QFont::Medium ) );
+    setFont( { F::Display, F::Normal }, createFont( 40, QFont::Medium ) );
 
     QskSkin::completeFontTable();
 }
