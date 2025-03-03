@@ -10,6 +10,8 @@ set(SOURCES
     GraphicProvider.h GraphicProvider.cpp
     MainBox.h MainBox.cpp
     MainWindow.h MainWindow.cpp
+    QuickAccessButton.h QuickAccessButton.cpp
+    QuickAccessTile.h QuickAccessTile.cpp
     Skin.h Skin.cpp
     Speedometer.h Speedometer.cpp
     SpeedometerSkinlet.h SpeedometerSkinlet.cpp

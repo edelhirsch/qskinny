@@ -7,6 +7,7 @@
 
 #include "Button.h"
 #include "EngineTile.h"
+#include "QuickAccessTile.h"
 #include "Switch.h"
 #include "Tile.h"
 
@@ -174,9 +175,7 @@ void MainBox::setupTileArea()
 
     m_data->tileArea->addItem( engineTile, 0, 0 );
 
-    auto* quickAccessContent = new QskTextLabel( "here quick access content" );
-    auto* quickAccessTile = new Tile( "quick access", m_data->tileArea );
-    quickAccessTile->setContent( quickAccessContent );
+    auto* quickAccessTile = new QuickAccessTile( m_data->tileArea );
 
     m_data->tileArea->addItem( quickAccessTile, 0, 1 );
 
