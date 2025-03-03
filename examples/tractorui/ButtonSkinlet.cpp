@@ -41,8 +41,11 @@ QRectF ButtonSkinlet::subControlRect( const QskSkinnable* skinnable,
         auto r = contentsRect;
 
         const auto tr = q->subControlRect( Q::Text );
-        const auto s = q->spacingHint( Q::Panel );
+        const auto s = q->spacingHint( subControl );
+        const auto ss = q->strutSizeHint( subControl );
 
+        r.setLeft( r.left() + ( r.width() - ss.width() ) / 2 );
+        r.setWidth( ss.width() );
         r.setBottom( tr.top() - s );
 
         return r;

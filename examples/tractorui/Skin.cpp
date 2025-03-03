@@ -224,6 +224,8 @@ void Skin::initHints()
         ed.setStrutSize( Q::Panel1, { 160, 160 } );
         ed.setBoxShape( Q::Panel1, 100, Qt::RelativeSize );
         ed.setGradient( Q::Panel1, buttonGradient( m_data->colors.secondary ) );
+        ed.setShadowMetrics( Q::Panel1, 1, 4, { 0, 4 } );
+        ed.setShadowColor( Q::Panel1, QskRgb::toTransparentF( t.onSecondaryContainer, 0.3 ) );
 
         ed.setStrutSize( Q::Panel2, { 140, 140 } );
         ed.setBoxShape( Q::Panel2, 100, Qt::RelativeSize );
