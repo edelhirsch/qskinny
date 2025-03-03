@@ -5,7 +5,9 @@
 
 #include "EngineTile.h"
 
+#include "Button.h"
 #include "Speedometer.h"
+#include "Switch.h"
 
 #include <QskFontRole.h>
 
@@ -40,6 +42,16 @@ EngineTile::EngineTile( QQuickItem* parent )
     auto* driveLabel = new QskTextLabel( "drive", driveBox );
     driveLabel->setAlignment( Qt::AlignCenter );
     driveLabel->setFontRole( QskFontRole::Title );
+
+    auto* roadAndCruiseControlBox = new QskLinearBox( Qt::Vertical, box );
+    roadAndCruiseControlBox->setDefaultAlignment( Qt::AlignCenter );
+    roadAndCruiseControlBox->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
+    roadAndCruiseControlBox->setMargins( 20 );
+    roadAndCruiseControlBox->setSpacing( 20 );
+
+    auto* roadModeSwitch = new Switch( "road", roadAndCruiseControlBox );
+    auto* cruiseControlButton = new Button( "arrow-down", roadAndCruiseControlBox );
+    cruiseControlButton->setText( "cruise control" );
 
     setContent( box );
 }
