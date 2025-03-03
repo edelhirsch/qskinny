@@ -10,6 +10,8 @@
 
 #include "MainBox.h"
 
+#include "QuickAccessButton.h"
+
 #include "Speedometer.h"
 #include "SpeedometerSkinlet.h"
 
@@ -20,6 +22,7 @@
 
 #include <material3/QskMaterial3Skin.h>
 
+#include <QskBoxBorderColors.h>
 #include <QskColorFilter.h>
 #include <QskFontRole.h>
 #include <QskRgbValue.h>
@@ -216,6 +219,34 @@ void Skin::initHints()
         using Q = MainBox;
 
         ed.setGradient( Q::Panel, backgroundGradient( t ) );
+    }
+
+    {
+        using Q = QuickAccessButton;
+
+        ed.setStrutSize( Q::Panel, { 166, 112 } );
+        ed.setSpacing( Q::Panel, 10 );
+
+        QskGradient g( t.surfaceVariant, t.onSecondary );
+        g.setLinearDirection( Qt::Vertical );
+        ed.setGradient( Q::Panel, g );
+
+        ed.setBoxShape( Q::Panel, 10 );
+        ed.setBoxBorderMetrics( Q::Panel, 1 );
+        ed.setBoxBorderColors( Q::Panel, t.surface );
+
+        auto s1 = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
+        ed.setShadowColor( Q::Panel, s1 );
+        ed.setShadowMetrics( Q::Panel, 1, 4, { 0, 2 } );
+        ed.setShadowMetrics( Q::Panel | Q::Hovered, 3, 4, { 0, 2 } );
+
+        ed.setStrutSize( Q::Icon, { 40, 40 } );
+        ed.setGraphicRole( Q::Icon, GraphicRoleOnPrimaryContainer );
+        ed.setGraphicRole( Q::Icon | Q::Pressed, GraphicRolePrimary );
+
+        ed.setFontRole( Q::Text, { QskFontRole::Body } );
+        ed.setColor( Q::Text, t.onPrimaryContainer );
+        ed.setColor( Q::Text | Q::Pressed, t.primary );
     }
 
     {
