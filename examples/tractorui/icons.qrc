@@ -2,6 +2,7 @@
     <qresource>
         <file>icons/qvg/logo.qvg</file>
 
+        <file>icons/qvg/arrow-down.qvg</file>
         <file>icons/qvg/bars.qvg</file>
         <file>icons/qvg/bluetooth.qvg</file>
         <file>icons/qvg/car-battery.qvg</file>
