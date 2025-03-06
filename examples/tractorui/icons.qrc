@@ -6,9 +6,11 @@
         <file>icons/qvg/bars.qvg</file>
         <file>icons/qvg/bluetooth.qvg</file>
         <file>icons/qvg/car-battery.qvg</file>
+        <file>icons/qvg/clock.qvg</file>
         <file>icons/qvg/gas-pump.qvg</file>
         <file>icons/qvg/grip.qvg</file>
         <file>icons/qvg/house.qvg</file>
+        <file>icons/qvg/leaf.qvg</file>
         <file>icons/qvg/life-ring.qvg</file>
         <file>icons/qvg/map-location.qvg</file>
         <file>icons/qvg/network-wired.qvg</file>
@@ -18,6 +20,8 @@
         <file>icons/qvg/square-poll-vertical.qvg</file>
         <file>icons/qvg/tractor.qvg</file>
         <file>icons/qvg/user.qvg</file>
+        <file>icons/qvg/weight-hanging.qvg</file>
         <file>icons/qvg/wifi.qvg</file>
+        <file>icons/qvg/wind.qvg</file>
     </qresource>
 </RCC>
