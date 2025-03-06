@@ -16,8 +16,6 @@ QuickAccessTile::QuickAccessTile( QQuickItem* parent )
     gridBox->setMargins( { 5, 5, 5, 10 } );
     gridBox->setSpacing( 10 );
 
-    setContent( gridBox );
-
     QVector< QPair< QString, QString >> tiles = {
         { "network-wired", "devices" },
         { "phabricator", "lighting" },
@@ -33,4 +31,6 @@ QuickAccessTile::QuickAccessTile( QQuickItem* parent )
         auto* b = new QuickAccessButton( t.first, t.second );
         gridBox->addItem( b, i / 3, i % 3 );
     }
+
+    setContent( gridBox );
 }
