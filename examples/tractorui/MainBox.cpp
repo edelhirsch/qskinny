@@ -6,6 +6,7 @@
 #include "MainBox.h"
 
 #include "Button.h"
+#include "CabinTile.h"
 #include "EngineTile.h"
 #include "QuickAccessTile.h"
 #include "Switch.h"
@@ -172,23 +173,17 @@ void MainBox::setupTileArea()
     m_data->tileArea->setSpacing( 20 );
 
     auto* engineTile = new EngineTile( m_data->tileArea );
-
     m_data->tileArea->addItem( engineTile, 0, 0 );
 
     auto* quickAccessTile = new QuickAccessTile( m_data->tileArea );
-
     m_data->tileArea->addItem( quickAccessTile, 0, 1 );
 
     auto* powerLiftContent = new QskTextLabel( "here power lift content" );
     auto* powerLiftTile = new Tile( "power lift", m_data->tileArea );
     powerLiftTile->setContent( powerLiftContent );
-
     m_data->tileArea->addItem( powerLiftTile, 1, 0 );
 
-    auto* cabinContent = new QskTextLabel( "here cabin content" );
-    auto* cabinTile = new Tile( "cabin", m_data->tileArea );
-    cabinTile->setContent( cabinContent );
-
+    auto* cabinTile = new CabinTile( m_data->tileArea );
     m_data->tileArea->addItem( cabinTile, 1, 1 );
 }
 

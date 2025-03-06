@@ -8,6 +8,8 @@
 #include "Button.h"
 #include "ButtonSkinlet.h"
 
+#include "CabinTile.h"
+
 #include "MainBox.h"
 
 #include "QuickAccessButton.h"
@@ -28,6 +30,7 @@
 #include <QskRgbValue.h>
 #include <QskSeparator.h>
 #include <QskShadowMetrics.h>
+#include <QskSlider.h>
 #include <QskSkinHintTableEditor.h>
 #include <QskSwitchButton.h>
 
@@ -152,7 +155,7 @@ void Skin::initHints()
         ed.setStrutSize( Q::InnerPanel1, { 72, 72 } );
         ed.setBoxShape( Q::InnerPanel1, 100, Qt::RelativeSize );
 
-        const auto g = buttonGradient( m_data->theme->primaryContainer, m_data->theme->onPrimary );
+        const auto g = buttonGradient( t.primaryContainer, t.onPrimary );
         ed.setGradient( Q::InnerPanel1, g );
         ed.setGradient( Q::InnerPanel1 | Q::Pressed, g.reversed() );
 
@@ -206,11 +209,11 @@ void Skin::initHints()
         ed.setGradient( Q::Panel | A::Left, g );
         ed.setGradient( Q::Panel | A::Right, g.reversed() );
 
-        auto s1 = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
+        auto s1 = QskRgb::toTransparentF( t.inverseSurface, 0.1 ); // ### own function
         ed.setShadowColor( Q::Panel, s1 );
         ed.setShadowMetrics( Q::Panel, 1, 3, { 1, 1 } );
 
-        auto s2 = QskRgb::toTransparentF( m_data->theme->surface, 0.6 );
+        auto s2 = QskRgb::toTransparentF( t.surface, 0.6 );
         ed.setShadowColor( R::Panel, s2 );
         ed.setShadowMetrics( R::Panel, 1, 3, { -1, -1 } );
     }
@@ -235,7 +238,7 @@ void Skin::initHints()
         ed.setBoxBorderMetrics( Q::Panel, 1 );
         ed.setBoxBorderColors( Q::Panel, t.surface );
 
-        auto s1 = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
+        auto s1 = QskRgb::toTransparentF( t.inverseSurface, 0.1 ); // ### own function
         ed.setShadowColor( Q::Panel, s1 );
         ed.setShadowMetrics( Q::Panel, 1, 4, { 0, 2 } );
         ed.setShadowMetrics( Q::Panel | Q::Hovered, 3, 4, { 0, 2 } );
@@ -247,6 +250,13 @@ void Skin::initHints()
         ed.setFontRole( Q::Text, { QskFontRole::Body } );
         ed.setColor( Q::Text, t.onPrimaryContainer );
         ed.setColor( Q::Text | Q::Pressed, t.primary );
+    }
+
+    {
+        using Q = SliderLabel;
+
+        ed.setAlignment( Q::Text, Qt::AlignRight | Qt::AlignVCenter );
+        ed.setFontRole( Q::Text, QskFontRole::Title );
     }
 
     {
@@ -266,7 +276,7 @@ void Skin::initHints()
         ed.setStrutSize( Q::Panel3, { 125, 125 } );
         ed.setBoxShape( Q::Panel3, 100, Qt::RelativeSize );
         ed.setGradient( Q::Panel3, g.reversed() );
-        auto s = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
+        auto s = QskRgb::toTransparentF( t.inverseSurface, 0.1 ); // ### own function
         ed.setShadowMetrics( Q::Panel3, 0, 1, { 0, 1 } );
         ed.setShadowColor( Q::Panel3, s );
 
@@ -292,7 +302,7 @@ void Skin::initHints()
         ed.setGradient( Q::Panel, g );
 
         ed.setShadowMetrics( Q::Panel, 2, 4, { 0, 2 } );
-        auto s1 = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.1 ); // ### own function
+        auto s1 = QskRgb::toTransparentF( t.inverseSurface, 0.1 ); // ### own function
         ed.setShadowColor( Q::Panel, s1 );
     }
 
@@ -325,24 +335,54 @@ void Skin::initHints()
     }
 
     {
+        using Q = QskSlider;
+
+        ed.setMetric( Q::Groove | A::Size, 10 );
+        ed.setBoxShape( Q::Groove, 100, Qt::RelativeSize );
+        ed.setGradient( Q::Groove, sliderGradient( t.primaryContainer, t.onPrimary ) );
+
+        ed.setShadowMetrics( Q::Groove, 1, 2, { 0, 1 } );
+        auto s1 = QskRgb::toTransparentF( t.inverseSurface, 0.1 ); // ### own function
+        ed.setShadowColor( Q::Groove, s1 );
+
+        ed.setMetric( Q::Fill | A::Size, 10 );
+        ed.setBoxShape( Q::Fill, 100, Qt::RelativeSize );
+        ed.setGradient( Q::Fill, sliderGradient( t.secondary ) );
+
+        ed.setStrutSize( Q::Handle, { 30, 30 } );
+        ed.setBoxShape( Q::Handle, 100, Qt::RelativeSize );
+        const auto g = buttonGradient( t.primaryContainer, t.onPrimary );
+        ed.setGradient( Q::Handle, g.reversed() );
+        ed.setGradient( Q::Handle | Q::Pressed, g );
+
+        auto c = QskRgb::toTransparentF( t.inverseSurface, 0.25 );
+        ed.setShadowColor( Q::Handle, c );
+        ed.setShadowMetrics( Q::Handle, 2, 4, { 0, 2 } );
+    }
+
+    {
         using Q = QskSwitchButton;
 
         ed.setStrutSize( Q::Groove, { 50, 18 } );
         ed.setBoxShape( Q::Groove, 100, Qt::RelativeSize );
-        ed.setGradient( Q::Groove, sliderGradient( m_data->theme->primaryContainer, m_data->theme->onPrimary ) );
-        ed.setGradient( Q::Groove | Q::Checked, sliderGradient( m_data->theme->secondary ) );
+        ed.setGradient( Q::Groove, sliderGradient( t.primaryContainer, t.onPrimary ) );
+        ed.setGradient( Q::Groove | Q::Checked, sliderGradient( t.secondary ) );
+
+        ed.setShadowMetrics( Q::Groove, 1, 2, { 0, 1 } );
+        auto s1 = QskRgb::toTransparentF( t.inverseSurface, 0.1 ); // ### own function
+        ed.setShadowColor( Q::Groove, s1 );
 
         ed.setStrutSize( Q::Handle, { 30, 30 } );
         ed.setBoxShape( Q::Handle, 100, Qt::RelativeSize );
         ed.setPosition( Q::Handle, 0.0 );
         ed.setPosition( Q::Handle | Q::Checked, 1.0 );
-        const auto g = buttonGradient( m_data->theme->primaryContainer, m_data->theme->onPrimary );
+        const auto g = buttonGradient( t.primaryContainer, t.onPrimary );
         ed.setGradient( Q::Handle, g.reversed() );
         ed.setGradient( Q::Handle | Q::Pressed, g );
 
-        auto c = QskRgb::toTransparentF( m_data->theme->inverseSurface, 0.25 );
+        auto c = QskRgb::toTransparentF( t.inverseSurface, 0.25 );
         ed.setShadowColor( Q::Handle, c );
-        ed.setShadowMetrics( Q::Handle, 2, 4, { 0, 0 } );
+        ed.setShadowMetrics( Q::Handle, 2, 4, { 0, 2 } );
     }
 
     {
