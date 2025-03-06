@@ -6,6 +6,7 @@
 set(SOURCES
     Button.h Button.cpp
     ButtonSkinlet.h ButtonSkinlet.cpp
+    CabinTile.h CabinTile.cpp
     EngineTile.h EngineTile.cpp
     GraphicProvider.h GraphicProvider.cpp
     MainBox.h MainBox.cpp
