@@ -11,6 +11,9 @@ set(SOURCES
     GraphicProvider.h GraphicProvider.cpp
     MainBox.h MainBox.cpp
     MainWindow.h MainWindow.cpp
+    PowerLiftArc.h PowerLiftArc.cpp
+    PowerLiftArcSkinlet.h PowerLiftArcSkinlet.cpp
+    PowerLiftTile.h PowerLiftTile.cpp
     QuickAccessButton.h QuickAccessButton.cpp
     QuickAccessTile.h QuickAccessTile.cpp
     Skin.h Skin.cpp
