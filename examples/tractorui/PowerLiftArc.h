@@ -1,0 +1,56 @@
+/******************************************************************************
+ * QSkinny - Copyright (C) The authors
+ *           SPDX-License-Identifier: BSD-3-Clause
+ *****************************************************************************/
+
+#pragma once
+
+#include <QskBoundedInput.h>
+#include <QskGraphicLabel.h>
+
+class TractorLabel : public QskGraphicLabel
+{
+    Q_OBJECT
+
+  public:
+    QSK_SUBCONTROLS( Panel, Graphic )
+
+    TractorLabel( const QString& url, QQuickItem* parent = nullptr );
+};
+
+class PowerLiftArc : public QskBoundedInput
+{
+    Q_OBJECT
+
+  public:
+    QSK_SUBCONTROLS( Groove, Fill, Handle )
+
+    static constexpr QskAspect::Variation Front = QskAspect::NoVariation;
+    static constexpr QskAspect::Variation Back = QskAspect::Left;
+
+    enum class Type
+    {
+        Front = Front,
+        Back = Back
+    };
+
+    PowerLiftArc( Type type, QQuickItem* parent = nullptr );
+
+    Type type() const;
+
+    qreal value() const;
+    void setValue( qreal value );
+
+  public Q_SLOTS:
+    void increment( qreal offset ) override;
+
+  Q_SIGNALS:
+    void valueChanged( qreal );
+
+  protected:
+    QskAspect::Variation effectiveVariation() const override;
+
+  private:
+    const Type m_type;
+    qreal m_value;
+};

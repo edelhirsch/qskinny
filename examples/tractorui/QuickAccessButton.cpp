@@ -18,5 +18,5 @@ QuickAccessButton::QuickAccessButton( const QString& iconSource, const QString& 
     setSubcontrolProxy( QskPushButton::Text, Text );
     setSubcontrolProxy( QskPushButton::Icon, Icon );
 
-    setSizePolicy( Qt::Vertical, QskSizePolicy::Preferred );
+    setSizePolicy( QskSizePolicy::Minimum, QskSizePolicy::Minimum );
 }

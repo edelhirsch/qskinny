@@ -12,6 +12,9 @@
 
 #include "MainBox.h"
 
+#include "PowerLiftArc.h"
+#include "PowerLiftArcSkinlet.h"
+
 #include "QuickAccessButton.h"
 
 #include "Speedometer.h"
@@ -24,9 +27,11 @@
 
 #include <material3/QskMaterial3Skin.h>
 
+#include <QskArcMetrics.h>
 #include <QskBoxBorderColors.h>
 #include <QskColorFilter.h>
 #include <QskFontRole.h>
+#include <QskMargins.h>
 #include <QskRgbValue.h>
 #include <QskSeparator.h>
 #include <QskShadowMetrics.h>
@@ -119,6 +124,7 @@ Skin::Skin( QObject* parent )
     , m_data( new PrivateData )
 {
     declareSkinlet< Button, ButtonSkinlet >();
+    declareSkinlet< PowerLiftArc, PowerLiftArcSkinlet >();
     declareSkinlet< Speedometer, SpeedometerSkinlet >();
 
     setColorScheme( LightScheme );
@@ -225,6 +231,28 @@ void Skin::initHints()
     }
 
     {
+        using Q = PowerLiftArc;
+
+        ed.setArcMetrics( Q::Groove | Q::Back, { -120, -120, 15 } );
+        // ed.setArcMetrics( Q::Groove | Q::Back, { -120, -360, 15 } );
+        ed.setArcMetrics( Q::Groove, { -60, 120, 15 } );
+        QskGradient groove( { { 0.0, t.primaryContainer }, { 0.4, t.primaryContainer },
+            { 0.5, t.onPrimary }, { 1.0, t.onPrimary } } );
+        groove.setRadialDirection( 0.5, 0.5, 1 );
+        ed.setGradient( Q::Groove, groove );
+
+        ed.setArcMetrics( Q::Fill, ed.arcMetrics( Q::Groove ) );
+
+        QskGradient fillFront( t.secondary, QColor( t.secondary ).lighter().toRgb() );
+        fillFront.setConicDirection( 0.5, 0.5, 300, 120 );
+        ed.setGradient( Q::Fill, fillFront );
+
+        auto fillBack = fillFront;
+        fillBack.setConicDirection( 0.5, 0.5, 240, -120 );
+        ed.setGradient( Q::Fill | Q::Back, fillBack );
+    }
+
+    {
         using Q = QuickAccessButton;
 
         ed.setStrutSize( Q::Panel, { 166, 112 } );
@@ -319,6 +347,13 @@ void Skin::initHints()
         ed.setFontRole( Q::Text, { QskFontRole::Title } );
         ed.setColor( Q::Text, t.onPrimary );
         ed.setAlignment( Q::Text, Qt::AlignCenter );
+    }
+
+    {
+        using Q = TractorLabel;
+
+        ed.setStrutSize( Q::Graphic, { 100, 100 } );
+        ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
     }
 
     {
