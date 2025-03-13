@@ -3,7 +3,10 @@
 #           SPDX-License-Identifier: BSD-3-Clause
 ############################################################################
 
+set(target tractorui)
+
 set(SOURCES
+    ArcShadowNode.h ArcShadowNode.cpp
     Button.h Button.cpp
     ButtonSkinlet.h ButtonSkinlet.cpp
     CabinTile.h CabinTile.cpp
@@ -25,10 +28,23 @@ set(SOURCES
 )
 qt_add_resources(SOURCES icons.qrc fonts.qrc)
 
-qsk_add_example(tractorui ${SOURCES})
+qsk_add_example(${target} ${SOURCES})
 
-target_compile_definitions(tractorui PRIVATE USE_SHORTCUTS=1)
+target_compile_definitions(${target} PRIVATE USE_SHORTCUTS=1)
 if(ENABLE_ENSURE_SKINS)
-    target_include_directories(tractorui PRIVATE ${QSK_SOURCE_DIR}/designsystems)
-    target_link_libraries(tractorui PRIVATE material3skin)
+    target_include_directories(${target} PRIVATE ${QSK_SOURCE_DIR}/designsystems)
+    target_link_libraries(${target} PRIVATE material3skin)
 endif()
+
+if (QT_VERSION_MAJOR VERSION_LESS 6) 
+    qt_add_resources(SOURCES shaders.qrc)
+endif()
+
+if (QT_VERSION_MAJOR VERSION_GREATER_EQUAL 6)
+    list(APPEND SHADERS
+        shaders/arcshadow-vulkan.vert
+        shaders/arcshadow-vulkan.frag
+    )
+    qsk_add_shaders( ${target} FILES ${SHADERS} OUTPUT_TARGETS shader_target)
+endif()
+
