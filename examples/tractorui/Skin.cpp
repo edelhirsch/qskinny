@@ -241,6 +241,10 @@ void Skin::initHints()
         groove.setRadialDirection( 0.5, 0.5, 1 );
         ed.setGradient( Q::Groove, groove );
 
+        auto s1 = QskRgb::toTransparentF( t.inverseSurface, 0.1 ); // ### own function
+        ed.setShadowColor( Q::Groove, s1 );
+        ed.setShadowMetrics( Q::Groove, 0, 5, { 0, 0 } );
+
         ed.setArcMetrics( Q::Fill, ed.arcMetrics( Q::Groove ) );
 
         QskGradient fillFront( t.secondary, QColor( t.secondary ).lighter().toRgb() );
