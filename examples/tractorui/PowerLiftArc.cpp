@@ -22,12 +22,14 @@ TractorLabel::TractorLabel( const QString& url, QQuickItem* parent )
 
 QSK_SUBCONTROL( PowerLiftArc, Groove )
 QSK_SUBCONTROL( PowerLiftArc, Fill )
+QSK_SUBCONTROL( PowerLiftArc, ProgrammedFill )
 QSK_SUBCONTROL( PowerLiftArc, Handle )
 
 PowerLiftArc::PowerLiftArc( Type type, QQuickItem* parent )
     : QskBoundedInput( parent )
     , m_type( type )
     , m_value( minimum() )
+    , m_programmedValue( minimum() )
 {
     setSizePolicy( QskSizePolicy::Constrained, QskSizePolicy::Preferred );
 }
@@ -50,6 +52,22 @@ void PowerLiftArc::setValue( qreal value )
     {
         m_value = bv;
         Q_EMIT valueChanged( m_value );
+    }
+}
+
+qreal PowerLiftArc::programmedValue() const
+{
+    return m_programmedValue;
+}
+
+void PowerLiftArc::setProgrammedValue( qreal value )
+{
+    const auto bv = boundedValue( value );
+
+    if( !qskFuzzyCompare( bv, m_programmedValue ) )
+    {
+        m_programmedValue = bv;
+        Q_EMIT programmedValueChanged( m_programmedValue );
     }
 }
 

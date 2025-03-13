@@ -234,7 +234,6 @@ void Skin::initHints()
         using Q = PowerLiftArc;
 
         ed.setArcMetrics( Q::Groove | Q::Back, { -120, -120, 15 } );
-        // ed.setArcMetrics( Q::Groove | Q::Back, { -120, -360, 15 } );
         ed.setArcMetrics( Q::Groove, { -60, 120, 15 } );
         QskGradient groove( { { 0.0, t.primaryContainer }, { 0.4, t.primaryContainer },
             { 0.5, t.onPrimary }, { 1.0, t.onPrimary } } );
@@ -254,6 +253,16 @@ void Skin::initHints()
         auto fillBack = fillFront;
         fillBack.setConicDirection( 0.5, 0.5, 240, -120 );
         ed.setGradient( Q::Fill | Q::Back, fillBack );
+
+        auto amBack = ed.arcMetrics( Q::Groove | Q::Back );
+        amBack.setThickness( 3 );
+        ed.setArcMetrics( Q::ProgrammedFill | Q::Back, amBack );
+
+        auto amFront = ed.arcMetrics( Q::Groove );
+        amFront.setThickness( 3 );
+        ed.setArcMetrics( Q::ProgrammedFill, amFront );
+
+        ed.setGradient( Q::ProgrammedFill, t.onPrimary );
     }
 
     {
@@ -357,7 +366,7 @@ void Skin::initHints()
         using Q = TractorLabel;
 
         ed.setStrutSize( Q::Graphic, { 100, 100 } );
-        ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
+        ed.setGraphicRole( Q::Graphic, GraphicRoleInversePrimary );
     }
 
     {
@@ -454,6 +463,7 @@ void Skin::setGraphicColor( GraphicRole role, QRgb rgb )
 
 void Skin::setupGraphicFilters( const QskMaterial3Theme& theme )
 {
+    setGraphicColor( GraphicRoleInversePrimary, theme.inversePrimary );
     setGraphicColor( GraphicRoleOnPrimaryContainer, theme.onPrimaryContainer );
     setGraphicColor( GraphicRoleOnSurfaceVariant, theme.onSurfaceVariant );
     setGraphicColor( GraphicRolePrimary, theme.primary );
