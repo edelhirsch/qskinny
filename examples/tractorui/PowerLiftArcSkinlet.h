@@ -7,6 +7,8 @@
 
 #include <QskSkinlet.h>
 
+class PowerLiftArc;
+
 class PowerLiftArcSkinlet : public QskSkinlet
 {
         Q_GADGET
@@ -14,6 +16,7 @@ class PowerLiftArcSkinlet : public QskSkinlet
     public:
         enum NodeRole
         {
+            GrooveShadowRole,
             GrooveRole,
             FillRole,
             HandleRole,
@@ -30,4 +33,7 @@ class PowerLiftArcSkinlet : public QskSkinlet
     protected:
         QSGNode* updateSubNode( const QskSkinnable*,
                                 quint8 nodeRole, QSGNode* ) const override;
+
+    private:
+        QSGNode* updateShadowNode( const PowerLiftArc* arc, QSGNode* node ) const;
 };

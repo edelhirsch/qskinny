@@ -5,9 +5,13 @@
 
 #include "PowerLiftArcSkinlet.h"
 
+#include "ArcShadowNode.h"
 #include "PowerLiftArc.h"
 
 #include <QskArcMetrics.h>
+#include <QskRgbValue.h>
+#include <QskSGNode.h>
+#include <QskShadowMetrics.h>
 
 #include <QtMath>
 
@@ -18,6 +22,7 @@ PowerLiftArcSkinlet::PowerLiftArcSkinlet( QskSkin* skin )
 {
     setNodeRoles(
     {
+        GrooveShadowRole,
         GrooveRole,
         FillRole,
         HandleRole,
@@ -76,6 +81,10 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
 
     switch( nodeRole )
     {
+        case GrooveShadowRole:
+        {
+            return updateShadowNode( q, node );
+        }
         case GrooveRole:
         {
             return updateArcNode( q, node, Q::Groove );
@@ -95,6 +104,32 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
     }
 
     return QskSkinlet::updateSubNode( skinnable, nodeRole, node );
+}
+
+QSGNode* PowerLiftArcSkinlet::updateShadowNode( const PowerLiftArc* arc, QSGNode* node ) const
+{
+    const auto rect = arc->subControlRect( Q::Groove );
+    if ( rect.isEmpty() )
+        return nullptr;
+
+    const auto color = arc->shadowColorHint( Q::Groove );
+    if ( !QskRgb::isVisible( color ) )
+        return nullptr;
+
+    auto metricsArc = arc->arcMetricsHint( Q::Groove );
+    metricsArc = metricsArc.toAbsolute( rect.size() );
+
+    auto metrics = arc->shadowMetricsHint( Q::Groove );
+    metrics = metrics.toAbsolute( rect.size() );
+
+    const auto shadowRect = metrics.shadowRect( rect );
+    const auto spreadRadius = metrics.spreadRadius() + 0.5 * metricsArc.thickness();
+
+    auto shadowNode = QskSGNode::ensureNode< ArcShadowNode >( node );
+    shadowNode->setShadowData( shadowRect, spreadRadius, metrics.blurRadius(),
+        metricsArc.startAngle(), metricsArc.spanAngle(), color );
+
+    return shadowNode;
 }
 
 #include "moc_PowerLiftArcSkinlet.cpp"
