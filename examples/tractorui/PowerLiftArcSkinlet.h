@@ -19,6 +19,7 @@ class PowerLiftArcSkinlet : public QskSkinlet
             GrooveShadowRole,
             GrooveRole,
             FillRole,
+            ProgrammedFillRole,
             HandleRole,
         };
 

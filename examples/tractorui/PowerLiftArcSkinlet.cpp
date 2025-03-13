@@ -25,6 +25,7 @@ PowerLiftArcSkinlet::PowerLiftArcSkinlet( QskSkin* skin )
         GrooveShadowRole,
         GrooveRole,
         FillRole,
+        ProgrammedFillRole,
         HandleRole,
     } );
 }
@@ -48,6 +49,14 @@ QRectF PowerLiftArcSkinlet::subControlRect( const QskSkinnable* skinnable,
             r.setX( r.right() - r.height() );
         }
 
+        return r;
+    }
+    if( subControl == Q::ProgrammedFill )
+    {
+        auto r = q->subControlRect( Q::Groove );
+        const auto w = q->arcMetricsHint( Q::Groove ).thickness() - q->arcMetricsHint( subControl ).thickness();
+        QMarginsF m( w, w, w, w );
+        r = r.marginsRemoved( m );
         return r;
     }
 
@@ -96,6 +105,14 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
             const qreal span = q->valueAsRatio( q->value() ) * am.spanAngle();
 
             return updateArcNode( q, node, start, span, Q::Fill );
+        }
+        case ProgrammedFillRole:
+        {
+            const auto am = q->arcMetricsHint( Q::ProgrammedFill );
+            const qreal start = am.startAngle();
+            const qreal span = q->valueAsRatio( q->programmedValue() ) * am.spanAngle();
+
+            return updateArcNode( q, node, start, span, Q::ProgrammedFill );
         }
         case HandleRole:
         {
