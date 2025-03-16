@@ -11,13 +11,15 @@
 #include "PowerLiftTile.h"
 #include "QuickAccessTile.h"
 #include "Switch.h"
-#include "Tile.h"
 
 #include <QskGraphicLabel.h>
 #include <QskGridBox.h>
 #include <QskLinearBox.h>
 #include <QskSeparator.h>
 #include <QskTextLabel.h>
+
+#include <QLocale>
+#include <QTimer>
 
 QSK_SUBCONTROL( HeaderElementsBackgroundBox, Panel )
 
@@ -118,9 +120,27 @@ void MainBox::setupHeaderBox()
     m_data->rightElements->setPadding( m_data->leftElements->padding() );
 
 
-    auto* date = new QskTextLabel( m_data->leftElements );
-    date->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
-    date->setText( "day\ndate\ntime");
+    auto* dateTimeLabel = new QskTextLabel( m_data->leftElements );
+    dateTimeLabel->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
+    dateTimeLabel->setAlignment( Qt::AlignCenter );
+
+    auto updateDateTime = [dateTimeLabel]()
+    {
+        auto l = QLocale::system();
+        auto cdt = QDateTime::currentDateTime();
+
+        auto day = l.dayName( QDate::currentDate().dayOfWeek() );
+        auto date = cdt.toString( l.dateFormat( QLocale::ShortFormat ) );
+        auto t = cdt.toString( l.timeFormat( QLocale::ShortFormat ) );
+
+        dateTimeLabel->setText( QString( "%1\n%2\n%3").arg( day ).arg( date ).arg( t ) );
+    };
+
+    auto* timer = new QTimer( this );
+    connect( timer, &QTimer::timeout, this, updateDateTime );
+    timer->start( 1000 * 60 );
+
+    updateDateTime();
 
     new QskSeparator( Qt::Vertical, m_data->leftElements );
 
