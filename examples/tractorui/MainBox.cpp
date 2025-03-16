@@ -59,8 +59,7 @@ void HeaderElementsBox::updateLayout()
 {
     QskLinearBox::updateLayout();
 
-    m_data->backgroundBox->setGradientHint( QskBox::Panel, gradientHint( Panel ) );
-    m_data->backgroundBox->setGeometry( { 0, 0 }, size() );
+    m_data->backgroundBox->setGeometry( geometry() );
 }
 
 QskAspect::Variation HeaderElementsBox::effectiveVariation() const

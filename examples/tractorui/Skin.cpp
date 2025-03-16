@@ -31,6 +31,7 @@
 #include <QskBoxBorderColors.h>
 #include <QskColorFilter.h>
 #include <QskFontRole.h>
+#include <QskHctColor.h>
 #include <QskMargins.h>
 #include <QskRgbValue.h>
 #include <QskSeparator.h>
@@ -44,6 +45,43 @@
 
 namespace
 {
+    class TractorTheme : public QskMaterial3Theme
+    {
+      public:
+        TractorTheme( QskSkin::ColorScheme colorScheme, const BaseColors& baseColors )
+            : QskMaterial3Theme( colorScheme, baseColors )
+        {
+            QskHctColor primaryHct = QskHctColor( baseColors.primary );
+
+            backgroundBase = primaryHct;
+            backgroundBase.setChroma( 8 );
+
+            surfaceFlashy = primaryHct;
+            surfaceFlashy.setChroma( 80 );
+
+            if ( colorScheme == QskSkin::LightScheme )
+            {
+                background1 = backgroundBase.toned( 95 ).rgb();
+                background2 = backgroundBase.toned( 99 ).rgb();
+
+                surfaceFlashy.setTone( 20 );
+            }
+            else
+            {
+                background1 = backgroundBase.toned( 10 ).rgb();
+                background2 = backgroundBase.toned( 20 ).rgb();
+
+                surfaceFlashy.setTone( 80 );
+            }
+        }
+
+        QskHctColor backgroundBase;
+        QRgb background1;
+        QRgb background2;
+
+        QskHctColor surfaceFlashy;
+    };
+
     QFont createFont( qreal pixelSize, QFont::Weight weight )
     {
         QFont font( QStringLiteral( "Calistoga" ), -1, weight );
@@ -52,12 +90,12 @@ namespace
         return font;
     }
 
-    QskGradient backgroundGradient( const QskMaterial3Theme& theme )
+    QskGradient backgroundGradient( const TractorTheme& theme )
     {
         QskGradient g( {
-            { 0.0, theme.surfaceVariant },
-            { 0.5, theme.onPrimary },
-            { 1.0, theme.surfaceVariant },
+            { 0.0, theme.background1 },
+            { 0.5, theme.background2 },
+            { 1.0, theme.background1 },
         } );
         g.setLinearDirection( Qt::Horizontal );
 
@@ -135,7 +173,7 @@ void Skin::initHints()
 {
     setupFonts();
 
-    const QskMaterial3Theme theme( colorScheme(), m_data->colors );
+    const TractorTheme theme( colorScheme(), m_data->colors );
 
     setupGraphicFilters( theme );
 
@@ -206,11 +244,12 @@ void Skin::initHints()
         ed.setBoxShape( Q::Panel, boxShape );
         ed.setBoxShape( R::Panel, boxShape );
 
-        const auto g2 = QskRgb::interpolated( theme.surfaceVariant, theme.onSecondary, 0.5 );
-        QskGradient g( theme.surfaceVariant, g2 );
+        const auto g2 = QskRgb::interpolated( theme.background1, theme.background2, 0.5 );
+        QskGradient g( theme.background1, g2 );
         g.setLinearDirection( Qt::Horizontal );
 
         ed.setGradient( Q::Panel | A::Left, g );
+        ed.setGradient( R::Panel, g ); // ### left and right
         ed.setGradient( Q::Panel | A::Right, g.reversed() );
 
         auto s1 = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
@@ -336,7 +375,7 @@ void Skin::initHints()
         using Q = Tile;
 
         ed.setBoxShape( Q::Panel, 20 );
-        QskGradient g( theme.surfaceVariant, theme.onSecondary );
+        QskGradient g( theme.background1, theme.background2 );
         g.setLinearDirection( Qt::Vertical );
         ed.setGradient( Q::Panel, g );
 
@@ -351,9 +390,7 @@ void Skin::initHints()
         ed.setBoxShape( Q::Panel, { 0, 0, 20, 20 } );
         ed.setPadding( Q::Panel, 0, 5, 0, 5 );
 
-        QskGradient g( theme.primary, theme.onSurfaceVariant );
-        g.setLinearDirection( Qt::Vertical );
-        ed.setGradient( Q::Panel, g );
+        ed.setGradient( Q::Panel, theme.surfaceFlashy.rgb() );
 
         ed.setFontRole( Q::Text, { QskFontRole::Title } );
         ed.setColor( Q::Text, theme.onPrimary );
