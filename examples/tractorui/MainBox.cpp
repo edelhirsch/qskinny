@@ -7,19 +7,49 @@
 
 #include "Button.h"
 #include "CabinTile.h"
+#include "Cube.h"
 #include "EngineTile.h"
 #include "PowerLiftTile.h"
 #include "QuickAccessTile.h"
 #include "Switch.h"
 
+#include <QskGesture.h>
+#include <QskEvent.h>
 #include <QskGraphicLabel.h>
 #include <QskGridBox.h>
 #include <QskLinearBox.h>
+#include <QskPanGestureRecognizer.h>
 #include <QskSeparator.h>
 #include <QskTextLabel.h>
 
 #include <QLocale>
 #include <QTimer>
+
+namespace
+{
+    class PanRecognizer final : public QskPanGestureRecognizer
+    {
+      public:
+        PanRecognizer( MainBox* mainItem )
+            : QskPanGestureRecognizer( mainItem )
+        {
+            setOrientations( Qt::Horizontal | Qt::Vertical );
+            setMinDistance( 50 );
+            setTimeout( 100 );
+
+            setWatchedItem( mainItem );
+        }
+    };
+
+    class EmptyTile : public Tile
+    {
+      public:
+        EmptyTile( QQuickItem* parent )
+            : Tile( "empty", parent )
+        {
+        }
+    };
+}
 
 QSK_SUBCONTROL( HeaderElementsBackgroundBox, Panel )
 
@@ -85,7 +115,8 @@ class MainBox::PrivateData
 
     QskLinearBox* contentBox;
     QskLinearBox* sidebarBox;
-    QskGridBox* tileArea;
+    Cube* cube;
+    QskGridBox* mainTileArea;
 };
 
 MainBox::MainBox( QQuickItem* parent )
@@ -101,6 +132,61 @@ MainBox::MainBox( QQuickItem* parent )
 
     setupHeaderBox();
     setupContentBox();
+}
+
+void MainBox::gestureEvent( QskGestureEvent* event )
+{
+    if( event->gesture()->state() == QskGesture::Finished
+        && event->gesture()->type() == QskGesture::Pan )
+    {
+        const auto* panGesture = static_cast< const QskPanGesture* >( event->gesture().get() );
+
+        const auto delta = panGesture->origin() - panGesture->position();
+
+        Qsk::Direction direction;
+
+        if( qAbs( delta.x() ) > qAbs( delta.y() ) )
+        {
+            direction = ( delta.x() < 0 ) ? Qsk::LeftToRight : Qsk::RightToLeft;
+        }
+        else
+        {
+            direction = ( delta.y() < 0 ) ? Qsk::TopToBottom : Qsk::BottomToTop;
+        }
+
+        m_data->cube->switchPosition( direction );
+    }
+}
+
+void MainBox::keyPressEvent( QKeyEvent* event )
+{
+    // maybe using shortcuts ?
+
+    Qsk::Direction direction;
+
+    switch( event->key() )
+    {
+        case Qt::Key_Up:
+            direction = Qsk::TopToBottom;
+            break;
+
+        case Qt::Key_Down:
+            direction = Qsk::BottomToTop;
+            break;
+
+        case Qt::Key_Left:
+            direction = Qsk::LeftToRight;
+            break;
+
+        case Qt::Key_Right:
+            direction = Qsk::RightToLeft;
+            break;
+
+        default:
+            return;
+    }
+
+    m_data->cube->switchPosition( direction );
 }
 
 void MainBox::setupHeaderBox()
@@ -188,21 +274,60 @@ void MainBox::setupSidebar()
 
 void MainBox::setupTileArea()
 {
-    m_data->tileArea = new QskGridBox( m_data->contentBox );
-    m_data->tileArea->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Expanding );
-    m_data->tileArea->setSpacing( 20 );
+    setupCube();
 
-    auto* engineTile = new EngineTile( m_data->tileArea );
-    m_data->tileArea->addItem( engineTile, 0, 0 );
+    m_data->mainTileArea = new QskGridBox( m_data->cube );
 
-    auto* quickAccessTile = new QuickAccessTile( m_data->tileArea );
-    m_data->tileArea->addItem( quickAccessTile, 0, 1 );
+    m_data->mainTileArea->setSpacing( 20 );
 
-    auto* powerLiftTile = new PowerLiftTile( m_data->tileArea );
-    m_data->tileArea->addItem( powerLiftTile, 1, 0 );
+    auto* engineTile = new EngineTile( m_data->mainTileArea );
+    m_data->mainTileArea->addItem( engineTile, 0, 0 );
 
-    auto* cabinTile = new CabinTile( m_data->tileArea );
-    m_data->tileArea->addItem( cabinTile, 1, 1 );
+    auto* quickAccessTile = new QuickAccessTile( m_data->mainTileArea );
+    m_data->mainTileArea->addItem( quickAccessTile, 0, 1 );
+
+    auto* powerLiftTile = new PowerLiftTile( m_data->mainTileArea );
+    m_data->mainTileArea->addItem( powerLiftTile, 1, 0 );
+
+    auto* cabinTile = new CabinTile( m_data->mainTileArea );
+    m_data->mainTileArea->addItem( cabinTile, 1, 1 );
+
+    for( int pos = 0; pos < Cube::NumPositions; pos++ )
+    {
+        if( pos == Cube::FrontPos )
+        {
+            m_data->cube->insertItem( Cube::FrontPos, m_data->mainTileArea );
+        }
+        else
+        {
+            auto* emptyTileArea = new QskGridBox( m_data->cube );
+
+            emptyTileArea->setSpacing( 20 );
+
+            for( int i = 0; i < 4; i++ )
+            {
+                auto* emptyTile = new EmptyTile( emptyTileArea );
+
+                int row = i / 2, col = i % 2;
+                emptyTileArea->addItem( emptyTile, row, col );
+            }
+
+            m_data->cube->insertItem( pos, emptyTileArea );
+        }
+    }
+
+    m_data->cube->setCurrentItem( m_data->mainTileArea );
+}
+
+void MainBox::setupCube()
+{
+    setAcceptedMouseButtons( Qt::LeftButton );
+    setFiltersChildMouseEvents( true );
+
+    (void) new PanRecognizer( this );
+
+    m_data->cube = new Cube( m_data->contentBox );
+    m_data->cube->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Expanding );
 }
 
 #include "moc_MainBox.cpp"

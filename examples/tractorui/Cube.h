@@ -1,0 +1,60 @@
+/******************************************************************************
+ * Copyright (C) The authors
+ *           SPDX-License-Identifier: BSD-3-Clause
+ *****************************************************************************/
+
+#pragma once
+
+#include <QskStackBox.h>
+
+class Cube : public QskStackBox
+{
+    Q_OBJECT
+
+  public:
+    enum Edge
+    {
+        LeftEdge = Qsk::LeftToRight,
+        RightEdge = Qsk::RightToLeft,
+        TopEdge = Qsk::TopToBottom,
+        BottomEdge = Qsk::BottomToTop,
+        NumEdges
+    };
+    Q_ENUM( Edge )
+
+    enum Position
+    {
+        LeftPos = LeftEdge,
+        RightPos = RightEdge,
+        TopPos = TopEdge,
+        BottomPos = BottomEdge,
+        FrontPos,
+        BackPos,
+        NumPositions
+    };
+    Q_ENUM( Position )
+
+    explicit Cube( QQuickItem* parent = nullptr );
+
+  public Q_SLOTS:
+    void switchPosition( const Qsk::Direction );
+    void switchToPosition( const Cube::Position );
+
+  Q_SIGNALS:
+    // might be different from indexChanged:
+    void cubeIndexChanged( const int index );
+
+  private:
+    Position currentPosition() const;
+    Position neighbor( const Position, const Qsk::Direction ) const;
+    Qsk::Direction direction( const Position from, const Position to ) const;
+    void updateEdge( Qsk::Direction, Position );
+    void doSwitch( Qsk::Direction, Position );
+
+    Position m_destination;
+    Edge m_currentEdge;
+    bool m_isIntermediateHop;
+
+    static QPair< Position, Edge > s_neighbors[ NumPositions ][ NumEdges ];
+    static Edge s_edgeTransformations[ NumEdges ][ NumEdges ];
+};
