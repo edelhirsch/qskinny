@@ -8,6 +8,7 @@
 #include "ArcShadowNode.h"
 #include "PowerLiftArc.h"
 
+#include <QskArcHints.h>
 #include <QskArcMetrics.h>
 #include <QskRgbValue.h>
 #include <QskSGNode.h>
@@ -100,19 +101,31 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
         }
         case FillRole:
         {
-            const auto am = q->arcMetricsHint( Q::Groove );
+            auto am = q->arcMetricsHint( Q::Groove );
             const qreal start = am.startAngle();
             const qreal span = q->valueAsRatio( q->value() ) * am.spanAngle();
 
-            return updateArcNode( q, node, start, span, Q::Fill );
+            am.setStartAngle( start );
+            am.setSpanAngle( span );
+
+            auto ah = q->arcHints( Q::Fill );
+            ah.metrics = am;
+
+            return updateArcNode( q, node, q->subControlRect( Q::Fill ), ah );
         }
         case ProgrammedFillRole:
         {
-            const auto am = q->arcMetricsHint( Q::ProgrammedFill );
+            auto am = q->arcMetricsHint( Q::ProgrammedFill );
             const qreal start = am.startAngle();
             const qreal span = q->valueAsRatio( q->programmedValue() ) * am.spanAngle();
 
-            return updateArcNode( q, node, start, span, Q::ProgrammedFill );
+            am.setStartAngle( start );
+            am.setSpanAngle( span );
+
+            auto ah = q->arcHints( Q::ProgrammedFill );
+            ah.metrics = am;
+
+            return updateArcNode( q, node, q->subControlRect( Q::ProgrammedFill ), ah );
         }
         case HandleRole:
         {
