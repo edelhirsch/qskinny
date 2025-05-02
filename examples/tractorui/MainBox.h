@@ -51,12 +51,17 @@ class MainBox : public QskLinearBox
 
     MainBox( QQuickItem* parent );
 
+  protected:
+    void keyPressEvent( QKeyEvent* ) override final;
+    void gestureEvent( QskGestureEvent* ) override final;
+
   private:
     void setupHeaderBox();
 
     void setupContentBox();
     void setupSidebar();
     void setupTileArea();
+    void setupCube();
 
     class PrivateData;
     std::unique_ptr< PrivateData > m_data;
