@@ -8,7 +8,7 @@
 #include <QskGradient.h>
 #include <QskSkin.h>
 
-class QskMaterial3Theme;
+class TractorTheme;
 
 class Skin : public QskSkin
 {
@@ -23,6 +23,7 @@ class Skin : public QskSkin
         GraphicRoleOnPrimaryContainer,
         GraphicRoleOnSurfaceVariant,
         GraphicRolePrimary,
+        GraphicRolePrimaryBase,
     };
 
     Skin( QObject* parent = nullptr );
@@ -33,7 +34,7 @@ class Skin : public QskSkin
 
   private:
     void setupFonts();
-    void setupGraphicFilters( const QskMaterial3Theme& );
+    void setupGraphicFilters( const TractorTheme& );
     void setGraphicColor( GraphicRole, QRgb );
 
     class PrivateData;
