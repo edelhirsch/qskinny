@@ -25,8 +25,6 @@
 
 #include <SkinnyNamespace.h>
 
-#include <material3/QskMaterial3Skin.h>
-
 #include <QskArcMetrics.h>
 #include <QskBoxBorderColors.h>
 #include <QskColorFilter.h>
@@ -150,19 +148,22 @@ namespace
 class Skin::PrivateData
 {
   public:
-    PrivateData()
+    PrivateData( const QskMaterial3Theme::BaseColors& baseColors )
+        : colors( baseColors )
     {
-        colors.primary = 0xff002b5e;
-        colors.secondary = 0xff5CC061;
-        colors.tertiary = 0xff98a6ff;
     }
 
     QskMaterial3Theme::BaseColors colors;
 };
 
 Skin::Skin( QObject* parent )
+    : Skin( { 0xff002b54, 0xff5cc061, 0xff98a6ff }, parent )
+{
+}
+
+Skin::Skin( const QskMaterial3Theme::BaseColors& baseColors, QObject* parent )
     : QskSkin( parent )
-    , m_data( new PrivateData )
+    , m_data( new PrivateData( baseColors ) )
 {
     declareSkinlet< Button, ButtonSkinlet >();
     declareSkinlet< PowerLiftArc, PowerLiftArcSkinlet >();
@@ -173,6 +174,13 @@ Skin::Skin( QObject* parent )
 
 Skin::~Skin()
 {
+}
+
+void Skin::setBaseColors( const QskMaterial3Theme::BaseColors& colors )
+{
+    m_data->colors = colors;
+
+    initHints();
 }
 
 void Skin::initHints()
