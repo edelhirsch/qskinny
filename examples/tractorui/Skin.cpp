@@ -43,45 +43,51 @@
 #include <QFont>
 #include <QFontInfo>
 
+class TractorTheme : public QskMaterial3Theme
+{
+  public:
+    TractorTheme( QskSkin::ColorScheme colorScheme, const BaseColors& baseColors )
+        : QskMaterial3Theme( colorScheme, baseColors )
+    {
+        QskHctColor primaryHct = QskHctColor( baseColors.primary );
+
+        backgroundBase = primaryHct;
+        backgroundBase.setChroma( 0 );
+
+        surfaceFlashy = primaryHct;
+        surfaceFlashy.setChroma( 30 );
+
+        if ( colorScheme == QskSkin::LightScheme )
+        {
+            primaryBase = baseColors.primary;
+
+            background1 = backgroundBase.toned( 95 ).rgb();
+            background2 = backgroundBase.toned( 99 ).rgb();
+
+            surfaceFlashy.setTone( 40 );
+        }
+        else
+        {
+            primaryBase = baseColors.primary;
+
+            background1 = backgroundBase.toned( 10 ).rgb();
+            background2 = backgroundBase.toned( 20 ).rgb();
+
+            surfaceFlashy.setTone( 80 );
+        }
+    }
+
+    QRgb primaryBase;
+
+    QskHctColor backgroundBase;
+    QRgb background1;
+    QRgb background2;
+
+    QskHctColor surfaceFlashy;
+};
+
 namespace
 {
-    class TractorTheme : public QskMaterial3Theme
-    {
-      public:
-        TractorTheme( QskSkin::ColorScheme colorScheme, const BaseColors& baseColors )
-            : QskMaterial3Theme( colorScheme, baseColors )
-        {
-            QskHctColor primaryHct = QskHctColor( baseColors.primary );
-
-            backgroundBase = primaryHct;
-            backgroundBase.setChroma( 8 );
-
-            surfaceFlashy = primaryHct;
-            surfaceFlashy.setChroma( 80 );
-
-            if ( colorScheme == QskSkin::LightScheme )
-            {
-                background1 = backgroundBase.toned( 95 ).rgb();
-                background2 = backgroundBase.toned( 99 ).rgb();
-
-                surfaceFlashy.setTone( 20 );
-            }
-            else
-            {
-                background1 = backgroundBase.toned( 10 ).rgb();
-                background2 = backgroundBase.toned( 20 ).rgb();
-
-                surfaceFlashy.setTone( 80 );
-            }
-        }
-
-        QskHctColor backgroundBase;
-        QRgb background1;
-        QRgb background2;
-
-        QskHctColor surfaceFlashy;
-    };
-
     QFont createFont( qreal pixelSize, QFont::Weight weight )
     {
         QFont font( QStringLiteral( "Calistoga" ), -1, weight );
@@ -207,7 +213,7 @@ void Skin::initHints()
         ed.setGradient( Q::InnerPanel2 | Q::Pressed, g );
 
         ed.setStrutSize( Q::Icon, { 35, 35 } );
-        ed.setGraphicRole( Q::Icon, GraphicRolePrimary );
+        ed.setGraphicRole( Q::Icon, GraphicRolePrimaryBase );
         ed.setGraphicRole( Q::Icon | Q::Pressed, GraphicRoleOnPrimaryContainer );
 
         ed.setFontRole( Q::Text, { QskFontRole::Body } );
@@ -368,7 +374,7 @@ void Skin::initHints()
         using Q = SwitchLabel;
 
         ed.setStrutSize( Q::Graphic, { -1, 46 } );
-        ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
+        ed.setGraphicRole( Q::Graphic, GraphicRolePrimaryBase );
     }
 
     {
@@ -407,7 +413,7 @@ void Skin::initHints()
     {
         using Q = QskGraphicLabel;
 
-        ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
+        ed.setGraphicRole( Q::Graphic, GraphicRolePrimaryBase );
     }
 
     {
@@ -496,10 +502,11 @@ void Skin::setGraphicColor( GraphicRole role, QRgb rgb )
     setGraphicFilter( role, colorFilter );
 }
 
-void Skin::setupGraphicFilters( const QskMaterial3Theme& theme )
+void Skin::setupGraphicFilters( const TractorTheme& theme )
 {
     setGraphicColor( GraphicRoleInversePrimary, theme.inversePrimary );
     setGraphicColor( GraphicRoleOnPrimaryContainer, theme.onPrimaryContainer );
     setGraphicColor( GraphicRoleOnSurfaceVariant, theme.onSurfaceVariant );
     setGraphicColor( GraphicRolePrimary, theme.primary );
+    setGraphicColor( GraphicRolePrimaryBase, theme.primaryBase );
 }
