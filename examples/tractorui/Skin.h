@@ -8,6 +8,8 @@
 #include <QskGradient.h>
 #include <QskSkin.h>
 
+#include <material3/QskMaterial3Skin.h>
+
 class TractorTheme;
 
 class Skin : public QskSkin
@@ -27,7 +29,10 @@ class Skin : public QskSkin
     };
 
     Skin( QObject* parent = nullptr );
+    Skin( const QskMaterial3Theme::BaseColors& baseColors, QObject* parent = nullptr );
     ~Skin() override;
+
+    void setBaseColors( const QskMaterial3Theme::BaseColors& colors );
 
   private:
     void initHints() override;
