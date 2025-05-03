@@ -13,4 +13,7 @@ class ThemeColorsTile : public Tile
 
   public:
     ThemeColorsTile( QQuickItem* parent = nullptr );
+
+  Q_SIGNALS:
+    void logoChanged( const QUrl& iconSource );
 };

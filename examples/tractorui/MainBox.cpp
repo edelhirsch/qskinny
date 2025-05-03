@@ -111,6 +111,7 @@ class MainBox::PrivateData
 {
   public:
     QskLinearBox* headerBox;
+    QskGraphicLabel* logo;
     HeaderElementsBox* leftElements;
     HeaderElementsBox* rightElements;
 
@@ -198,9 +199,9 @@ void MainBox::setupHeaderBox()
     m_data->leftElements = new HeaderElementsBox( HeaderElementsBox::Position::Left, m_data->headerBox );
     m_data->leftElements->setPadding( { 0, 10, 25, 10 } );
 
-    auto* logo = new QskGraphicLabel( "logo", m_data->headerBox );
-    logo->setAlignment( Qt::AlignCenter );
-    logo->setMargins( 15 );
+    m_data->logo = new QskGraphicLabel( "logo", m_data->headerBox );
+    m_data->logo->setAlignment( Qt::AlignCenter );
+    m_data->logo->setMargins( 15 );
 
     m_data->rightElements = new HeaderElementsBox( HeaderElementsBox::Position::Right, m_data->headerBox );
     m_data->rightElements->setPadding( m_data->leftElements->padding() );
@@ -284,8 +285,13 @@ void MainBox::setupTileArea()
     auto* engineTile = new EngineTile( m_data->mainTileArea );
     m_data->mainTileArea->addItem( engineTile, 0, 0 );
 
-    auto* quickAccessTile = new ThemeColorsTile( m_data->mainTileArea );
-    m_data->mainTileArea->addItem( quickAccessTile, 0, 1 );
+    auto* themeColorsTile = new ThemeColorsTile( m_data->mainTileArea );
+    m_data->mainTileArea->addItem( themeColorsTile, 0, 1 );
+
+    connect( themeColorsTile, &ThemeColorsTile::logoChanged, this, [this]( const QUrl& url )
+    {
+        m_data->logo->setSource( url );
+    } );
 
     auto* powerLiftTile = new PowerLiftTile( m_data->mainTileArea );
     m_data->mainTileArea->addItem( powerLiftTile, 1, 0 );
