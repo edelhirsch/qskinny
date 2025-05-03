@@ -24,6 +24,7 @@ set(SOURCES
     Speedometer.h Speedometer.cpp
     SpeedometerSkinlet.h SpeedometerSkinlet.cpp
     Switch.h Switch.cpp
+    ThemeColorsTile.h ThemeColorsTile.cpp
     Tile.h Tile.cpp
     main.cpp
 )

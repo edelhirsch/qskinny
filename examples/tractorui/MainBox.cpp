@@ -12,6 +12,7 @@
 #include "PowerLiftTile.h"
 #include "QuickAccessTile.h"
 #include "Switch.h"
+#include "ThemeColorsTile.h"
 
 #include <QskGesture.h>
 #include <QskEvent.h>
@@ -283,7 +284,7 @@ void MainBox::setupTileArea()
     auto* engineTile = new EngineTile( m_data->mainTileArea );
     m_data->mainTileArea->addItem( engineTile, 0, 0 );
 
-    auto* quickAccessTile = new QuickAccessTile( m_data->mainTileArea );
+    auto* quickAccessTile = new ThemeColorsTile( m_data->mainTileArea );
     m_data->mainTileArea->addItem( quickAccessTile, 0, 1 );
 
     auto* powerLiftTile = new PowerLiftTile( m_data->mainTileArea );
