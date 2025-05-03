@@ -46,8 +46,8 @@ ThemeColorsTile::ThemeColorsTile( QQuickItem* parent )
 
     QVector< std::tuple< QString, QRgb, QRgb >> themes = {
         { "logo", 0xff002b54, 0xff5cc061 }, // (original)
-        { "logo-Qt", 0xff2cde85, 0xff00414a }, // Qt Company
-        { "logo-T-Mobile", 0xffe20074, 0xffffffff }, // T-Mobile
+        { "logo-Qt", 0xff00414a, 0xff2cde85 }, // Qt Company
+        { "logo-T-Mobile", 0xffe20074, 0xff888888 }, // T-Mobile
         { "logo-BMW", 0xff0166b1, 0xff6f6f6f }, // BMW
         { "logo-Siemens", 0xff009999, 0xff3D3D3B }, // Siemens
         { "logo-FC-Bayern", 0xffE6003A, 0xff0066b2 }, // FC Bayern
