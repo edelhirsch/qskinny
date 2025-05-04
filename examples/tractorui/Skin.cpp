@@ -36,6 +36,7 @@
 #include <QskShadowMetrics.h>
 #include <QskSlider.h>
 #include <QskSkinHintTableEditor.h>
+#include <QskSkinManager.h>
 #include <QskSwitchButton.h>
 
 #include <QFont>
@@ -47,18 +48,20 @@ class TractorTheme : public QskMaterial3Theme
     TractorTheme( QskSkin::ColorScheme colorScheme, const BaseColors& baseColors )
         : QskMaterial3Theme( colorScheme, baseColors )
     {
-        QskHctColor primaryHct = QskHctColor( baseColors.primary );
+        const QskHctColor primaryBaseHct = QskHctColor( baseColors.primary );
 
-        backgroundBase = primaryHct;
+        backgroundBase = primaryBaseHct;
         backgroundBase.setChroma( 0 );
 
-        surfaceFlashy = primaryHct;
+        surfaceFlashy = primaryBaseHct;
         surfaceFlashy.setChroma( 40 );
+
+        shadow = QskRgb::toTransparentF( inverseSurface, 0.1 );
 
         if ( colorScheme == QskSkin::LightScheme )
         {
             primaryBase = baseColors.primary;
-            primaryBackground = primaryHct.toned( 99 ).rgb();
+            primaryBackground = primaryBaseHct.toned( 99 ).rgb();
             secondaryBase = baseColors.secondary;
 
             background1 = backgroundBase.toned( 95 ).rgb();
@@ -68,8 +71,15 @@ class TractorTheme : public QskMaterial3Theme
         }
         else
         {
-            primaryBase = baseColors.primary;
-            secondaryBase = baseColors.secondary;
+            auto primaryBaseDark = primaryBaseHct;
+            primaryBaseDark.setTone( 90 );
+            primaryBase = primaryBaseDark.rgb();
+
+            primaryBackground = primaryBaseDark.toned( 15 ).rgb();
+
+            auto secondaryBaseDark = QskHctColor( baseColors.secondary );
+            secondaryBaseDark.setTone( 60 );
+            secondaryBase = secondaryBaseDark.rgb();
 
             background1 = backgroundBase.toned( 10 ).rgb();
             background2 = backgroundBase.toned( 20 ).rgb();
@@ -87,6 +97,8 @@ class TractorTheme : public QskMaterial3Theme
     QRgb background2;
 
     QskHctColor surfaceFlashy;
+
+    QRgb shadow;
 };
 
 namespace
@@ -123,21 +135,18 @@ namespace
         return g;
     }
 
-    QskGradient buttonGradient( QRgb c1, QRgb c2 )
-    {
-        QskGradient g( c1, c2 );
-        g.setLinearDirection( 0, 0, 1, 1 );
-
-        return g;
-    }
-
-    QskGradient sliderGradient( QRgb rgb )
+    QskGradient verticalGradient( QRgb rgb )
     {
 
         QskHctColor c( rgb );
 
         const auto t = c.tone();
         QskGradient g( c.toned( t - 10 ).rgb(), c.toned( t + 10 ).rgb() );
+
+        if( qskSkinManager->currentSkin()->colorScheme() == QskSkin::DarkScheme )
+        {
+            g = g.reversed();
+        }
 
         g.setLinearDirection( Qt::Vertical );
 
@@ -235,8 +244,7 @@ void Skin::initHints()
         ed.setStrutSize( Q::Panel | s, { 85, 85 } );
         ed.setBoxShape( Q::Panel | s, 100, Qt::RelativeSize );
 
-        QskGradient sg( theme.onPrimary, theme.surfaceVariant );
-        sg.setLinearDirection( 0, 0, 1, 1 );
+        const auto sg = buttonGradient( theme.primaryBackground );
 
         ed.setGradient( Q::Panel | s, sg );
         ed.setGradient( Q::Panel | s | Q::Pressed, sg.reversed() );
@@ -266,8 +274,7 @@ void Skin::initHints()
         ed.setGradient( R::Panel, g ); // ### left and right
         ed.setGradient( Q::Panel | A::Right, g.reversed() );
 
-        auto s1 = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
-        ed.setShadowColor( Q::Panel, s1 );
+        ed.setShadowColor( Q::Panel, theme.shadow );
         ed.setShadowMetrics( Q::Panel, 1, 3, { 1, 1 } );
 
         auto s2 = QskRgb::toTransparentF( theme.surface, 0.6 );
@@ -291,8 +298,7 @@ void Skin::initHints()
         groove.setRadialDirection( 0.5, 0.5, 1 );
         ed.setGradient( Q::Groove, groove );
 
-        auto s1 = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
-        ed.setShadowColor( Q::Groove, s1 );
+        ed.setShadowColor( Q::Groove, theme.shadow );
         ed.setShadowMetrics( Q::Groove, 0, 5, { 0, 0 } );
 
         ed.setArcMetrics( Q::Fill, ed.arcMetrics( Q::Groove ) );
@@ -325,14 +331,13 @@ void Skin::initHints()
 
         QskGradient g( theme.surfaceVariant, theme.onSecondary );
         g.setLinearDirection( Qt::Vertical );
-        ed.setGradient( Q::Panel, g );
+        ed.setGradient( Q::Panel, verticalGradient( theme.primaryBackground ) );
 
         ed.setBoxShape( Q::Panel, 10 );
         ed.setBoxBorderMetrics( Q::Panel, 1 );
         ed.setBoxBorderColors( Q::Panel, theme.surface );
 
-        auto s1 = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
-        ed.setShadowColor( Q::Panel, s1 );
+        ed.setShadowColor( Q::Panel, theme.shadow );
         ed.setShadowMetrics( Q::Panel, 1, 4, { 0, 2 } );
         ed.setShadowMetrics( Q::Panel | Q::Hovered, 3, 4, { 0, 2 } );
 
@@ -350,6 +355,7 @@ void Skin::initHints()
 
         ed.setAlignment( Q::Text, Qt::AlignRight | Qt::AlignVCenter );
         ed.setFontRole( Q::Text, QskFontRole::Title );
+        ed.setColor( Q::Text, theme.onPrimaryContainer );
     }
 
     {
@@ -375,8 +381,10 @@ void Skin::initHints()
 
         ed.setAlignment( Q::ValueText, Qt::AlignCenter );
         ed.setFontRole( Q::ValueText, QskFontRole::Display );
+        ed.setColor( Q::ValueText, theme.onPrimaryContainer );
 
         ed.setAlignment( Q::UnitText, Qt::AlignCenter );
+        ed.setColor( Q::UnitText, theme.onPrimaryContainer );
     }
 
     {
@@ -395,8 +403,7 @@ void Skin::initHints()
         ed.setGradient( Q::Panel, g );
 
         ed.setShadowMetrics( Q::Panel, 2, 4, { 0, 2 } );
-        auto s1 = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
-        ed.setShadowColor( Q::Panel, s1 );
+        ed.setShadowColor( Q::Panel, theme.shadow );
     }
 
     {
@@ -437,11 +444,10 @@ void Skin::initHints()
 
         ed.setMetric( Q::Groove | A::Size, 10 );
         ed.setBoxShape( Q::Groove, 100, Qt::RelativeSize );
-        ed.setGradient( Q::Groove, sliderGradient( theme.primaryBackground ) );
+        ed.setGradient( Q::Groove, verticalGradient( theme.primaryBackground ) );
 
         ed.setShadowMetrics( Q::Groove, 1, 2, { 0, 1 } );
-        auto s1 = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
-        ed.setShadowColor( Q::Groove, s1 );
+        ed.setShadowColor( Q::Groove, theme.shadow );
 
         ed.setMetric( Q::Fill | A::Size, 10 );
         ed.setBoxShape( Q::Fill, 100, Qt::RelativeSize );
@@ -451,13 +457,13 @@ void Skin::initHints()
 
         ed.setStrutSize( Q::Handle, { 30, 30 } );
         ed.setBoxShape( Q::Handle, 100, Qt::RelativeSize );
-        const auto g = buttonGradient( theme.primaryContainer, theme.onPrimary );
-        ed.setGradient( Q::Handle, g.reversed() );
-        ed.setGradient( Q::Handle | Q::Pressed, g );
+        const auto g = buttonGradient( theme.onPrimary );
+        ed.setGradient( Q::Handle, g );
+        ed.setGradient( Q::Handle | Q::Pressed, g.reversed() );
 
         auto c = QskRgb::toTransparentF( theme.inverseSurface, 0.25 );
         ed.setShadowColor( Q::Handle, c );
-        ed.setShadowMetrics( Q::Handle, 2, 4, { 0, 2 } );
+        ed.setShadowMetrics( Q::Handle, 1, 2, { 0, 1 } );
     }
 
     {
@@ -465,24 +471,23 @@ void Skin::initHints()
 
         ed.setStrutSize( Q::Groove, { 50, 18 } );
         ed.setBoxShape( Q::Groove, 100, Qt::RelativeSize );
-        ed.setGradient( Q::Groove, sliderGradient( theme.primaryBackground ) );
-        ed.setGradient( Q::Groove | Q::Checked, sliderGradient( theme.secondaryBase ) );
+        ed.setGradient( Q::Groove, verticalGradient( theme.primaryBackground ) );
+        ed.setGradient( Q::Groove | Q::Checked, verticalGradient( theme.secondaryBase ) );
 
         ed.setShadowMetrics( Q::Groove, 1, 2, { 0, 1 } );
-        auto s1 = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
-        ed.setShadowColor( Q::Groove, s1 );
+        ed.setShadowColor( Q::Groove, theme.shadow );
 
         ed.setStrutSize( Q::Handle, { 30, 30 } );
         ed.setBoxShape( Q::Handle, 100, Qt::RelativeSize );
         ed.setPosition( Q::Handle, 0.0 );
         ed.setPosition( Q::Handle | Q::Checked, 1.0 );
-        const auto g = buttonGradient( theme.primaryContainer, theme.onPrimary );
-        ed.setGradient( Q::Handle, g.reversed() );
-        ed.setGradient( Q::Handle | Q::Pressed, g );
+        const auto g = buttonGradient( theme.onPrimary );
+        ed.setGradient( Q::Handle, g );
+        ed.setGradient( Q::Handle | Q::Pressed, g.reversed() );
 
         auto c = QskRgb::toTransparentF( theme.inverseSurface, 0.25 );
         ed.setShadowColor( Q::Handle, c );
-        ed.setShadowMetrics( Q::Handle, 2, 4, { 0, 2 } );
+        ed.setShadowMetrics( Q::Handle, 1, 2, { 0, 1 } );
     }
 
     {
