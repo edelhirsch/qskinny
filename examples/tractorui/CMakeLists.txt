@@ -28,6 +28,7 @@ set(SOURCES
     Tile.h Tile.cpp
     main.cpp
 )
+
 qt_add_resources(SOURCES icons.qrc fonts.qrc)
 
 qsk_add_example(${target} ${SOURCES})
@@ -47,6 +48,5 @@ if (QT_VERSION_MAJOR VERSION_GREATER_EQUAL 6)
         shaders/arcshadow-vulkan.vert
         shaders/arcshadow-vulkan.frag
     )
-    qsk_add_shaders( ${target} FILES ${SHADERS} OUTPUT_TARGETS shader_target)
+    qsk_add_shaders(${target} "qskArcShaders" FILES ${SHADERS} OUTPUT_TARGETS shader_target)
 endif()
-
