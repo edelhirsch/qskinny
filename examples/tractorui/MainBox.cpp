@@ -290,7 +290,11 @@ void MainBox::setupTileArea()
 
     connect( themeColorsTile, &ThemeColorsTile::logoChanged, this, [this]( const QUrl& url )
     {
+#if 1 // change to use brand logos
+        Q_UNUSED( url )
+#else
         m_data->logo->setSource( url );
+#endif
     } );
 
     auto* powerLiftTile = new PowerLiftTile( m_data->mainTileArea );
