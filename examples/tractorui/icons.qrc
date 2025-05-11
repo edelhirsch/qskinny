@@ -24,15 +24,5 @@
         <file>icons/qvg/weight-hanging.qvg</file>
         <file>icons/qvg/wifi.qvg</file>
         <file>icons/qvg/wind.qvg</file>
-
-        <file>icons/qvg/logo-Qt.qvg</file>
-        <file>icons/qvg/logo-T-Mobile.qvg</file>
-        <file>icons/qvg/logo-BMW.qvg</file>
-        <file>icons/qvg/logo-Siemens.qvg</file>
-        <file>icons/qvg/logo-FC-Bayern.qvg</file>
-        <file>icons/qvg/logo-John-Deere.qvg</file>
-        <file>icons/qvg/logo-Tommy-Hilfiger.qvg</file>
-        <file>icons/qvg/logo-Ikea.qvg</file>
-
     </qresource>
 </RCC>
