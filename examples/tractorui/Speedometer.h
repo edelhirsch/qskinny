@@ -12,13 +12,16 @@ class Speedometer : public QskBoundedControl
     Q_OBJECT
 
   public:
-    QSK_SUBCONTROLS( Panel1, Panel2, Panel3, ValueText, UnitText );
+    QSK_SUBCONTROLS( OuterPanel, MiddlePanel, InnerPanel, Tickmarks, Value, Intensity, ValueText, UnitText );
 
     Speedometer( QQuickItem* parent = nullptr );
     ~Speedometer();
 
     qreal value() const;
     void setValue( qreal value );
+
+    bool showIntensity() const;
+    void setShowIntensity( bool on );
 
     QString unitString() const;
     void setUnitString( const QString& unitString );
