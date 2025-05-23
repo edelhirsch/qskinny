@@ -7,6 +7,8 @@
 
 #include <QskSkinlet.h>
 
+class Speedometer;
+
 class SpeedometerSkinlet : public QskSkinlet
 {
         Q_GADGET
@@ -14,9 +16,13 @@ class SpeedometerSkinlet : public QskSkinlet
     public:
         enum NodeRole
         {
-            Panel1Role,
-            Panel2Role,
-            Panel3Role,
+            OuterPanelRole,
+            MiddlePanelRole,
+            InnerPanelRole,
+            TickmarksRole,
+            ValueRole,
+            IntensityRole,
+            ValueShadowRole,
             ValueTextRole,
             UnitTextRole,
         };
@@ -32,4 +38,7 @@ class SpeedometerSkinlet : public QskSkinlet
     protected:
         QSGNode* updateSubNode( const QskSkinnable*,
                                 quint8 nodeRole, QSGNode* ) const override;
+
+    private:
+        QSGNode* updateShadowNode( const Speedometer*, QSGNode* node ) const;
 };

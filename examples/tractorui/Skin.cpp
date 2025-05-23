@@ -31,6 +31,7 @@
 #include <QskFontRole.h>
 #include <QskHctColor.h>
 #include <QskMargins.h>
+#include <QskGradientDirection.h>
 #include <QskRgbValue.h>
 #include <QskSeparator.h>
 #include <QskShadowMetrics.h>
@@ -49,6 +50,7 @@ class TractorTheme : public QskMaterial3Theme
         : QskMaterial3Theme( colorScheme, baseColors )
     {
         const QskHctColor primaryBaseHct = QskHctColor( baseColors.primary );
+        const QskHctColor secondaryBaseHct = QskHctColor( baseColors.secondary );
 
         backgroundBase = primaryBaseHct;
         backgroundBase.setChroma( 0 );
@@ -56,13 +58,22 @@ class TractorTheme : public QskMaterial3Theme
         surfaceFlashy = primaryBaseHct;
         surfaceFlashy.setChroma( 40 );
 
+        auto chrome = primaryBaseHct;
+        chrome.setChroma( 10 );
+
         shadow = QskRgb::toTransparentF( inverseSurface, 0.1 );
 
         if ( colorScheme == QskSkin::LightScheme )
         {
             primaryBase = baseColors.primary;
             primaryBackground = primaryBaseHct.toned( 99 ).rgb();
+
             secondaryBase = baseColors.secondary;
+
+            chrome1 = chrome.toned( 60 ).rgb();
+            chrome2 = chrome.toned( 80 ).rgb();
+            chromeInnerBorder = chrome.toned( 100 ).rgb();
+            chromeOuterBorder = chrome.toned( 60 ).rgb();
 
             background1 = backgroundBase.toned( 95 ).rgb();
             background2 = backgroundBase.toned( 99 ).rgb();
@@ -81,6 +92,10 @@ class TractorTheme : public QskMaterial3Theme
             secondaryBaseDark.setTone( 60 );
             secondaryBase = secondaryBaseDark.rgb();
 
+            chrome1 = chrome.toned( 10 ).rgb();
+            chrome2 = chrome.toned( 30 ).rgb();
+            chromeOuterBorder = chrome.toned( 40 ).rgb();
+
             background1 = backgroundBase.toned( 10 ).rgb();
             background2 = backgroundBase.toned( 20 ).rgb();
 
@@ -91,6 +106,10 @@ class TractorTheme : public QskMaterial3Theme
     QRgb primaryBase;
     QRgb primaryBackground;
     QRgb secondaryBase;
+    QRgb chrome1;
+    QRgb chrome2;
+    QRgb chromeInnerBorder;
+    QRgb chromeOuterBorder;
 
     QskHctColor backgroundBase;
     QRgb background1;
@@ -131,6 +150,30 @@ namespace
         QskGradient g( c.toned( t + 10 ).rgb(), c.toned( t - 10 ).rgb() );
 
         g.setLinearDirection( 0, 0, 1, 1 );
+
+        return g;
+    }
+
+    QskGradient radialGradient( QRgb rgb )
+    {
+        QskHctColor c( rgb );
+
+        const auto t = c.tone();
+        QskGradient g( c.toned( t + 10 ).rgb(), c.toned( t - 10 ).rgb() );
+
+        g.setRadialDirection( {} );
+
+        return g;
+    }
+
+    QskGradient conicalGradient( QRgb rgb )
+    {
+        QskHctColor c( rgb );
+
+        const auto t = c.tone();
+        QskGradient g( c.toned( t - 10 ).rgb(), c.toned( t + 10 ).rgb() );
+
+        g.setConicDirection( {} );
 
         return g;
     }
@@ -361,23 +404,59 @@ void Skin::initHints()
     {
         using Q = Speedometer;
 
-        ed.setStrutSize( Q::Panel1, { 160, 160 } );
-        ed.setBoxShape( Q::Panel1, 100, Qt::RelativeSize );
-        ed.setGradient( Q::Panel1, buttonGradient( theme.secondaryBase ) );
-        ed.setShadowMetrics( Q::Panel1, 1, 4, { 0, 4 } );
-        ed.setShadowColor( Q::Panel1, QskRgb::toTransparentF( theme.onSecondaryContainer, 0.3 ) );
+        ed.setStrutSize( Q::OuterPanel, { 170, 170 } );
+        ed.setBoxShape( Q::OuterPanel, 100, Qt::RelativeSize );
 
-        ed.setStrutSize( Q::Panel2, { 140, 140 } );
-        ed.setBoxShape( Q::Panel2, 100, Qt::RelativeSize );
+        QskGradient chromeGradient( {
+            { 0.0, theme.chrome1 },
+            { 0.1, theme.chrome2 },
+            { 0.2, theme.chrome1 },
+            { 0.3, theme.chrome2 },
+            { 0.4, theme.chrome1 },
+            { 0.5, theme.chrome2 },
+            { 0.6, theme.chrome1 },
+            { 0.7, theme.chrome2 },
+            { 0.8, theme.chrome1 },
+            { 0.9, theme.chrome2 },
+            { 1.0, theme.chrome1 },
+            } );
+        chromeGradient.setDirection( QskGradient::Conic );
+
+        ed.setGradient( Q::OuterPanel, chromeGradient );
+        ed.setShadowMetrics( Q::OuterPanel, 1, 2, { 0, 2 } );
+        ed.setShadowColor( Q::OuterPanel, QskRgb::toTransparentF( theme.onSecondaryContainer, 0.3 ) );
+        ed.setBoxBorderMetrics( Q::OuterPanel, 1 );
+        ed.setBoxBorderColors( Q::OuterPanel, theme.chromeOuterBorder );
+
+        ed.setStrutSize( Q::MiddlePanel, { 150, 150 } );
+        ed.setBoxShape( Q::MiddlePanel, 100, Qt::RelativeSize );
         const auto g = buttonGradient( theme.primaryBackground );
-        ed.setGradient( Q::Panel2, g );
+        ed.setGradient( Q::MiddlePanel, g );
+        ed.setBoxBorderMetrics( Q::MiddlePanel, 1 );
+        ed.setBoxBorderColors( Q::MiddlePanel, theme.chromeInnerBorder );
 
-        ed.setStrutSize( Q::Panel3, { 125, 125 } );
-        ed.setBoxShape( Q::Panel3, 100, Qt::RelativeSize );
-        ed.setGradient( Q::Panel3, g.reversed() );
-        auto s = QskRgb::toTransparentF( theme.inverseSurface, 0.1 ); // ### own function
-        ed.setShadowMetrics( Q::Panel3, 0, 1, { 0, 1 } );
-        ed.setShadowColor( Q::Panel3, s );
+        ed.setMetric( Q::Tickmarks, 1 );
+        ed.setArcMetrics( Q::Tickmarks, { 225, -270, 15 } );
+        ed.setColor( Q::Tickmarks, theme.chromeOuterBorder );
+
+        ed.setStrutSize( Q::InnerPanel, { 143, 143 } );
+        ed.setBoxShape( Q::InnerPanel, 100, Qt::RelativeSize );
+        ed.setGradient( Q::InnerPanel, g );
+        ed.setShadowMetrics( Q::InnerPanel, 3, 3, { 0, 0 } );
+        ed.setShadowColor( Q::InnerPanel, theme.shadow );
+
+        ed.setArcMetrics( Q::Value, { 225, -270, 11 } );
+        auto valueGradient = conicalGradient( theme.secondaryBase );
+        valueGradient.setConicDirection( 0.5, 0.5, 225, -270 );
+        ed.setGradient( Q::Value, valueGradient );
+        ed.setShadowColor( Q::Value, QskRgb::toTransparentF( theme.secondaryBase, 0.3 ) );
+        ed.setShadowMetrics( Q::Value, 0, 3, { 1, 1 } );
+
+        ed.setStrutSize( Q::Intensity, { 120, 120 } );
+        ed.setArcMetrics( Q::Intensity, { 225, -270, 5 } );
+        QskGradient intensityGradient( QColor::fromRgba( 0x3300ff00 ), QColor::fromRgba( 0x33ff0000 ) );
+        intensityGradient.setConicDirection( 0.5, 0.5, 225, -270 );
+        ed.setGradient( Q::Intensity, intensityGradient );
 
         ed.setAlignment( Q::ValueText, Qt::AlignCenter );
         ed.setFontRole( Q::ValueText, QskFontRole::Display );
