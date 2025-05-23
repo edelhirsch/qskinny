@@ -7,9 +7,12 @@
 
 #include <QskFunctions.h>
 
-QSK_SUBCONTROL( Speedometer, Panel1 )
-QSK_SUBCONTROL( Speedometer, Panel2 )
-QSK_SUBCONTROL( Speedometer, Panel3 )
+QSK_SUBCONTROL( Speedometer, OuterPanel )
+QSK_SUBCONTROL( Speedometer, MiddlePanel )
+QSK_SUBCONTROL( Speedometer, InnerPanel )
+QSK_SUBCONTROL( Speedometer, Tickmarks )
+QSK_SUBCONTROL( Speedometer, Value )
+QSK_SUBCONTROL( Speedometer, Intensity )
 QSK_SUBCONTROL( Speedometer, ValueText )
 QSK_SUBCONTROL( Speedometer, UnitText )
 
@@ -18,12 +21,14 @@ class Speedometer::PrivateData
   public:
     qreal value = 0.0;
     QString unitString;
+    bool showIntensity = false;
 };
 
 Speedometer::Speedometer( QQuickItem* parent )
     : QskBoundedControl( parent )
     , m_data( new PrivateData )
 {
+    setBoundaries( 0, 120 );
 }
 
 Speedometer::~Speedometer()
@@ -37,11 +42,23 @@ qreal Speedometer::value() const
 
 void Speedometer::setValue( qreal value )
 {
-    if( !qskFuzzyCompare( value, m_data->value ) )
+    const auto bv = boundedValue( value );
+
+    if( !qskFuzzyCompare( bv, m_data->value ) )
     {
-        m_data->value = value;
+        m_data->value = bv;
         Q_EMIT valueChanged();
     }
+}
+
+bool Speedometer::showIntensity() const
+{
+    return m_data->showIntensity;
+}
+
+void Speedometer::setShowIntensity( bool on )
+{
+    m_data->showIntensity = on;
 }
 
 QString Speedometer::unitString() const

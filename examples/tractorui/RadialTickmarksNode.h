@@ -1,0 +1,33 @@
+/******************************************************************************
+ * Copyright (C) 2021 Edelhirsch Software GmbH
+ *           SPDX-License-Identifier: BSD-3-Clause
+ *****************************************************************************/
+
+#pragma once
+
+#include <QskIntervalF.h>
+
+#include <QSGGeometryNode>
+#include <QSGFlatColorMaterial>
+
+class QskArcMetrics;
+class QskTickmarks;
+
+class RadialTickmarksNode : public QSGGeometryNode
+{
+  public:
+    RadialTickmarksNode();
+    ~RadialTickmarksNode() override;
+
+    void update( const QColor&, const QRectF&, const QskArcMetrics&,
+        const QskTickmarks&, const QskIntervalF&, int );
+
+  private:
+    QSGGeometry m_geometry;
+    QSGFlatColorMaterial m_material;
+
+    QRectF m_rect;
+    int m_lineWidth = 0;
+
+    QskHashValue m_hash = 0;
+};

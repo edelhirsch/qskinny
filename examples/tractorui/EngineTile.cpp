@@ -22,7 +22,8 @@ EngineTile::EngineTile( QQuickItem* parent )
     speedBox->setDefaultAlignment( Qt::AlignCenter );
 
     auto* speed = new Speedometer( speedBox );
-    speed->setValue( 35 );
+    speed->setBoundaries( 0, 70 );
+    speed->setValue( 53 );
     speed->setUnitString( "km/h" );
 
     auto* speedLabel = new QskTextLabel( "speed", speedBox );
@@ -36,6 +37,8 @@ EngineTile::EngineTile( QQuickItem* parent )
     driveBox->setDefaultAlignment( Qt::AlignCenter );
 
     auto* drive = new Speedometer( driveBox );
+    drive->setShowIntensity( true );
+    drive->setBoundaries( 0, 80 );
     drive->setValue( 25 );
     drive->setUnitString( "*100 rpm" );
 

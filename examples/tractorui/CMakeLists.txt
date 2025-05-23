@@ -20,6 +20,7 @@ set(SOURCES
     PowerLiftTile.h PowerLiftTile.cpp
     QuickAccessButton.h QuickAccessButton.cpp
     QuickAccessTile.h QuickAccessTile.cpp
+    RadialTickmarksNode.h RadialTickmarksNode.cpp
     Skin.h Skin.cpp
     Speedometer.h Speedometer.cpp
     SpeedometerSkinlet.h SpeedometerSkinlet.cpp
