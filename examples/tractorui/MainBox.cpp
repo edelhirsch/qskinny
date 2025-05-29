@@ -18,6 +18,7 @@
 #include <QskEvent.h>
 #include <QskGraphicLabel.h>
 #include <QskGridBox.h>
+#include <QskSkinManager.h>
 #include <QskLinearBox.h>
 #include <QskPanGestureRecognizer.h>
 #include <QskSeparator.h>
@@ -265,12 +266,54 @@ void MainBox::setupSidebar()
 {
     m_data->sidebarBox = new QskLinearBox( Qt::Vertical, m_data->contentBox );
 
-    const auto buttonIcons = { "house", "car-battery", "grip", "square-poll-vertical", "tractor", "road" };
+    const QVector< QPair< QString, std::function< void() > > > sidebarEntries = {
+        { "house", [this]()
+            {
+                m_data->cube->switchToPosition( Cube::FrontPos );
+         } },
+        { "cube", [this]()
+            {
+                m_data->cube->switchPosition( Qsk::LeftToRight );
+         } },
+        { "moon", [this]()
+            {
+                QskSkin::ColorScheme colorScheme;
+                QString iconSource;
 
-    for( const auto& icon : buttonIcons )
+                auto* skin = qskSkinManager->skin();
+
+                if( skin->colorScheme() == QskSkin::LightScheme )
+                {
+                    colorScheme = QskSkin::DarkScheme;
+                    iconSource = "sun";
+                }
+                else
+                {
+                    colorScheme = QskSkin::LightScheme;
+                    iconSource = "moon";
+                }
+
+                skin->setColorScheme( colorScheme );
+
+                auto* button = qobject_cast< Button* >( sender() );
+                button->setIconSource( iconSource );
+         } },
+        { "square-poll-vertical", []()
+            {
+         } },
+        { "tractor", []()
+            {
+         } },
+        { "road", []()
+            {
+         } }
+    };
+
+    for( const auto& entry : sidebarEntries )
     {
-        auto* b = new Button( icon, m_data->sidebarBox );
+        auto* b = new Button( entry.first, m_data->sidebarBox );
         b->setType( Button::Type::Sidebar );
+        connect( b, &QskPushButton::clicked, this, entry.second );
     }
 }
 
