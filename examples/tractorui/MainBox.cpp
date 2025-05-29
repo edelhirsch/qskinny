@@ -298,7 +298,7 @@ void MainBox::setupSidebar()
                 auto* button = qobject_cast< Button* >( sender() );
                 button->setIconSource( iconSource );
          } },
-        { "square-poll-vertical", []()
+        { "language", []()
             {
          } },
         { "tractor", []()
