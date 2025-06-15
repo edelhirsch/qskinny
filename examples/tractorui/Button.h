@@ -6,8 +6,13 @@
 #pragma once
 
 #include <QskBox.h>
+#include <QskLabelData.h>
+#include <QskPopup.h>
 #include <QskPushButton.h>
 #include <QskTextLabel.h>
+
+class QskLinearBox;
+class QskSegmentedBar;
 
 class Button : public QskPushButton
 {
@@ -35,4 +40,38 @@ class Button : public QskPushButton
 
   private:
     Type m_type;
+};
+
+class SidebarOverlayButton : public QskPushButton
+{
+    Q_OBJECT
+
+  public:
+    QSK_SUBCONTROLS( Panel )
+
+    SidebarOverlayButton( QQuickItem* parent );
+};
+
+class SidebarButtonPopup : public QskPopup
+{
+    Q_OBJECT
+
+  public:
+    QSK_SUBCONTROLS( Panel, Overlay )
+
+    SidebarButtonPopup( Button* button, const QVector< QskLabelData >& options, int index = -1 );
+
+    QRectF clipRect() const override;
+    QskAspect fadingAspect() const override;
+
+  Q_SIGNALS:
+    void selectedIndexChanged( int index );
+
+  protected:
+    void updateNode( QSGNode* ) override;
+
+  private:
+    const Button* const m_button;
+    QskLinearBox* m_linearBox;
+    QskSegmentedBar* m_bar;
 };

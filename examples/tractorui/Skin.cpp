@@ -33,6 +33,7 @@
 #include <QskMargins.h>
 #include <QskGradientDirection.h>
 #include <QskRgbValue.h>
+#include <QskSegmentedBar.h>
 #include <QskSeparator.h>
 #include <QskShadowMetrics.h>
 #include <QskSlider.h>
@@ -394,6 +395,30 @@ void Skin::initHints()
     }
 
     {
+        using Q = SidebarOverlayButton;
+
+        ed.setBoxShape( Q::Panel, 100, 0, 100, 0, Qt::RelativeSize );
+
+        const auto r = buttonGradient( theme.primaryBackground ).rgbStart();
+
+        QskGradient g( {
+            { 0.0, Qt::transparent },
+            { 0.5, Qt::transparent },
+            { 1.0, r } } );
+        g.setLinearDirection( Qt::Horizontal );
+        ed.setGradient( Q::Panel, g );
+    }
+
+    {
+        using Q = SidebarButtonPopup;
+
+        ed.setAnimation( Q::Panel | A::Position, 300, QEasingCurve::OutQuart );
+
+        // const auto c = QskRgb::toTransparentF( theme.onBackground, 0.2 ); ###
+        // ed.setGradient( Q::Overlay, c );
+    }
+
+    {
         using Q = SliderLabel;
 
         ed.setAlignment( Q::Text, Qt::AlignRight | Qt::AlignVCenter );
@@ -509,6 +534,30 @@ void Skin::initHints()
         using Q = QskGraphicLabel;
 
         ed.setGraphicRole( Q::Graphic, GraphicRolePrimaryBase );
+    }
+
+    {
+        using Q = QskSegmentedBar;
+
+        ed.setStrutSize( Q::Panel, { 85, 85 } );
+        ed.setBoxShape( Q::Panel, 0, 100, 0, 100, Qt::RelativeSize );
+
+        const auto g = buttonGradient( theme.primaryBackground );
+
+        ed.setGradient( Q::Panel, g );
+        ed.setShadowColor( Q::Panel, theme.shadow );
+        ed.setShadowMetrics( Q::Panel, 0, 4, { 2, 4 } );
+
+        ed.setStrutSize( Q::Segment, { 130, -1 } );
+        ed.setBoxShape( Q::Segment | Q::Selected, 100, Qt::RelativeSize );
+        ed.setGradient( Q::Segment | Q::Selected, buttonGradient( theme.primaryBackground ).reversed() );
+        ed.setShadowColor( Q::Segment | Q::Selected, QskRgb::toTransparentF( theme.secondary, 0.3 ) );
+        ed.setShadowMetrics( Q::Segment | Q::Selected, 3, 6, { 3, 3 } );
+
+        ed.setFontRole( Q::Text, { QskFontRole::Body } );
+        ed.setColor( Q::Text, theme.onPrimaryContainer );
+
+        ed.setPadding( Q::Icon, { 8, 3, 8, 3 } );
     }
 
     {
