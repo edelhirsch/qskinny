@@ -26,6 +26,8 @@ int main( int argc, char* argv[] )
     QskObjectCounter counter( true );
 #endif
 
+    QLocale::setDefault( QLocale( "en_US" ) );
+
     QGuiApplication app( argc, argv );
 
     qskSkinManager->setSkin( new Skin() );

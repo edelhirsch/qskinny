@@ -28,5 +28,9 @@
         <file>icons/qvg/weight-hanging.qvg</file>
         <file>icons/qvg/wifi.qvg</file>
         <file>icons/qvg/wind.qvg</file>
+
+        <file>icons/qvg/country-de.qvg</file>
+        <file>icons/qvg/country-us.qvg</file>
+        <file>icons/qvg/country-cn.qvg</file>
     </qresource>
 </RCC>

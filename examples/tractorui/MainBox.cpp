@@ -20,12 +20,15 @@
 #include <QskGridBox.h>
 #include <QskSkinManager.h>
 #include <QskLinearBox.h>
+#include <QskMenu.h>
 #include <QskPanGestureRecognizer.h>
+#include <QskPopup.h>
 #include <QskSeparator.h>
 #include <QskTextLabel.h>
 
 #include <QLocale>
 #include <QTimer>
+#include <QQuickWindow>
 
 namespace
 {
@@ -298,8 +301,31 @@ void MainBox::setupSidebar()
                 auto* button = qobject_cast< Button* >( sender() );
                 button->setIconSource( iconSource );
          } },
-        { "language", []()
+        { "language", [this]()
             {
+                auto* button = qobject_cast< Button* >( sender() );
+
+                const QVector< QskLabelData > options = {
+                    { "Deutsch", { "country-de" } },
+                    { "English", { "country-us" } },
+                    { "中国人", { "country-cn" } } };
+
+                const QVector< QLocale > locales = { QLocale( "de_DE" ), QLocale( "en_US" ), QLocale( "zh_CN" ) };
+                const int index = locales.indexOf( QLocale() );
+
+                auto* popup = new SidebarButtonPopup( button, options, index );
+
+                connect( popup, &SidebarButtonPopup::selectedIndexChanged, this, [popup, locales]( int index )
+                {
+                    QLocale::setDefault( locales.at( index ) );
+
+                    QTimer::singleShot( 200, popup, [popup]()
+                    {
+                        popup->close();
+                    } );
+                } );
+
+                popup->toggle();
          } },
         { "tractor", []()
             {

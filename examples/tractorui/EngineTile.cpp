@@ -26,7 +26,7 @@ EngineTile::EngineTile( QQuickItem* parent )
     speed->setValue( 53 );
     speed->setUnitString( "km/h" );
 
-    auto* speedLabel = new QskTextLabel( "speed", speedBox );
+    auto* speedLabel = new QskTextLabel( tr( "speed" ), speedBox );
     speedLabel->setAlignment( Qt::AlignCenter );
     speedLabel->setFontRole( QskFontRole::Title );
 
@@ -42,7 +42,7 @@ EngineTile::EngineTile( QQuickItem* parent )
     drive->setValue( 25 );
     drive->setUnitString( "*100 rpm" );
 
-    auto* driveLabel = new QskTextLabel( "drive", driveBox );
+    auto* driveLabel = new QskTextLabel( tr( "drive" ), driveBox );
     driveLabel->setAlignment( Qt::AlignCenter );
     driveLabel->setFontRole( QskFontRole::Title );
 
