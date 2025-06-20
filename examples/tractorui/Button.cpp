@@ -106,7 +106,17 @@ QRectF SidebarButtonPopup::clipRect() const
 {
     if ( isFading() && parentItem() )
     {
-        const auto v = effectiveSkinHint( fadingAspect() ).toDouble();
+        const auto sh = effectiveSkinHint( fadingAspect() );
+        qreal v;
+
+        if( sh.isValid() )
+        {
+            v = sh.toDouble();
+        }
+        else
+        {
+            v = isOpen() ? 1.0 : 0.0;
+        }
 
         const auto w = v * sizeHint().width();
         QRectF r( 0, 0, w, sizeHint().height() );
