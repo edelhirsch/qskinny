@@ -6,6 +6,7 @@
 #pragma once
 
 #include <QskLinearBox.h>
+#include <QskAnimator.h>
 
 class HeaderElementsBackgroundBox : public QskBox
 {
@@ -49,7 +50,13 @@ class MainBox : public QskLinearBox
   public:
     QSK_SUBCONTROLS( Panel )
 
-    MainBox( QQuickItem* parent );
+    MainBox( QQuickItem* parent = nullptr );
+    ~MainBox();
+
+    void rebuildUI();
+
+Q_SIGNALS:
+    void languageChanged( const QString& localeName );
 
   protected:
     void keyPressEvent( QKeyEvent* ) override final;
@@ -57,12 +64,16 @@ class MainBox : public QskLinearBox
 
   private:
     void setupHeaderBox();
-
     void setupContentBox();
     void setupSidebar();
     void setupTileArea();
     void setupCube();
+    void startFadeAnimation();
+    void performRebuild();
+
+    class FadeAnimator;
 
     class PrivateData;
     std::unique_ptr< PrivateData > m_data;
+    FadeAnimator* m_fadeAnimator = nullptr;
 };

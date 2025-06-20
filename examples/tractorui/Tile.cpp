@@ -21,7 +21,7 @@ TileLabel::TileLabel( const QString& text, QQuickItem* parent )
 
 Tile::Tile( const QString &title, QQuickItem* parent )
     : QskLinearBox( Qt::Vertical, parent )
-    , m_label( new TileLabel( title, nullptr ) )
+    , m_label( new TileLabel( tr(title.toUtf8().constData()), nullptr ) )
 {
     setPanel( true );
     setAutoAddChildren( false );
