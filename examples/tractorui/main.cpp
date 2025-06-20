@@ -19,6 +19,9 @@
 
 #include <QGuiApplication>
 #include <QTimer>
+#include <QTranslator>
+#include <QLibraryInfo>
+#include <QDir>
 
 int main( int argc, char* argv[] )
 {
@@ -26,6 +29,7 @@ int main( int argc, char* argv[] )
     QskObjectCounter counter( true );
 #endif
 
+    // Use system locale by default
     QLocale::setDefault( QLocale( "en_US" ) );
 
     QGuiApplication app( argc, argv );

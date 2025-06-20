@@ -58,16 +58,6 @@ namespace
     };
 }
 
-QSK_SUBCONTROL( HeaderElementsBackgroundBox, Panel )
-
-// just for displaying shadow in another color and avoiding a skinlet:
-HeaderElementsBackgroundBox::HeaderElementsBackgroundBox( QQuickItem* parent )
-    : QskBox( parent )
-{
-    setSubcontrolProxy( QskBox::Panel, Panel );
-}
-
-
 QSK_SUBCONTROL( HeaderElementsBox, Panel )
 
 class HeaderElementsBox::PrivateData
@@ -76,6 +66,96 @@ class HeaderElementsBox::PrivateData
     Position pos;
     HeaderElementsBackgroundBox* backgroundBox;
 };
+
+class MainBox::PrivateData
+{
+  public:
+    QskLinearBox* headerBox;
+    QskGraphicLabel* logo;
+    HeaderElementsBox* leftElements;
+    HeaderElementsBox* rightElements;
+
+    QskLinearBox* contentBox;
+    QskLinearBox* sidebarBox;
+    Cube* cube;
+    QskGridBox* mainTileArea;
+};
+
+class MainBox::FadeAnimator : public QskAnimator
+{
+  public:
+    FadeAnimator( MainBox* mainBox )
+        : m_mainBox( mainBox )
+    {
+        setDuration( 300 );
+        setEasingCurve( QEasingCurve::InOutQuad );
+        setWindow( mainBox->window() );
+    }
+
+    void startFadeOut()
+    {
+        m_fadeOut = true;
+        start();
+    }
+
+    void startFadeIn()
+    {
+        m_fadeOut = false;
+        start();
+    }
+
+  protected:
+    void advance( qreal value ) override
+    {
+        if ( m_fadeOut )
+        {
+            // Fade out: 1.0 -> 0.0
+            if ( m_mainBox->m_data->headerBox)
+                m_mainBox->m_data->headerBox->setOpacity( 1.0 - value );
+            if ( m_mainBox->m_data->mainTileArea)
+                m_mainBox->m_data->mainTileArea->setOpacity( 1.0 - value );
+        }
+        else
+        {
+            // Fade in: 0.0 -> 1.0
+            if ( m_mainBox->m_data->headerBox)
+                m_mainBox->m_data->headerBox->setOpacity( value );
+            if ( m_mainBox->m_data->mainTileArea)
+                m_mainBox->m_data->mainTileArea->setOpacity( value );
+        }
+    }
+
+    void done() override
+    {
+        if ( m_fadeOut )
+        {
+            // Fade out completed, now rebuild UI and start fade in
+            m_mainBox->performRebuild();
+            startFadeIn();
+        }
+        else
+        {
+            // Fade in completed, animation done
+            if ( m_mainBox->m_data->headerBox)
+                m_mainBox->m_data->headerBox->setOpacity( 1.0 );
+            if ( m_mainBox->m_data->mainTileArea)
+                m_mainBox->m_data->mainTileArea->setOpacity( 1.0 );
+        }
+    }
+
+  private:
+    MainBox* m_mainBox;
+    bool m_fadeOut = true;
+};
+
+QSK_SUBCONTROL( HeaderElementsBackgroundBox, Panel )
+
+// just for displaying shadow in another color and avoiding a skinlet:
+HeaderElementsBackgroundBox::HeaderElementsBackgroundBox( QQuickItem* parent )
+    : QskBox( parent )
+{
+    setSubcontrolProxy( QskBox::Panel, Panel );
+}
 
 HeaderElementsBox::HeaderElementsBox( HeaderElementsBox::Position pos, QQuickItem* parent )
     : QskLinearBox( Qt::Horizontal, parent )
@@ -113,20 +193,6 @@ QskAspect::Variation HeaderElementsBox::effectiveVariation() const
 
 QSK_SUBCONTROL( MainBox, Panel )
 
-class MainBox::PrivateData
-{
-  public:
-    QskLinearBox* headerBox;
-    QskGraphicLabel* logo;
-    HeaderElementsBox* leftElements;
-    HeaderElementsBox* rightElements;
-
-    QskLinearBox* contentBox;
-    QskLinearBox* sidebarBox;
-    Cube* cube;
-    QskGridBox* mainTileArea;
-};
-
 MainBox::MainBox( QQuickItem* parent )
     : QskLinearBox( Qt::Vertical, parent )
     , m_data( new PrivateData )
@@ -140,6 +206,11 @@ MainBox::MainBox( QQuickItem* parent )
 
     setupHeaderBox();
     setupContentBox();
+}
+
+MainBox::~MainBox()
+{
+    delete m_fadeAnimator;
 }
 
 void MainBox::gestureEvent( QskGestureEvent* event )
@@ -201,7 +272,7 @@ void MainBox::setupHeaderBox()
 {
     m_data->headerBox = new QskLinearBox( Qt::Horizontal, this );
     m_data->headerBox->setSpacing( 20 );
-
+    
     m_data->leftElements = new HeaderElementsBox( HeaderElementsBox::Position::Left, m_data->headerBox );
     m_data->leftElements->setPadding( { 0, 10, 25, 10 } );
 
@@ -219,7 +290,7 @@ void MainBox::setupHeaderBox()
 
     auto updateDateTime = [dateTimeLabel]()
     {
-        auto l = QLocale::system();
+        auto l = QLocale();
         auto cdt = QDateTime::currentDateTime();
 
         auto day = l.dayName( QDate::currentDate().dayOfWeek() );
@@ -242,7 +313,7 @@ void MainBox::setupHeaderBox()
     new QskSeparator( Qt::Vertical, m_data->leftElements );
 
     auto* userButton = new Button( "user", m_data->leftElements );
-    userButton->setText( "Hans" );
+    userButton->setText( tr("Hans") );
 
 
     auto* wifiSwitch = new Switch( "wifi", m_data->rightElements );
@@ -254,7 +325,7 @@ void MainBox::setupHeaderBox()
     new QskSeparator( Qt::Vertical, m_data->rightElements );
 
     auto* settingsButton = new Button( "bars", m_data->rightElements );
-    settingsButton->setText( "settings" );
+    settingsButton->setText( tr("settings") );
 }
 
 void MainBox::setupContentBox()
@@ -313,17 +384,21 @@ void MainBox::setupSidebar()
                     { "中国人", { "country-cn" } } };
 
                 const QVector< QLocale > locales = { QLocale( "de_DE" ), QLocale( "en_US" ), QLocale( "zh_CN" ) };
-                const int index = locales.indexOf( QLocale() );
+                const int index = locales.indexOf( QLocale().language() );
 
                 auto* popup = new SidebarButtonPopup( button, options, index );
 
-                connect( popup, &SidebarButtonPopup::selectedIndexChanged, this, [popup, locales]( int index )
+                connect( popup, &SidebarButtonPopup::selectedIndexChanged, this, [this, popup, locales]( int index )
                 {
                     QLocale::setDefault( locales.at( index ) );
 
-                    QTimer::singleShot( 200, popup, [popup]()
+                    const auto localeName = locales.at( index ).name();
+
+                    QTimer::singleShot( 100, popup, [this, popup, localeName]()
                     {
                         popup->close();
+                        Q_EMIT languageChanged( localeName );
+
                     } );
                 } );
 
@@ -350,9 +425,8 @@ void MainBox::setupTileArea()
     setupCube();
 
     m_data->mainTileArea = new QskGridBox( m_data->cube );
-
     m_data->mainTileArea->setSpacing( 20 );
-
+    
     auto* engineTile = new EngineTile( m_data->mainTileArea );
     m_data->mainTileArea->addItem( engineTile, 0, 0 );
 
@@ -410,6 +484,51 @@ void MainBox::setupCube()
 
     m_data->cube = new Cube( m_data->contentBox );
     m_data->cube->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Expanding );
+}
+
+void MainBox::rebuildUI()
+{
+    // Start fade out animation instead of immediate rebuild
+    startFadeAnimation();
+}
+
+void MainBox::startFadeAnimation()
+{
+    if ( !m_fadeAnimator )
+    {
+        m_fadeAnimator = new FadeAnimator( this );
+    }
+
+    if ( !m_fadeAnimator->isRunning() )
+    {
+        m_fadeAnimator->startFadeOut();
+    }
+}
+
+void MainBox::performRebuild()
+{
+    // This is called when fade out is complete
+    // Clear existing content
+    if (m_data->headerBox) {
+        m_data->headerBox->deleteLater();
+        m_data->headerBox = nullptr;
+    }
+    if (m_data->contentBox) {
+        m_data->contentBox->deleteLater();
+        m_data->contentBox = nullptr;
+    }
+    if (m_data->cube) {
+        m_data->cube->deleteLater();
+        m_data->cube = nullptr;
+    }
+    if (m_data->mainTileArea) {
+        m_data->mainTileArea->deleteLater();
+        m_data->mainTileArea = nullptr;
+    }
+
+    // Rebuild the UI
+    setupHeaderBox();
+    setupContentBox();
 }
 
 #include "moc_MainBox.cpp"

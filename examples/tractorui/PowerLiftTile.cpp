@@ -36,12 +36,12 @@ PowerLiftTile::PowerLiftTile( QQuickItem* parent )
     frontArc->setProgrammedValue( 0.8 );
     arcsBox->addItem( frontArc, 0, 2 );
 
-    auto* backLabel = new QskTextLabel( "back", arcsBox );
+    auto* backLabel = new QskTextLabel( tr("back"), arcsBox );
     backLabel->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
     backLabel->setFontRole( QskFontRole::Title );
     arcsBox->addItem( backLabel, 1, 0 );
 
-    auto* frontLabel = new QskTextLabel( "front", arcsBox );
+    auto* frontLabel = new QskTextLabel( tr("front"), arcsBox );
     frontLabel->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
     frontLabel->setFontRole( QskFontRole::Title );
     arcsBox->addItem( frontLabel, 1, 2 );
@@ -51,8 +51,8 @@ PowerLiftTile::PowerLiftTile( QQuickItem* parent )
     buttonsBox->setMargins( 10 );
     buttonsBox->setSpacing( 10 );
 
-    auto* velocityButton = new QuickAccessButton( "clock", "velocity", buttonsBox );
-    auto* weightsButton = new QuickAccessButton( "weight-hanging", "weights", buttonsBox );
+    auto* velocityButton = new QuickAccessButton( "clock", tr("velocity"), buttonsBox );
+    auto* weightsButton = new QuickAccessButton( "weight-hanging", tr("weights"), buttonsBox );
 
     setContent( outerBox );
 }
