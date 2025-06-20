@@ -26,6 +26,8 @@
 #include <QskSeparator.h>
 #include <QskTextLabel.h>
 
+#include <QDateTime>
+#include <QDate>
 #include <QLocale>
 #include <QTimer>
 #include <QQuickWindow>
