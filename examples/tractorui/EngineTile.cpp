@@ -24,9 +24,9 @@ EngineTile::EngineTile( QQuickItem* parent )
     auto* speed = new Speedometer( speedBox );
     speed->setBoundaries( 0, 70 );
     speed->setValue( 53 );
-    speed->setUnitString( "km/h" );
+    speed->setUnitString( tr("km/h") );
 
-    auto* speedLabel = new QskTextLabel( tr( "speed" ), speedBox );
+    auto* speedLabel = new QskTextLabel( tr("speed"), speedBox );
     speedLabel->setAlignment( Qt::AlignCenter );
     speedLabel->setFontRole( QskFontRole::Title );
 
@@ -40,9 +40,9 @@ EngineTile::EngineTile( QQuickItem* parent )
     drive->setShowIntensity( true );
     drive->setBoundaries( 0, 80 );
     drive->setValue( 25 );
-    drive->setUnitString( "*100 rpm" );
+    drive->setUnitString( tr("*100 rpm") );
 
-    auto* driveLabel = new QskTextLabel( tr( "drive" ), driveBox );
+    auto* driveLabel = new QskTextLabel( tr("drive"), driveBox );
     driveLabel->setAlignment( Qt::AlignCenter );
     driveLabel->setFontRole( QskFontRole::Title );
 
@@ -54,7 +54,7 @@ EngineTile::EngineTile( QQuickItem* parent )
 
     auto* roadModeSwitch = new Switch( "road", roadAndCruiseControlBox );
     auto* cruiseControlButton = new Button( "arrow-down", roadAndCruiseControlBox );
-    cruiseControlButton->setText( "cruise control" );
+    cruiseControlButton->setText( tr("cruise control") );
 
     setContent( box );
 }

@@ -106,15 +106,15 @@ CabinTile::CabinTile( QQuickItem* parent )
 
     auto* slidersBox = new QskLinearBox( Qt::Vertical, outerBox );
 
-    auto* temperatureSlider = new LabeledSlider( "temperature", "°C", slidersBox );
+    auto* temperatureSlider = new LabeledSlider( tr("temperature"), tr("°C"), slidersBox );
     temperatureSlider->slider()->setBoundaries( 15, 30 );
     temperatureSlider->slider()->setValue( 22 );
 
-    auto* durationSlider = new LabeledSlider( "duration", "min", slidersBox );
+    auto* durationSlider = new LabeledSlider( tr("duration"), tr("min"), slidersBox );
     durationSlider->slider()->setBoundaries( 1, 60 );
     durationSlider->slider()->setValue( 30 );
 
-    auto* fanSpeedSlider = new LabeledSlider( "fan speed", "", slidersBox );
+    auto* fanSpeedSlider = new LabeledSlider( tr("fan speed"), QString(), slidersBox );
     fanSpeedSlider->slider()->setBoundaries( 0, 5 );
     fanSpeedSlider->slider()->setValue( 3 );
 
@@ -128,7 +128,7 @@ CabinTile::CabinTile( QQuickItem* parent )
     auto* ecoModeSwitch = new Switch( "leaf", buttonsBox );
 
     auto* maxButton = new Button( "wind", buttonsBox );
-    maxButton->setText( "max" );
+    maxButton->setText( tr("max") );
 
     setContent( outerBox );
 }

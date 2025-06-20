@@ -38,7 +38,7 @@ namespace
 }
 
 ThemeColorsTile::ThemeColorsTile( QQuickItem* parent )
-    : Tile( "theme colors", parent )
+    : Tile( tr("theme colors"), parent )
 {
     auto* gridBox = new QskGridBox( this );
     gridBox->setMargins( { 5, 5, 5, 10 } );
@@ -66,7 +66,7 @@ ThemeColorsTile::ThemeColorsTile( QQuickItem* parent )
         const auto primaryColor = std::get< 1 >( t );
         const auto secondaryColor = std::get< 2 >( t );
 
-        auto* b = new Button( "theme " + QString::number( i + 1 ) );
+        auto* b = new Button( tr("theme %1").arg(i + 1) );
         buttons.append( b );
 
         connect( b, &Button::clicked, this, [this, b, buttons, primaryColor, secondaryColor, customLogo]()
