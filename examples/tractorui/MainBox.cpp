@@ -122,6 +122,8 @@ class MainBox::FadeAnimator : public QskAnimator
                 m_mainBox->m_data->headerBox->setOpacity( value );
             if ( m_mainBox->m_data->mainTileArea)
                 m_mainBox->m_data->mainTileArea->setOpacity( value );
+            if ( m_mainBox->m_data->sidebarBox)
+                m_mainBox->m_data->sidebarBox->setOpacity( 1.0 );
         }
     }
 
@@ -271,6 +273,7 @@ void MainBox::keyPressEvent( QKeyEvent* event )
 void MainBox::setupHeaderBox()
 {
     m_data->headerBox = new QskLinearBox( Qt::Horizontal, this );
+
     m_data->headerBox->setSpacing( 20 );
     
     m_data->leftElements = new HeaderElementsBox( HeaderElementsBox::Position::Left, m_data->headerBox );
@@ -529,6 +532,10 @@ void MainBox::performRebuild()
     // Rebuild the UI
     setupHeaderBox();
     setupContentBox();
+
+    m_data->headerBox->setOpacity( 0.0 );
+    m_data->sidebarBox->setOpacity( 0.0 );
+    m_data->mainTileArea->setOpacity( 0.0 );
 }
 
 #include "moc_MainBox.cpp"
