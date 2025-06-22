@@ -30,9 +30,42 @@ set(SOURCES
     main.cpp
 )
 
-qt_add_resources(SOURCES icons.qrc fonts.qrc translations.qrc)
+# Generate .qm files from .ts files
+set(TS_FILES translations_de_DE.ts translations_en_US.ts translations_zh_CN.ts)
+set(QM_FILES)
+
+foreach(TS_FILE ${TS_FILES})
+    get_filename_component(LANG ${TS_FILE} NAME_WE)
+    set(QM_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.qm")
+    
+    add_custom_command(
+        OUTPUT ${QM_FILE}
+        COMMAND lrelease ${CMAKE_CURRENT_SOURCE_DIR}/${TS_FILE} -qm ${QM_FILE}
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${TS_FILE}
+        COMMENT "Generating ${QM_FILE}"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    
+    list(APPEND QM_FILES ${QM_FILE})
+endforeach()
+
+# Create a custom target for translations
+add_custom_target(translations ALL DEPENDS ${QM_FILES})
+
+# Copy the .qrc file to the binary directory
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations.qrc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc
+    COPYONLY
+)
+
+# Add the .qrc file to the build
+qt_add_resources(SOURCES icons.qrc fonts.qrc ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc)
 
 qsk_add_example(${target} ${SOURCES})
+
+# Ensure translations are built before the target
+add_dependencies(${target} translations)
 
 target_compile_definitions(${target} PRIVATE USE_SHORTCUTS=1)
 if(ENABLE_ENSURE_SKINS)
@@ -51,26 +84,3 @@ if (QT_VERSION_MAJOR VERSION_GREATER_EQUAL 6)
     )
     qsk_add_shaders(${target} "qskArcShaders" FILES ${SHADERS} OUTPUT_TARGETS shader_target)
 endif()
-
-set(TS_FILES translations_de_DE.ts translations_en_US.ts translations_zh_CN.ts)
-set(QM_FILES)
-foreach(TS_FILE ${TS_FILES})
-    get_filename_component(LANG ${TS_FILE} NAME_WE)
-    set(QM_FILE "${CMAKE_CURRENT_BINARY_DIR}/${LANG}.qm")
-    set(QM_FILE_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/${LANG}.qm")
-    add_custom_command(
-        OUTPUT ${QM_FILE}
-        COMMAND lrelease ${CMAKE_CURRENT_SOURCE_DIR}/${TS_FILE} -qm ${QM_FILE}
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${TS_FILE}
-        COMMENT "Generating ${QM_FILE}"
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-    add_custom_command(
-        OUTPUT ${QM_FILE_SOURCE}
-        COMMAND ${CMAKE_COMMAND} -E copy ${QM_FILE} ${QM_FILE_SOURCE}
-        DEPENDS ${QM_FILE}
-        COMMENT "Copying ${QM_FILE} to source directory"
-    )
-    list(APPEND QM_FILES ${QM_FILE} ${QM_FILE_SOURCE})
-endforeach()
-add_custom_target(translations ALL DEPENDS ${QM_FILES})
