@@ -300,7 +300,8 @@ void MainBox::setupHeaderBox()
         auto date = cdt.toString( l.dateFormat( QLocale::ShortFormat ) );
         auto t = cdt.toString( l.timeFormat( QLocale::ShortFormat ) );
 
-        dateTimeLabel->setText( QString( "%1\n%2\n%3").arg( day ).arg( date ).arg( t ) );
+        if( dateTimeLabel )
+            dateTimeLabel->setText( QString( "%1\n%2\n%3").arg( day ).arg( date ).arg( t ) );
     };
 
     auto* timer = new QTimer( this );
