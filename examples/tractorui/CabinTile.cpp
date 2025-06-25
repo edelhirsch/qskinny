@@ -29,7 +29,7 @@ namespace
             w1 = qMax( w1, qskHorizontalAdvance( f, vMin ) );
             w1 = qMax( w1, qskHorizontalAdvance( f, vMax ) );
 
-            w2 = qMax( w2, qskHorizontalAdvance( f, s->unit() ) );
+            w2 = qMax( w2, qskHorizontalAdvance( f, s->unitString() ) );
         }
 
         for( auto* s : sliders )
@@ -50,13 +50,18 @@ SliderLabel::SliderLabel( const QString& text, QQuickItem* parent )
     setSubcontrolProxy( QskTextLabel::Text, Text );
 }
 
-LabeledSlider::LabeledSlider( const QString& labelText, const QString& unit, QQuickItem* parent )
+LabeledSlider::LabeledSlider( const QString& labelText, UnitConversion::UnitType unitType, const QString& explicitUnitString, QQuickItem* parent )
     : QskGridBox( parent )
-    , m_unit( unit )
+    , UnitConversion( unitType )
 {
     setDefaultAlignment( Qt::AlignCenter );
     setSpacing( Qt::Horizontal, 10 );
     setSizePolicy( Qt::Vertical, QskSizePolicy::Fixed );
+
+    if( unit() == UnitConversion::Unit::None )
+    {
+        setExplicitUnitString( explicitUnitString );
+    }
 
     m_slider = new QskSlider( Qt::Horizontal, this );
 
@@ -65,10 +70,10 @@ LabeledSlider::LabeledSlider( const QString& labelText, const QString& unit, QQu
 
     connect( m_slider, &QskSlider::valueChanged, this, [this, valueLabel]()
     {
-        valueLabel->setText( QString::number( m_slider->value(), 'f', 0 ) );
+        valueLabel->setText( QString::number( convertedValue( m_slider->value() ), 'f', 0 ) );
     } );
 
-    auto* unitLabel = new SliderLabel( unit, this );
+    auto* unitLabel = new SliderLabel( unitString(), this );
     unitLabel->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
     unitLabel->setAlignmentHint( SliderLabel::Text, Qt::AlignLeft | Qt::AlignVCenter );
 
@@ -89,12 +94,7 @@ QskSlider* LabeledSlider::slider()
 
 QString LabeledSlider::valueText() const
 {
-    return QString::number( m_slider->value(), 'f', 0 );
-}
-
-QString LabeledSlider::unit() const
-{
-    return m_unit;
+    return QString::number( convertedValue( m_slider->value() ), 'f', 0 );
 }
 
 CabinTile::CabinTile( QQuickItem* parent )
@@ -106,15 +106,15 @@ CabinTile::CabinTile( QQuickItem* parent )
 
     auto* slidersBox = new QskLinearBox( Qt::Vertical, outerBox );
 
-    auto* temperatureSlider = new LabeledSlider( tr("temperature"), tr("°C"), slidersBox );
+    auto* temperatureSlider = new LabeledSlider( tr("temperature"), UnitConversion::UnitType::Temperature, tr("°C"), slidersBox );
     temperatureSlider->slider()->setBoundaries( 15, 30 );
     temperatureSlider->slider()->setValue( 22 );
 
-    auto* durationSlider = new LabeledSlider( tr("duration"), tr("min"), slidersBox );
+    auto* durationSlider = new LabeledSlider( tr("duration"), UnitConversion::UnitType::None, tr("min"), slidersBox );
     durationSlider->slider()->setBoundaries( 1, 60 );
     durationSlider->slider()->setValue( 30 );
 
-    auto* fanSpeedSlider = new LabeledSlider( tr("fan speed"), QString(), slidersBox );
+    auto* fanSpeedSlider = new LabeledSlider( tr("fan speed"), UnitConversion::UnitType::None, QString(), slidersBox );
     fanSpeedSlider->slider()->setBoundaries( 0, 5 );
     fanSpeedSlider->slider()->setValue( 3 );
 

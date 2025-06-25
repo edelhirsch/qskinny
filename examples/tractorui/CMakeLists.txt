@@ -27,6 +27,7 @@ set(SOURCES
     Switch.h Switch.cpp
     ThemeColorsTile.h ThemeColorsTile.cpp
     Tile.h Tile.cpp
+    UnitConversion.h UnitConversion.cpp
     main.cpp
 )
 

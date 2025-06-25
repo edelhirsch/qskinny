@@ -128,11 +128,11 @@ QSGNode* SpeedometerSkinlet::updateSubNode( const QskSkinnable* skinnable, quint
             const auto ticksRect = q->subControlRect( Q::InnerPanel );
             const auto arcMetrics = q->arcMetricsHint( Q::Tickmarks );
 
-            auto tickmarks = QskGraduation::divideInterval( q->minimum(), q->maximum(), 10, 15 );
+            auto tickmarks = QskGraduation::divideInterval( q->convertedValue( q->minimum() ), q->convertedValue( q->maximum() ), 10, 15 );
 
             const auto tickLineWidth = q->metric( Q::Tickmarks );
 
-            ticksNode->update( color, ticksRect, arcMetrics, tickmarks, q->boundaries(), tickLineWidth );
+            ticksNode->update( color, ticksRect, arcMetrics, tickmarks, q->convertedInterval(q->boundaries()), tickLineWidth );
 
             return ticksNode;
         }
@@ -153,7 +153,7 @@ QSGNode* SpeedometerSkinlet::updateSubNode( const QskSkinnable* skinnable, quint
         }
         case ValueTextRole:
         {
-            const auto s = QString::number( q->value(), 'f', 0 );
+            const auto s = QString::number( q->convertedValue( q->value() ), 'f', 0 );
             return QskSkinlet::updateTextNode( q, node, s, Q::ValueText );
         }
         case UnitTextRole:

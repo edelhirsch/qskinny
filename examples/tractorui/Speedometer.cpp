@@ -24,8 +24,9 @@ class Speedometer::PrivateData
     bool showIntensity = false;
 };
 
-Speedometer::Speedometer( QQuickItem* parent )
+Speedometer::Speedometer( UnitConversion::UnitType unitType, QQuickItem* parent )
     : QskBoundedControl( parent )
+    , UnitConversion( unitType )
     , m_data( new PrivateData )
 {
     setBoundaries( 0, 120 );
@@ -59,14 +60,4 @@ bool Speedometer::showIntensity() const
 void Speedometer::setShowIntensity( bool on )
 {
     m_data->showIntensity = on;
-}
-
-QString Speedometer::unitString() const
-{
-    return m_data->unitString;
-}
-
-void Speedometer::setUnitString( const QString& unitString )
-{
-    m_data->unitString = unitString;
 }
