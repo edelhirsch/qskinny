@@ -461,7 +461,7 @@ void Skin::initHints()
         ed.setBoxBorderColors( Q::MiddlePanel, theme.chromeInnerBorder );
 
         ed.setMetric( Q::Tickmarks, 1 );
-        ed.setArcMetrics( Q::Tickmarks, { 225, -270, 15 } );
+        ed.setArcMetrics( Q::Tickmarks, { -45, 270, 15 } );
         ed.setColor( Q::Tickmarks, theme.chromeOuterBorder );
 
         ed.setStrutSize( Q::InnerPanel, { 143, 143 } );

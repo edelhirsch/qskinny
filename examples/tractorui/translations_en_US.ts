@@ -177,4 +177,47 @@
         <translation>empty</translation>
     </message>
 </context>
+<context>
+    <name>UnitConversion</name>
+    <message>
+        <source>mph</source>
+        <translation>mph</translation>
+    </message>
+    <message>
+        <source>°F</source>
+        <translation>°F</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>gal</source>
+        <translation>gal</translation>
+    </message>
+    <message>
+        <source>kg</source>
+        <translation>kg</translation>
+    </message>
+    <message>
+        <source>lb</source>
+        <translation>lb</translation>
+    </message>
+    <message>
+        <source>Liters per 100km</source>
+        <translation>Liters per 100km</translation>
+    </message>
+    <message>
+        <source>Miles per gallon</source>
+        <translation>Miles per gallon</translation>
+    </message>
+    <message>
+        <source>km</source>
+        <translation>km</translation>
+    </message>
+    <message>
+        <source>mi</source>
+        <translation>mi</translation>
+    </message>
+</context>
 </TS>
