@@ -74,6 +74,7 @@ class MainBox::PrivateData
     QskGraphicLabel* logo;
     HeaderElementsBox* leftElements;
     HeaderElementsBox* rightElements;
+    QTimer* timer = nullptr;
 
     QskLinearBox* contentBox;
     QskLinearBox* sidebarBox;
@@ -304,9 +305,13 @@ void MainBox::setupHeaderBox()
             dateTimeLabel->setText( QString( "%1\n%2\n%3").arg( day ).arg( date ).arg( t ) );
     };
 
-    auto* timer = new QTimer( this );
-    connect( timer, &QTimer::timeout, this, updateDateTime );
-    timer->start( 1000 * 60 );
+    if( !m_data->timer )
+    {
+        m_data->timer = new QTimer( this );
+        connect( m_data->timer, &QTimer::timeout, this, updateDateTime );
+    }
+
+    m_data->timer->start( 1000 * 60 );
 
     updateDateTime();
 
@@ -511,6 +516,8 @@ void MainBox::startFadeAnimation()
 
 void MainBox::performRebuild()
 {
+    m_data->timer->stop();
+
     // This is called when fade out is complete
     // Clear existing content
     if (m_data->headerBox) {
