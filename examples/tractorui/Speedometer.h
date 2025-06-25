@@ -5,16 +5,18 @@
 
 #pragma once
 
+#include "UnitConversion.h"
+
 #include <QskBoundedControl.h>
 
-class Speedometer : public QskBoundedControl
+class Speedometer : public QskBoundedControl, public UnitConversion
 {
     Q_OBJECT
 
   public:
     QSK_SUBCONTROLS( OuterPanel, MiddlePanel, InnerPanel, Tickmarks, Value, Intensity, ValueText, UnitText );
 
-    Speedometer( QQuickItem* parent = nullptr );
+    Speedometer( UnitConversion::UnitType unitType, QQuickItem* parent = nullptr );
     ~Speedometer();
 
     qreal value() const;
@@ -23,12 +25,8 @@ class Speedometer : public QskBoundedControl
     bool showIntensity() const;
     void setShowIntensity( bool on );
 
-    QString unitString() const;
-    void setUnitString( const QString& unitString );
-
   Q_SIGNALS:
     void valueChanged();
-    void unitStringChanged();
 
   private:
     class PrivateData;

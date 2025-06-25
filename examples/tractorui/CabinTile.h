@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Tile.h"
+#include "UnitConversion.h"
 
 #include <QskGridBox.h>
 
@@ -21,21 +22,19 @@ class SliderLabel : public QskTextLabel
     SliderLabel( const QString& text, QQuickItem* parent = nullptr );
 };
 
-class LabeledSlider : public QskGridBox
+class LabeledSlider : public QskGridBox, public UnitConversion
 {
     Q_OBJECT
 
   public:
-    LabeledSlider( const QString& labelText, const QString& unit, QQuickItem* parent = nullptr );
+    LabeledSlider( const QString& labelText, UnitConversion::UnitType unitType, const QString& explicitUnitString, QQuickItem* parent = nullptr );
 
     QskSlider* slider();
     QString valueText() const;
-    QString unit() const;
     QString label() const;
 
   private:
     QskSlider* m_slider;
-    QString m_unit;
 };
 
 class CabinTile : public Tile
