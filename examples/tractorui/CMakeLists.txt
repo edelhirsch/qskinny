@@ -17,7 +17,7 @@ set(SOURCES
     MainWindow.h MainWindow.cpp
     PowerLiftArc.h PowerLiftArc.cpp
     PowerLiftArcSkinlet.h PowerLiftArcSkinlet.cpp
-    PowerLiftTile.h PowerLiftTile.cpp
+    FrontPowerLiftTile.h FrontPowerLiftTile.cpp
     QuickAccessButton.h QuickAccessButton.cpp
     QuickAccessTile.h QuickAccessTile.cpp
     RadialTickmarksNode.h RadialTickmarksNode.cpp
