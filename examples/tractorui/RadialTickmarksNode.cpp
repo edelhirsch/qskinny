@@ -64,7 +64,7 @@ void RadialTickmarksNode::update( const QColor& color, const QRectF& rect,
             for( const auto tick : ticks )
             {
                 const qreal ratio = ( tick - interval.lowerBound() ) / interval.length();
-                const qreal angle = startAngle + ratio * spanAngle;
+                const qreal angle = startAngle - ratio * spanAngle + 90;
 
                 const qreal cos = qFastCos( qDegreesToRadians( angle ) );
                 const qreal sin = qFastSin( qDegreesToRadians( angle ) );

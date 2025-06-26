@@ -460,8 +460,10 @@ void Skin::initHints()
         ed.setBoxBorderMetrics( Q::MiddlePanel, 1 );
         ed.setBoxBorderColors( Q::MiddlePanel, theme.chromeInnerBorder );
 
+        const auto startAngle = 225, spanAngle = -270;
+
         ed.setMetric( Q::Tickmarks, 1 );
-        ed.setArcMetrics( Q::Tickmarks, { -45, 270, 15 } );
+        ed.setArcMetrics( Q::Tickmarks, { startAngle, spanAngle, 15 } );
         ed.setColor( Q::Tickmarks, theme.chromeOuterBorder );
 
         ed.setStrutSize( Q::InnerPanel, { 143, 143 } );
@@ -470,17 +472,17 @@ void Skin::initHints()
         ed.setShadowMetrics( Q::InnerPanel, 3, 3, { 0, 0 } );
         ed.setShadowColor( Q::InnerPanel, theme.shadow );
 
-        ed.setArcMetrics( Q::Value, { 225, -270, 11 } );
+        ed.setArcMetrics( Q::Value, { startAngle, spanAngle, 11 } );
         auto valueGradient = conicalGradient( theme.secondaryBase );
-        valueGradient.setConicDirection( 0.5, 0.5, 225, -270 );
+        valueGradient.setConicDirection( 0.5, 0.5, startAngle, spanAngle );
         ed.setGradient( Q::Value, valueGradient );
         ed.setShadowColor( Q::Value, QskRgb::toTransparentF( theme.secondaryBase, 0.3 ) );
         ed.setShadowMetrics( Q::Value, 0, 3, { 1, 1 } );
 
         ed.setStrutSize( Q::Intensity, { 120, 120 } );
-        ed.setArcMetrics( Q::Intensity, { 225, -270, 5 } );
+        ed.setArcMetrics( Q::Intensity, { startAngle, spanAngle, 5 } );
         QskGradient intensityGradient( QColor::fromRgba( 0x3300ff00 ), QColor::fromRgba( 0x33ff0000 ) );
-        intensityGradient.setConicDirection( 0.5, 0.5, 225, -270 );
+        intensityGradient.setConicDirection( 0.5, 0.5, startAngle, spanAngle );
         ed.setGradient( Q::Intensity, intensityGradient );
 
         ed.setAlignment( Q::ValueText, Qt::AlignCenter );
