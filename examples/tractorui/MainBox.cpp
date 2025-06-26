@@ -74,6 +74,7 @@ class MainBox::PrivateData
     QskGraphicLabel* logo;
     HeaderElementsBox* leftElements;
     HeaderElementsBox* rightElements;
+    QPointer<QskTextLabel> dateTimeLabel;
     QTimer* timer = nullptr;
 
     QskLinearBox* contentBox;
@@ -288,11 +289,11 @@ void MainBox::setupHeaderBox()
     m_data->rightElements->setPadding( m_data->leftElements->padding() );
 
 
-    auto* dateTimeLabel = new QskTextLabel( m_data->leftElements );
-    dateTimeLabel->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
-    dateTimeLabel->setAlignment( Qt::AlignCenter );
+    m_data->dateTimeLabel = new QskTextLabel( m_data->leftElements );
+    m_data->dateTimeLabel->setSizePolicy( Qt::Horizontal, QskSizePolicy::Fixed );
+    m_data->dateTimeLabel->setAlignment( Qt::AlignCenter );
 
-    auto updateDateTime = [dateTimeLabel]()
+    auto updateDateTime = [this]()
     {
         auto l = QLocale();
         auto cdt = QDateTime::currentDateTime();
@@ -301,8 +302,8 @@ void MainBox::setupHeaderBox()
         auto date = cdt.toString( l.dateFormat( QLocale::ShortFormat ) );
         auto t = cdt.toString( l.timeFormat( QLocale::ShortFormat ) );
 
-        if( dateTimeLabel )
-            dateTimeLabel->setText( QString( "%1\n%2\n%3").arg( day ).arg( date ).arg( t ) );
+        if( m_data->dateTimeLabel )
+            m_data->dateTimeLabel->setText( QString( "%1\n%2\n%3").arg( day ).arg( date ).arg( t ) );
     };
 
     if( !m_data->timer )
