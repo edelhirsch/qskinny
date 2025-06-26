@@ -9,7 +9,7 @@
 #include "CabinTile.h"
 #include "Cube.h"
 #include "EngineTile.h"
-#include "PowerLiftTile.h"
+#include "FrontPowerLiftTile.h"
 #include "QuickAccessTile.h"
 #include "Switch.h"
 #include "ThemeColorsTile.h"
@@ -452,7 +452,7 @@ void MainBox::setupTileArea()
 #endif
     } );
 
-    auto* powerLiftTile = new PowerLiftTile( m_data->mainTileArea );
+    auto* powerLiftTile = new FrontPowerLiftTile( m_data->mainTileArea );
     m_data->mainTileArea->addItem( powerLiftTile, 1, 0 );
 
     auto* cabinTile = new CabinTile( m_data->mainTileArea );
