@@ -11,10 +11,10 @@
 
 class QskSlider;
 
-class PowerLiftTile : public Tile
+class FrontPowerLiftTile : public Tile
 {
     Q_OBJECT
 
   public:
-    PowerLiftTile( QQuickItem* parent = nullptr );
+    FrontPowerLiftTile( QQuickItem* parent = nullptr );
 };

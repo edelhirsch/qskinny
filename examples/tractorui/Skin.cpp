@@ -529,7 +529,7 @@ void Skin::initHints()
         using Q = TractorLabel;
 
         ed.setStrutSize( Q::Graphic, { 100, 100 } );
-        ed.setGraphicRole( Q::Graphic, GraphicRoleInversePrimary );
+        ed.setGraphicRole( Q::Graphic, GraphicRolePrimary );
     }
 
     {
@@ -650,7 +650,6 @@ void Skin::setGraphicColor( GraphicRole role, QRgb rgb )
 
 void Skin::setupGraphicFilters( const TractorTheme& theme )
 {
-    setGraphicColor( GraphicRoleInversePrimary, theme.inversePrimary );
     setGraphicColor( GraphicRoleOnPrimaryContainer, theme.onPrimaryContainer );
     setGraphicColor( GraphicRoleOnSurfaceVariant, theme.onSurfaceVariant );
     setGraphicColor( GraphicRolePrimary, theme.primary );
