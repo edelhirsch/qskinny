@@ -23,11 +23,14 @@ PowerLiftArcSkinlet::PowerLiftArcSkinlet( QskSkin* skin )
 {
     setNodeRoles(
     {
+        BoundariesRole,
         GrooveShadowRole,
         GrooveRole,
         FillRole,
         ProgrammedFillRole,
-        HandleRole,
+        MinHandleRole,
+        MaxHandleRole,
+        ValueHandleRole,
     } );
 }
 
@@ -36,10 +39,28 @@ QRectF PowerLiftArcSkinlet::subControlRect( const QskSkinnable* skinnable,
 {
     const auto q = static_cast< const Q* >( skinnable );
 
+    if( subControl == Q::Boundaries )
+    {
+        auto r = contentsRect;
+
+        if( q->type() == Q::Type::Back )
+        {
+            r.setWidth( r.height() );
+        }
+        else
+        {
+            r.setX( r.right() - r.height() );
+        }
+
+        return r;
+    }
     if( subControl == Q::Groove
         || subControl == Q::Fill )
     {
-        auto r = contentsRect;
+        const auto amb = q->arcMetricsHint( Q::Boundaries );
+        const auto s = q->spacingHint( Q::Boundaries );
+        const auto w = amb.thickness() + s;
+        auto r = q->subControlRect( Q::Boundaries ).marginsRemoved( { w, w, w, w } );
 
         if( q->type() == Q::Type::Back )
         {
@@ -61,7 +82,7 @@ QRectF PowerLiftArcSkinlet::subControlRect( const QskSkinnable* skinnable,
         return r;
     }
 
-    if( subControl == Q::Handle )
+    if( subControl == Q::ValueHandle )
     {
         return {};
     }
@@ -127,9 +148,32 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
 
             return updateArcNode( q, node, q->subControlRect( Q::ProgrammedFill ), ah );
         }
-        case HandleRole:
+        case ValueHandleRole:
         {
-            return updateBoxNode( q, node, Q::Handle );
+            return updateBoxNode( q, node, Q::ValueHandle );
+        }
+        case MinHandleRole:
+        {
+            return updateBoxNode( q, node, Q::MinHandle );
+        }
+        case MaxHandleRole:
+        {
+            return updateBoxNode( q, node, Q::MaxHandle );
+        }
+        case BoundariesRole:
+        {
+            auto am = q->arcMetricsHint( Q::Boundaries );
+            const auto b = q->boundaries();
+            const qreal start = am.startAngle() + q->valueAsRatio( b.lowerBound() ) * am.spanAngle();
+            const qreal span = q->valueAsRatio( b.upperBound() - b.lowerBound() ) * am.spanAngle();
+
+            am.setStartAngle( start );
+            am.setSpanAngle( span );
+
+            auto ah = q->arcHints( Q::Boundaries);
+            ah.metrics = am;
+
+            return updateArcNode( q, node, q->subControlRect( Q::Boundaries ), ah );
         }
     }
 

@@ -20,10 +20,13 @@ TractorLabel::TractorLabel( const QString& url, QQuickItem* parent )
 }
 
 
+QSK_SUBCONTROL( PowerLiftArc, Boundaries )
 QSK_SUBCONTROL( PowerLiftArc, Groove )
 QSK_SUBCONTROL( PowerLiftArc, Fill )
 QSK_SUBCONTROL( PowerLiftArc, ProgrammedFill )
-QSK_SUBCONTROL( PowerLiftArc, Handle )
+QSK_SUBCONTROL( PowerLiftArc, MinHandle )
+QSK_SUBCONTROL( PowerLiftArc, MaxHandle )
+QSK_SUBCONTROL( PowerLiftArc, ValueHandle )
 
 PowerLiftArc::PowerLiftArc( Type type, QQuickItem* parent )
     : QskBoundedInput( parent )

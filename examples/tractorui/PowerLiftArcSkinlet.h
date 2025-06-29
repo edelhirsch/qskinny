@@ -16,11 +16,14 @@ class PowerLiftArcSkinlet : public QskSkinlet
     public:
         enum NodeRole
         {
+            BoundariesRole,
             GrooveShadowRole,
             GrooveRole,
             FillRole,
             ProgrammedFillRole,
-            HandleRole,
+            MinHandleRole,
+            MaxHandleRole,
+            ValueHandleRole,
         };
 
         Q_INVOKABLE PowerLiftArcSkinlet( QskSkin* = nullptr );
