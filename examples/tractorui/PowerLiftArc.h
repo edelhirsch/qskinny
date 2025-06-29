@@ -7,6 +7,7 @@
 
 #include <QskBoundedInput.h>
 #include <QskGraphicLabel.h>
+#include <QskIntervalF.h>
 
 class TractorLabel : public QskGraphicLabel
 {
@@ -23,7 +24,7 @@ class PowerLiftArc : public QskBoundedInput
     Q_OBJECT
 
   public:
-    QSK_SUBCONTROLS( Groove, Fill, ProgrammedFill, Handle )
+    QSK_SUBCONTROLS( Boundaries, Groove, Fill, ProgrammedFill, MinHandle, MaxHandle, ValueHandle )
 
     static constexpr QskAspect::Variation Front = QskAspect::NoVariation;
     static constexpr QskAspect::Variation Back = QskAspect::Left;
