@@ -335,6 +335,10 @@ void Skin::initHints()
     {
         using Q = PowerLiftArc;
 
+        ed.setSpacing( Q::Boundaries, 10 );
+        ed.setGradient( Q::Boundaries, theme.primaryBase );
+        ed.setArcMetrics( Q::Boundaries, { -60, 120, 5 } );
+
         ed.setArcMetrics( Q::Groove | Q::Back, { -120, -120, 15 } );
         ed.setArcMetrics( Q::Groove, { -60, 120, 15 } );
         QskGradient groove( { { 0.0, theme.primaryContainer }, { 0.4, theme.primaryContainer },
