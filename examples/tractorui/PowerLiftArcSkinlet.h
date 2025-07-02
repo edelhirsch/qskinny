@@ -19,6 +19,7 @@ class PowerLiftArcSkinlet : public QskSkinlet
             BoundariesRole,
             GrooveShadowRole,
             GrooveRole,
+            FillGlowRole,
             FillRole,
             ProgrammedFillRole,
             MinHandleRole,
@@ -40,4 +41,7 @@ class PowerLiftArcSkinlet : public QskSkinlet
 
     private:
         QSGNode* updateShadowNode( const PowerLiftArc* arc, QSGNode* node ) const;
+        QSGNode* updateGlowNode( const PowerLiftArc* arc, QSGNode* node ) const;
+
+        QskArcMetrics fillMetrics( const PowerLiftArc* arc ) const;
 };
