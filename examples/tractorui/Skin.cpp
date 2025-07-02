@@ -172,7 +172,7 @@ namespace
         QskHctColor c( rgb );
 
         const auto t = c.tone();
-        QskGradient g( c.toned( t - 10 ).rgb(), c.toned( t + 10 ).rgb() );
+        QskGradient g( c.toned( t - 15 ).rgb(), c.toned( t + 15 ).rgb() );
 
         g.setConicDirection( {} );
 
@@ -349,10 +349,12 @@ void Skin::initHints()
         ed.setShadowColor( Q::Groove, theme.shadow );
         ed.setShadowMetrics( Q::Groove, 0, 5, { 0, 0 } );
 
+        ed.setShadowColor( Q::FillGlow, theme.shadow );
+        ed.setShadowMetrics( Q::FillGlow, -2, 8, { 1, 1 } );
+
         ed.setArcMetrics( Q::Fill, ed.arcMetrics( Q::Groove ) );
 
-        QskHctColor c( theme.secondaryBase );
-        QskGradient fillFront( c.toned( c.tone() - 5 ).rgb(), c.toned( c.tone() + 5 ).rgb() );
+        auto fillFront = conicalGradient( theme.secondaryBase );
         fillFront.setConicDirection( 0.5, 0.5, 300, 120 );
         ed.setGradient( Q::Fill, fillFront );
 
@@ -480,7 +482,7 @@ void Skin::initHints()
         auto valueGradient = conicalGradient( theme.secondaryBase );
         valueGradient.setConicDirection( 0.5, 0.5, startAngle, spanAngle );
         ed.setGradient( Q::Value, valueGradient );
-        ed.setShadowColor( Q::Value, QskRgb::toTransparentF( theme.secondaryBase, 0.3 ) );
+        ed.setShadowColor( Q::Value, theme.shadow );
         ed.setShadowMetrics( Q::Value, 0, 3, { 1, 1 } );
 
         ed.setStrutSize( Q::Intensity, { 120, 120 } );

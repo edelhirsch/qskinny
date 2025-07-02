@@ -7,6 +7,7 @@
 
 #include "ArcShadowNode.h"
 #include "PowerLiftArc.h"
+#include "ArcGlowNode.h"
 
 #include <QskArcHints.h>
 #include <QskArcMetrics.h>
@@ -26,6 +27,7 @@ PowerLiftArcSkinlet::PowerLiftArcSkinlet( QskSkin* skin )
         BoundariesRole,
         GrooveShadowRole,
         GrooveRole,
+        FillGlowRole,
         FillRole,
         ProgrammedFillRole,
         MinHandleRole,
@@ -120,14 +122,13 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
         {
             return updateArcNode( q, node, Q::Groove );
         }
+        case FillGlowRole:
+        {
+            return updateGlowNode( q, node );
+        }
         case FillRole:
         {
-            auto am = q->arcMetricsHint( Q::Groove );
-            const qreal start = am.startAngle();
-            const qreal span = q->valueAsRatio( q->value() ) * am.spanAngle();
-
-            am.setStartAngle( start );
-            am.setSpanAngle( span );
+            auto am = fillMetrics( q );
 
             auto ah = q->arcHints( Q::Fill );
             ah.metrics = am;
@@ -136,6 +137,7 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
         }
         case ProgrammedFillRole:
         {
+            return nullptr; // TODO: implement
             auto am = q->arcMetricsHint( Q::ProgrammedFill );
             const qreal start = am.startAngle();
             const qreal span = q->valueAsRatio( q->programmedValue() ) * am.spanAngle();
@@ -204,6 +206,48 @@ QSGNode* PowerLiftArcSkinlet::updateShadowNode( const PowerLiftArc* arc, QSGNode
         metricsArc.startAngle(), metricsArc.spanAngle(), color );
 
     return shadowNode;
+}
+
+QSGNode* PowerLiftArcSkinlet::updateGlowNode( const PowerLiftArc* arc, QSGNode* node ) const
+{
+    const auto rect = arc->subControlRect( Q::Fill );
+    if ( rect.isEmpty() )
+        return nullptr;
+
+    const auto color = arc->glowColorHint();
+    if ( !QskRgb::isVisible( color ) )
+        return nullptr;
+
+    auto metricsArc = fillMetrics( arc );
+    metricsArc = metricsArc.toAbsolute( rect.size() );
+
+    auto metrics = arc->glowMetricsHint();
+    metrics = metrics.toAbsolute( rect.size() );
+
+    const auto glowRect = metrics.shadowRect( rect );
+    const auto spreadRadius = metrics.spreadRadius() + 0.5 * metricsArc.thickness();
+
+    auto glowNode = QskSGNode::ensureNode<ArcGlowNode>( node );
+    glowNode->setGlowData(
+        glowRect,
+        spreadRadius,
+        metrics.blurRadius(),
+        metricsArc.startAngle(),
+        metricsArc.spanAngle(),
+        color );
+
+    return glowNode;
+}
+
+QskArcMetrics PowerLiftArcSkinlet::fillMetrics( const PowerLiftArc* arc ) const
+{
+    auto am = arc->arcMetricsHint( Q::Fill );
+    const qreal start = am.startAngle();
+    const qreal span = arc->valueAsRatio( arc->value() ) * am.spanAngle();
+
+    am.setStartAngle( start );
+    am.setSpanAngle( span );
+    return am;
 }
 
 #include "moc_PowerLiftArcSkinlet.cpp"

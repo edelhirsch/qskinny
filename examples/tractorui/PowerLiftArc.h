@@ -8,6 +8,8 @@
 #include <QskBoundedInput.h>
 #include <QskGraphicLabel.h>
 #include <QskIntervalF.h>
+#include <QskShadowMetrics.h>
+#include <QColor>
 
 class TractorLabel : public QskGraphicLabel
 {
@@ -24,7 +26,7 @@ class PowerLiftArc : public QskBoundedInput
     Q_OBJECT
 
   public:
-    QSK_SUBCONTROLS( Boundaries, Groove, Fill, ProgrammedFill, MinHandle, MaxHandle, ValueHandle )
+    QSK_SUBCONTROLS( Boundaries, Groove, Fill, ProgrammedFill, MinHandle, MaxHandle, ValueHandle, FillGlow )
 
     static constexpr QskAspect::Variation Front = QskAspect::NoVariation;
     static constexpr QskAspect::Variation Back = QskAspect::Left;
@@ -44,6 +46,9 @@ class PowerLiftArc : public QskBoundedInput
 
     qreal programmedValue() const;
     void setProgrammedValue( qreal value );
+
+    QColor glowColorHint( QskSkinHintStatus* = nullptr ) const;
+    QskShadowMetrics glowMetricsHint( QskSkinHintStatus* = nullptr ) const;
 
   public Q_SLOTS:
     void increment( qreal offset ) override;

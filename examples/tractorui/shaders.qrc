@@ -4,6 +4,8 @@
 
         <file>shaders/arcshadow.vert</file>
         <file>shaders/arcshadow.frag</file>
+        <file>shaders/arcglow.vert</file>
+        <file>shaders/arcglow.frag</file>
 
     </qresource>
 </RCC>
