@@ -1,8 +1,0 @@
-attribute highp vec4 in_vertex;
-attribute highp vec2 in_coord;
-varying lowp vec2 coord;
-void main()
-{
-    coord = in_coord;
-    gl_Position = in_vertex;
-} 
