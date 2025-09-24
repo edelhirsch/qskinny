@@ -172,7 +172,7 @@ namespace
         QskHctColor c( rgb );
 
         const auto t = c.tone();
-        QskGradient g( c.toned( t - 10 ).rgb(), c.toned( t + 10 ).rgb() );
+        QskGradient g( c.toned( t - 15 ).rgb(), c.toned( t + 15 ).rgb() );
 
         g.setConicDirection( {} );
 
@@ -351,8 +351,7 @@ void Skin::initHints()
 
         ed.setArcMetrics( Q::Fill, ed.arcMetrics( Q::Groove ) );
 
-        QskHctColor c( theme.secondaryBase );
-        QskGradient fillFront( c.toned( c.tone() - 5 ).rgb(), c.toned( c.tone() + 5 ).rgb() );
+        auto fillFront = conicalGradient( theme.secondaryBase );
         fillFront.setConicDirection( 0.5, 0.5, 300, 120 );
         ed.setGradient( Q::Fill, fillFront );
 
@@ -360,15 +359,15 @@ void Skin::initHints()
         fillBack.setConicDirection( 0.5, 0.5, 240, -120 );
         ed.setGradient( Q::Fill | Q::Back, fillBack );
 
-        auto amBack = ed.arcMetrics( Q::Groove | Q::Back );
-        amBack.setThickness( 3 );
-        ed.setArcMetrics( Q::ProgrammedFill | Q::Back, amBack );
+        // auto amBack = ed.arcMetrics( Q::Groove | Q::Back );
+        // amBack.setThickness( 3 );
+        // ed.setArcMetrics( Q::ProgrammedFill | Q::Back, amBack );
 
-        auto amFront = ed.arcMetrics( Q::Groove );
-        amFront.setThickness( 3 );
-        ed.setArcMetrics( Q::ProgrammedFill, amFront );
+        // auto amFront = ed.arcMetrics( Q::Groove );
+        // amFront.setThickness( 3 );
+        // ed.setArcMetrics( Q::ProgrammedFill, amFront );
 
-        ed.setGradient( Q::ProgrammedFill, theme.onPrimary );
+        // ed.setGradient( Q::ProgrammedFill, theme.onPrimary );
     }
 
     {
@@ -480,7 +479,7 @@ void Skin::initHints()
         auto valueGradient = conicalGradient( theme.secondaryBase );
         valueGradient.setConicDirection( 0.5, 0.5, startAngle, spanAngle );
         ed.setGradient( Q::Value, valueGradient );
-        ed.setShadowColor( Q::Value, QskRgb::toTransparentF( theme.secondaryBase, 0.3 ) );
+        ed.setShadowColor( Q::Value, theme.shadow );
         ed.setShadowMetrics( Q::Value, 0, 3, { 1, 1 } );
 
         ed.setStrutSize( Q::Intensity, { 120, 120 } );
