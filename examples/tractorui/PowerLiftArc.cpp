@@ -6,7 +6,6 @@
 #include "PowerLiftArc.h"
 
 #include <QskFunctions.h>
-#include <QskSkinnable.h>
 
 QSK_SUBCONTROL( TractorLabel, Panel )
 QSK_SUBCONTROL( TractorLabel, Graphic )
@@ -28,7 +27,6 @@ QSK_SUBCONTROL( PowerLiftArc, ProgrammedFill )
 QSK_SUBCONTROL( PowerLiftArc, MinHandle )
 QSK_SUBCONTROL( PowerLiftArc, MaxHandle )
 QSK_SUBCONTROL( PowerLiftArc, ValueHandle )
-QSK_SUBCONTROL( PowerLiftArc, FillGlow )
 
 PowerLiftArc::PowerLiftArc( Type type, QQuickItem* parent )
     : QskBoundedInput( parent )
@@ -84,16 +82,4 @@ void PowerLiftArc::increment( qreal offset )
 QskAspect::Variation PowerLiftArc::effectiveVariation() const
 {
     return static_cast< QskAspect::Variation >( m_type );
-}
-
-QColor PowerLiftArc::glowColorHint( QskSkinHintStatus* status ) const
-{
-    // For now, reuse shadow color hint (can be customized later)
-    return shadowColorHint( FillGlow, status );
-}
-
-QskShadowMetrics PowerLiftArc::glowMetricsHint( QskSkinHintStatus* status ) const
-{
-    // For now, reuse shadow metrics hint (can be customized later)
-    return shadowMetricsHint( FillGlow, status );
 }

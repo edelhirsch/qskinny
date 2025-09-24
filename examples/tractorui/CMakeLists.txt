@@ -7,7 +7,6 @@ set(target tractorui)
 
 set(SOURCES
     ArcShadowNode.h ArcShadowNode.cpp
-    ArcGlowNode.h ArcGlowNode.cpp
     Button.h Button.cpp
     ButtonSkinlet.h ButtonSkinlet.cpp
     CabinTile.h CabinTile.cpp
@@ -83,24 +82,6 @@ if (QT_VERSION_MAJOR VERSION_GREATER_EQUAL 6)
     list(APPEND SHADERS
         shaders/arcshadow-vulkan.vert
         shaders/arcshadow-vulkan.frag
-        shaders/arcglow-vulkan.vert
-        shaders/arcglow-vulkan.frag
     )
     qsk_add_shaders(${target} "qskArcShaders" FILES ${SHADERS} OUTPUT_TARGETS shader_target)
 endif()
-
-# Add shaders to the build/install
-set(SHADERS
-    shaders/arcshadow.frag
-    shaders/arcshadow-vulkan.frag
-    shaders/arcshadow.vert
-    shaders/arcshadow-vulkan.vert
-    shaders/arcglow.frag
-    shaders/arcglow-vulkan.frag
-    shaders/arcglow.vert
-    shaders/arcglow-vulkan.vert
-)
-
-# If you have a custom command or install for shaders, add it here
-# For example:
-# install(FILES ${SHADERS} DESTINATION ${CMAKE_INSTALL_DATADIR}/tractorui/shaders)
