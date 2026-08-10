@@ -491,6 +491,16 @@ list(APPEND SOURCES
     inputpanel/QskVirtualKeyboard.cpp
 )
 
+if(NOT UNIX AND ENABLE_HUNSPELL)
+    message(WARNING "Feature 'hunspell' only available for UNIX!")
+    unset(ENABLE_HUNSPELL CACHE)
+endif()
+
+if(NOT UNIX AND ENABLE_PINYIN)
+    message(WARNING "Feature 'pinyin' only available for UNIX!")
+    unset(ENABLE_PINYIN CACHE)
+endif()
+
 if(ENABLE_PINYIN)
     list(APPEND HEADERS inputpanel/QskPinyinTextPredictor.h)
     list(APPEND SOURCES inputpanel/QskPinyinTextPredictor.cpp)
@@ -536,6 +546,7 @@ if (QT_VERSION_MAJOR VERSION_GREATER 5)
 endif()
 
 if(ENABLE_HUNSPELL)
+    qsk_setup_Hunspell()
     target_link_libraries(${target} PRIVATE hunspell)
 endif()
 
@@ -546,9 +557,6 @@ if(ENABLE_PINYIN)
     # LibIME::Pinyin carries its include dir and pulls in LibIME::Core,
     # Fcitx5::Utils and Boost as transitive dependencies.
     target_link_libraries(${target} PRIVATE LibIME::Pinyin)
-
-    target_include_directories(${target}
-        PUBLIC $<BUILD_INTERFACE:${QSK_SOURCE_DIR}/inputcontext>)
 endif()
 
 set_target_properties(${target} PROPERTIES FOLDER libs)

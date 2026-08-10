@@ -130,14 +130,3 @@ macro(qsk_setup_Hunspell)
     set(Hunspell_FOUND TRUE)
 
 endmacro()
-
-macro(qsk_setup_Pinyin)
-
-    # The pinyin predictor is implemented against libime ( the Fcitx input
-    # method engine library, package libimepinyin-dev ). The imported target
-    # LibIME::Pinyin provides the include directory and pulls in LibIME::Core,
-    # Fcitx5::Utils and Boost as transitive dependencies.
-
-    find_package(LibIMEPinyin REQUIRED)
-
-endmacro()
