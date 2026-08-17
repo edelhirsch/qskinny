@@ -24,11 +24,11 @@
 #include <qpa/qplatforminputcontext.h>
 #include <qpa/qplatformintegration.h>
 
-#if HUNSPELL
+#if QSK_HUNSPELL
 #include "QskHunspellTextPredictor.h"
 #endif
 
-#if PINYIN
+#if QSK_PINYIN
 #include "QskPinyinTextPredictor.h"
 #endif
 
@@ -608,14 +608,14 @@ std::shared_ptr< QskTextPredictor > QskInputContextFactory::setupPredictor( cons
 
 QskTextPredictor* QskInputContextFactory::createPredictor( const QLocale& locale )
 {
-#if PINYIN
+#if QSK_PINYIN
     if( locale.language() == QLocale::Chinese )
     {
         return new QskPinyinTextPredictor();
     }
 #endif
 
-#if HUNSPELL
+#if QSK_HUNSPELL
     return new QskHunspellTextPredictor( locale );
 #else
     Q_UNUSED( locale )

@@ -551,7 +551,7 @@ if(ENABLE_HUNSPELL)
 endif()
 
 if(ENABLE_PINYIN)
-    target_compile_definitions(${target} PRIVATE PINYIN)
+    target_compile_definitions(${target} PUBLIC QSK_PINYIN)
     find_package(LibIMEPinyin REQUIRED)
 
     # LibIME::Pinyin carries its include dir and pulls in LibIME::Core,

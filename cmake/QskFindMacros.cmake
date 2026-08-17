@@ -124,6 +124,8 @@ macro(qsk_setup_Hunspell)
     endif()
 
     add_library(Hunspell::Hunspell INTERFACE IMPORTED)
+    target_compile_definitions(${target} PUBLIC QSK_HUNSPELL)
+
     target_link_libraries(Hunspell::Hunspell INTERFACE ${package_name})
     unset(package_name)
 
