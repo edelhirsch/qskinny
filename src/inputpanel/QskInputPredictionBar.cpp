@@ -82,6 +82,7 @@ QskInputPredictionBar::QskInputPredictionBar( QQuickItem* parent )
     m_data->scrollArea->setFlickableOrientations( Qt::Horizontal );
 
     m_data->layoutBox = new QskLinearBox( Qt::Horizontal, m_data->scrollArea );
+    m_data->layoutBox->setMargins( 5 );
 
     m_data->scrollArea->setScrolledItem( m_data->layoutBox );
 
