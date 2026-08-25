@@ -598,7 +598,7 @@ void QskVirtualKeyboard::updateLocale( const QLocale& locale )
             break;
 
         case QLocale::Chinese:
-#if PINYIN
+#if QSK_PINYIN
             newLayout = &m_data->layouts.en_US;
 #else
             newLayout = &m_data->layouts.zh;
