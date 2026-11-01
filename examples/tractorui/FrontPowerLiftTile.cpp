@@ -25,7 +25,7 @@ FrontPowerLiftTile::FrontPowerLiftTile( QQuickItem* parent )
     // 0 = fully raised ( the drawing's home ), larger = lowered. Map the arc value
     // so the handle and the bucket are always at the same height: value 1 raises
     // the loader, value 0 lowers it by the full travel.
-    constexpr qreal maxLoaderAngle = 63.0; // degrees of boom travel
+    constexpr qreal maxLoaderAngle = 45.0; // degrees of boom travel
 
     const auto applyValue = [ image ]( qreal value )
     {
