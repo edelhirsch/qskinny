@@ -359,17 +359,15 @@ void Skin::initHints()
         fillBack.setConicDirection( 0.5, 0.5, 240, -120 );
         ed.setGradient( Q::Fill | Q::Back, fillBack );
 
-        // draggable value handle - a light knob that grows a little while pressed
-        ed.setStrutSize( Q::ValueHandle, { 28, 28 } );
-        ed.setStrutSize( Q::ValueHandle | Q::Pressed, { 34, 34 } );
+        // draggable value handle - same look as the QskSlider handles in the
+        // cabin tile
+        ed.setStrutSize( Q::ValueHandle, { 30, 30 } );
         ed.setBoxShape( Q::ValueHandle, 100, Qt::RelativeSize );
-        ed.setBoxBorderMetrics( Q::ValueHandle, 2 );
-        ed.setBoxBorderMetrics( Q::ValueHandle | Q::Pressed, 3 );
-        ed.setGradient( Q::ValueHandle, theme.onPrimary );
-        ed.setBoxBorderColors( Q::ValueHandle, theme.secondaryBase );
-        ed.setShadowColor( Q::ValueHandle, theme.shadow );
-        ed.setShadowMetrics( Q::ValueHandle, 1, 4, { 0, 2 } );
-        ed.setAnimation( Q::ValueHandle | A::Metric, 100 );
+        const auto handleGradient = buttonGradient( theme.onPrimary );
+        ed.setGradient( Q::ValueHandle, handleGradient );
+        ed.setGradient( Q::ValueHandle | Q::Pressed, handleGradient.reversed() );
+        ed.setShadowColor( Q::ValueHandle, QskRgb::toTransparentF( theme.inverseSurface, 0.25 ) );
+        ed.setShadowMetrics( Q::ValueHandle, 1, 2, { 0, 1 } );
 
         // auto amBack = ed.arcMetrics( Q::Groove | Q::Back );
         // amBack.setThickness( 3 );
