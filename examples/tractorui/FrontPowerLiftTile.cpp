@@ -21,22 +21,15 @@ FrontPowerLiftTile::FrontPowerLiftTile( QQuickItem* parent )
 
     auto* frontArc = new PowerLiftArc( PowerLiftArc::Type::Front, outerBox );
 
-    // The loader is articulated and driven through FrontPowerLiftImage::setLoaderAngle(),
-    // 0 = fully raised ( the drawing's home ), larger = lowered. Map the arc value
-    // so the handle and the bucket are always at the same height: value 1 raises
-    // the loader, value 0 lowers it by the full travel.
-    constexpr qreal maxLoaderAngle = 45.0; // degrees of boom travel
-
-    const auto applyValue = [ image ]( qreal value )
-    {
-        image->setLoaderAngle( ( 1.0 - value ) * maxLoaderAngle );
-    };
-
-    connect( frontArc, &PowerLiftArc::valueChanged, image, applyValue );
+    // The loader follows the arc handle: the image swings the boom so the
+    // bucket's lower edge stays level with the handle. This is recomputed from
+    // the live geometry ( see FrontPowerLiftImage::updateFromArc ), so the two
+    // stay aligned at any window size.
+    image->setArc( frontArc );
+    connect( frontArc, &PowerLiftArc::valueChanged, image, &FrontPowerLiftImage::updateFromArc );
 
     frontArc->setValue( 0.8 );
     frontArc->setProgrammedValue( 0.8 );
-    applyValue( frontArc->value() ); // initial sync
 
     setContent( outerBox );
 }

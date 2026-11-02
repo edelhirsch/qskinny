@@ -51,6 +51,10 @@ class PowerLiftArc : public QskBoundedValueInput
 
     bool isPressed() const;
 
+    // the scene y coordinate of the value handle's centre, so a sibling can
+    // line something up with the handle at any size
+    qreal handleCenterSceneY() const;
+
     qreal programmedValue() const;
     void setProgrammedValue( qreal value );
 

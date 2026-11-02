@@ -15,15 +15,54 @@
 
 namespace
 {
-    // the loader boom hinge pin, as a fraction of the tractor.svg viewBox
-    // ( 228.5387 x 137.39494 ) — the joint at ~(135,50) in SVG units
-    constexpr qreal PivotFx = 135.0 / 228.5387;
-    constexpr qreal PivotFy = 50.0 / 137.39494;
+    // the tractor.svg viewBox, so the articulation points below can be given in
+    // the drawing's own units and turned into fractions of the item
+    constexpr qreal SvgW = 228.5387;
+    constexpr qreal SvgH = 137.39494;
+
+    // the loader boom hinge pin, as a fraction of the viewBox — the joint at
+    // ~( 135, 50 ) in SVG units
+    constexpr qreal PivotFx = 135.0 / SvgW;
+    constexpr qreal PivotFy = 50.0 / SvgH;
 
     // the upper arm endpoints: A = anchor on the static 3-bolt plate,
     // B = far end on the bell-crank ( moves with the boom ), viewBox fractions
-    constexpr qreal ArmAx = 140.0 / 228.5387, ArmAy = 23.0 / 137.39494;
-    constexpr qreal ArmBx = 177.0 / 228.5387, ArmBy = 29.0 / 137.39494;
+    constexpr qreal ArmAx = 140.0 / SvgW, ArmAy = 23.0 / SvgH;
+    constexpr qreal ArmBx = 177.0 / SvgW, ArmBy = 29.0 / SvgH;
+
+    // the bucket, as a fraction of the viewBox — the point kept level with the
+    // arc handle. An effective point: the scoop is a curved shape, these were
+    // tuned so the rendered scoop sits on the handle across its travel.
+    constexpr qreal BucketFx = 200.0 / SvgW;
+    constexpr qreal BucketFy = 46.0 / SvgH;
+
+    // The boom is rotated about the pivot to raise / lower the bucket. The three
+    // layers fill the item with fillMode = Stretch, so a point at viewBox
+    // fraction ( fx, fy ) is drawn at ( fx·w, fy·h ); rotating by θ about the
+    // pivot puts the bucket's vertical position ( as a fraction of the item
+    // height ) at
+    //     PivotFy + ( BucketFx - PivotFx )·( w / h )·sinθ + ( BucketFy - PivotFy )·cosθ
+    // We do not hard-code the angle: given where the handle is ( targetFraction,
+    // a fraction of the item height ) we solve for the boom angle that lands the
+    // bucket there, from the *live* w and h. That keeps the bucket level with
+    // the handle at any window size, which a fixed angle cannot. Inverting
+    // a·sinθ + b·cosθ = c :
+    qreal boomAngleForHandle( qreal targetFraction, qreal w, qreal h )
+    {
+        if ( h <= 0.0 )
+            return 0.0;
+
+        const qreal a = ( BucketFx - PivotFx ) * ( w / h );
+        const qreal b = ( BucketFy - PivotFy );
+        const qreal c = targetFraction - PivotFy;
+
+        const qreal r = std::hypot( a, b );
+        if ( r < 1e-9 )
+            return 0.0;
+
+        const qreal theta = std::asin( qBound( -1.0, c / r, 1.0 ) ) - std::atan2( b, a );
+        return qBound( -15.0, qRadiansToDegrees( theta ), 95.0 );
+    }
 
     // rotates its item around an arbitrary pivot, expressed as a fraction of
     // the item size so it survives resizing
@@ -139,6 +178,8 @@ class FrontPowerLiftImage::PrivateData
 
     LoaderRotation* rotation = nullptr;
     ArmStretch* armStretch = nullptr;
+
+    const PowerLiftArc* arc = nullptr;
 };
 
 FrontPowerLiftImage::FrontPowerLiftImage( QQuickItem* parent )
@@ -171,10 +212,34 @@ void FrontPowerLiftImage::setLoaderAngle( qreal degrees )
     m_data->armStretch->setAngle( degrees );
 }
 
+void FrontPowerLiftImage::setArc( const PowerLiftArc* arc )
+{
+    m_data->arc = arc;
+    updateFromArc();
+}
+
+void FrontPowerLiftImage::updateFromArc()
+{
+    if ( m_data->arc == nullptr )
+        return;
+
+    const auto r = contentsRect();
+    if ( r.height() <= 0.0 )
+        return; // not laid out yet - updateLayout() will call us again
+
+    // the handle height, expressed as a fraction of the drawing's frame
+    const auto frameTop = mapToScene( r.topLeft() ).y();
+    const auto fraction = ( m_data->arc->handleCenterSceneY() - frameTop ) / r.height();
+
+    setLoaderAngle( boomAngleForHandle( fraction, r.width(), r.height() ) );
+}
+
 void FrontPowerLiftImage::updateLayout()
 {
     const auto r = contentsRect();
     m_data->body->setGeometry( r );
     m_data->loader->setGeometry( r );
     m_data->upper->setGeometry( r );
+
+    updateFromArc();
 }

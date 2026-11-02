@@ -68,6 +68,11 @@ bool PowerLiftArc::isPressed() const
     return hasSkinState( Pressed );
 }
 
+qreal PowerLiftArc::handleCenterSceneY() const
+{
+    return mapToScene( subControlRect( ValueHandle ).center() ).y();
+}
+
 qreal PowerLiftArc::programmedValue() const
 {
     return m_programmedValue;
