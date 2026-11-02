@@ -359,6 +359,16 @@ void Skin::initHints()
         fillBack.setConicDirection( 0.5, 0.5, 240, -120 );
         ed.setGradient( Q::Fill | Q::Back, fillBack );
 
+        // draggable value handle - same look as the QskSlider handles in the
+        // cabin tile
+        ed.setStrutSize( Q::ValueHandle, { 30, 30 } );
+        ed.setBoxShape( Q::ValueHandle, 100, Qt::RelativeSize );
+        const auto handleGradient = buttonGradient( theme.onPrimary );
+        ed.setGradient( Q::ValueHandle, handleGradient );
+        ed.setGradient( Q::ValueHandle | Q::Pressed, handleGradient.reversed() );
+        ed.setShadowColor( Q::ValueHandle, QskRgb::toTransparentF( theme.inverseSurface, 0.25 ) );
+        ed.setShadowMetrics( Q::ValueHandle, 1, 2, { 0, 1 } );
+
         // auto amBack = ed.arcMetrics( Q::Groove | Q::Back );
         // amBack.setThickness( 3 );
         // ed.setArcMetrics( Q::ProgrammedFill | Q::Back, amBack );

@@ -17,6 +17,7 @@ set(SOURCES
     MainWindow.h MainWindow.cpp
     PowerLiftArc.h PowerLiftArc.cpp
     PowerLiftArcSkinlet.h PowerLiftArcSkinlet.cpp
+    FrontPowerLiftImage.h FrontPowerLiftImage.cpp
     FrontPowerLiftTile.h FrontPowerLiftTile.cpp
     QuickAccessButton.h QuickAccessButton.cpp
     QuickAccessTile.h QuickAccessTile.cpp

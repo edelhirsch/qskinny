@@ -10,6 +10,7 @@
 
 #include <QskArcHints.h>
 #include <QskArcMetrics.h>
+#include <QskIntervalF.h>
 #include <QskRgbValue.h>
 #include <QskSGNode.h>
 #include <QskShadowMetrics.h>
@@ -28,8 +29,6 @@ PowerLiftArcSkinlet::PowerLiftArcSkinlet( QskSkin* skin )
         GrooveRole,
         FillRole,
         ProgrammedFillRole,
-        MinHandleRole,
-        MaxHandleRole,
         ValueHandleRole,
     } );
 }
@@ -84,7 +83,24 @@ QRectF PowerLiftArcSkinlet::subControlRect( const QskSkinnable* skinnable,
 
     if( subControl == Q::ValueHandle )
     {
-        return {};
+        const auto grooveRect = q->subControlRect( Q::Groove );
+        if( grooveRect.isEmpty() )
+            return {};
+
+        const auto metrics = q->arcMetricsHint( Q::Groove );
+        const auto strut = q->strutSizeHint( Q::ValueHandle );
+
+        // centre of the handle sits on the groove's centre line, at the angle
+        // corresponding to the current value
+        const auto radius = ( grooveRect.width() - metrics.thickness() ) / 2.0;
+        const auto angle = metrics.startAngle() + q->valueAsRatio() * metrics.spanAngle();
+        const auto rad = qDegreesToRadians( angle );
+
+        const auto cx = grooveRect.center().x() + radius * qCos( rad );
+        const auto cy = grooveRect.center().y() - radius * qSin( rad );
+
+        return QRectF( cx - strut.width() / 2.0, cy - strut.height() / 2.0,
+            strut.width(), strut.height() );
     }
 
     return QskSkinlet::subControlRect( skinnable, contentsRect, subControl );
@@ -151,14 +167,6 @@ QSGNode* PowerLiftArcSkinlet::updateSubNode( const QskSkinnable* skinnable, quin
         case ValueHandleRole:
         {
             return updateBoxNode( q, node, Q::ValueHandle );
-        }
-        case MinHandleRole:
-        {
-            return updateBoxNode( q, node, Q::MinHandle );
-        }
-        case MaxHandleRole:
-        {
-            return updateBoxNode( q, node, Q::MaxHandle );
         }
         case BoundariesRole:
         {

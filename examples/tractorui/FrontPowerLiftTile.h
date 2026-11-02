@@ -7,10 +7,6 @@
 
 #include "Tile.h"
 
-#include <QskGraphicLabel.h>
-
-class QskSlider;
-
 class FrontPowerLiftTile : public Tile
 {
     Q_OBJECT
