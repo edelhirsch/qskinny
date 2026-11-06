@@ -255,6 +255,9 @@ namespace
         void setupInputPredictionBarMetrics();
         void setupInputPredictionBarColors( QskAspect::Section, const QskFluent2Theme& );
 
+        void setupInputPredictionBarScrollAreaMetrics();
+        void setupInputPredictionBarScrollAreaColors( QskAspect::Section, const QskFluent2Theme& );
+
         void setupListViewMetrics();
         void setupListViewColors( QskAspect::Section, const QskFluent2Theme& );
 
@@ -337,6 +340,12 @@ namespace
         {
             setBoxBorderGradient( aspect, gradient[ 0 ], gradient[ 1 ], baseColor );
         }
+
+        template< typename Q >
+        void setupScrollViewSkinHintsMetrics();
+
+        template< typename Q >
+        void setupScrollViewSkinHintsColors( QskAspect::Section, const QskFluent2Theme& );
     };
 }
 
@@ -353,6 +362,7 @@ void Editor::setupMetrics()
     setupMenuMetrics();
     setupPageIndicatorMetrics();
     setupInputPredictionBarMetrics();
+    setupInputPredictionBarScrollAreaMetrics();
     setupProgressBarMetrics();
     setupProgressRingMetrics();
     setupPushButtonMetrics();
@@ -395,6 +405,7 @@ void Editor::setupColors( QskAspect::Section section, const QskFluent2Theme& the
     setupPageIndicatorColors( section, theme );
     setupProgressBarColors( section, theme );
     setupInputPredictionBarColors( section, theme );
+    setupInputPredictionBarScrollAreaColors( section, theme );
     setupProgressRingColors( section, theme );
     setupPushButtonColors( section, theme );
     setupRadioBoxColors( section, theme );
@@ -1270,10 +1281,10 @@ void Editor::setupRadioBoxColors(
     }
 }
 
-void Editor::setupScrollViewMetrics()
+template< typename Q >
+void Editor::setupScrollViewSkinHintsMetrics()
 {
     using A = QskAspect;
-    using Q = QskScrollView;
 
     for ( auto subControl : { Q::HorizontalScrollBar, Q::VerticalScrollBar } )
     {
@@ -1310,11 +1321,11 @@ void Editor::setupScrollViewMetrics()
     setStrutSize( Q::VerticalScrollHandle, 0.0, handleExtent );
 }
 
-void Editor::setupScrollViewColors(
+template< typename Q >
+void Editor::setupScrollViewSkinHintsColors(
     QskAspect::Section section, const QskFluent2Theme& theme )
 {
     using A = QskAspect;
-    using Q = QskScrollView;
 
     const auto& pal = theme.palette;
 
@@ -1351,6 +1362,30 @@ void Editor::setupScrollViewColors(
 
         setAnimation( subControl | A::Color, 100 );
     }
+}
+
+void Editor::setupScrollViewMetrics()
+{
+    setupScrollViewSkinHintsMetrics< QskScrollView >();
+}
+
+void Editor::setupScrollViewColors(
+    QskAspect::Section section, const QskFluent2Theme& theme )
+{
+    setupScrollViewSkinHintsColors< QskScrollView >( section, theme );
+}
+
+void Editor::setupInputPredictionBarScrollAreaMetrics()
+{
+    // same styling as the generic QskScrollView
+    setupScrollViewSkinHintsMetrics< QskInputPredictionBarScrollArea >();
+}
+
+void Editor::setupInputPredictionBarScrollAreaColors(
+    QskAspect::Section section, const QskFluent2Theme& theme )
+{
+    // same styling as the generic QskScrollView
+    setupScrollViewSkinHintsColors< QskInputPredictionBarScrollArea >( section, theme );
 }
 
 void Editor::setupSegmentedBarMetrics()

@@ -169,6 +169,7 @@ namespace
         Q_INVOKABLE void setupFocusIndicator();
         Q_INVOKABLE void setupInputPanel();
         Q_INVOKABLE void setupInputPredictionBar();
+        Q_INVOKABLE void setupInputPredictionBarScrollArea();
         Q_INVOKABLE void setupVirtualKeyboard();
         Q_INVOKABLE void setupListView();
         Q_INVOKABLE void setupMenu();
@@ -200,6 +201,9 @@ namespace
 
             return QskGraphicIO::read( path );
         }
+
+        template< typename Q >
+        void setupScrollViewSkinHints();
 
         const QskMaterial3Theme& m_pal;
     };
@@ -1344,10 +1348,10 @@ void Editor::setupVirtualKeyboard()
     setPadding( Q::Panel, { 3_px, 25_px, 3_px, 5_px } );
 }
 
-void Editor::setupScrollView()
+template< typename Q >
+void Editor::setupScrollViewSkinHints()
 {
     using A = QskAspect;
-    using Q = QskScrollView;
 
     setGradient( Q::Panel, m_pal.background );
     setGradient( Q::Viewport, m_pal.secondaryContainer );
@@ -1372,6 +1376,17 @@ void Editor::setupScrollView()
 
     // when changing the position by QskScrollView::scrollTo
     setAnimation( Q::Viewport | A::Metric, QskAnimationHint( 200, QEasingCurve::InCubic ) );
+}
+
+void Editor::setupScrollView()
+{
+    setupScrollViewSkinHints< QskScrollView >();
+}
+
+void Editor::setupInputPredictionBarScrollArea()
+{
+    // same styling as the generic QskScrollView
+    setupScrollViewSkinHints< QskInputPredictionBarScrollArea >();
 }
 
 void Editor::setupListView()

@@ -22,6 +22,7 @@
 #include <QskGraphicIO.h>
 #include <QskGraphicLabel.h>
 #include <QskInputPanelBox.h>
+#include <QskInputPredictionBar.h>
 #include <QskListView.h>
 #include <QskMenu.h>
 #include <QskPageIndicator.h>
@@ -123,6 +124,7 @@ namespace
         Q_INVOKABLE void setupFocusIndicator();
         Q_INVOKABLE void setupGraphicLabel();
         Q_INVOKABLE void setupInputPanel();
+        Q_INVOKABLE void setupInputPredictionBarScrollArea();
         Q_INVOKABLE void setupVirtualKeyboard();
         Q_INVOKABLE void setupListView();
         Q_INVOKABLE void setupMenu();
@@ -174,6 +176,9 @@ namespace
             Q_ASSERT( !graphic.isEmpty() );
             return graphic;
         }
+
+        template< typename Q >
+        void setupScrollViewSkinHints();
 
         const QskFusionPalette& m_pal;
     };
@@ -1265,11 +1270,11 @@ void Editor::setupVirtualKeyboard()
     setAnimation( Q::ButtonPanel | A::Color, 100 );
 }
 
-void Editor::setupScrollView()
+template< typename Q >
+void Editor::setupScrollViewSkinHints()
 {
     // not sure - Qt/Quick and Qt/Widgets totally differ
 
-    using Q = QskScrollView;
     using A = QskAspect;
     using P = QPalette;
 
@@ -1326,6 +1331,17 @@ void Editor::setupScrollView()
 
         setAnimation( subControl | A::Color, 100 );
     }
+}
+
+void Editor::setupScrollView()
+{
+    setupScrollViewSkinHints< QskScrollView >();
+}
+
+void Editor::setupInputPredictionBarScrollArea()
+{
+    // same styling as the generic QskScrollView
+    setupScrollViewSkinHints< QskInputPredictionBarScrollArea >();
 }
 
 void Editor::setupListView()

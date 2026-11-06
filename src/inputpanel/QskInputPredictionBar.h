@@ -7,6 +7,21 @@
 #define QSK_INPUT_PREDICTION_BAR_H
 
 #include "QskBox.h"
+#include "QskScrollArea.h"
+
+class QSK_EXPORT QskInputPredictionBarScrollArea : public QskScrollArea
+{
+    Q_OBJECT
+
+    using Inherited = QskScrollArea;
+
+  public:
+    QSK_SUBCONTROLS( Panel, Viewport,
+        HorizontalScrollBar, HorizontalScrollHandle,
+        VerticalScrollBar, VerticalScrollHandle )
+
+    QskInputPredictionBarScrollArea( QQuickItem* parent = nullptr );
+};
 
 class QSK_EXPORT QskInputPredictionBar : public QskBox
 {

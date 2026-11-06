@@ -12,6 +12,13 @@
 #include <qfontmetrics.h>
 #include <qstringlist.h>
 
+QSK_SUBCONTROL( QskInputPredictionBarScrollArea, Panel )
+QSK_SUBCONTROL( QskInputPredictionBarScrollArea, Viewport )
+QSK_SUBCONTROL( QskInputPredictionBarScrollArea, HorizontalScrollBar )
+QSK_SUBCONTROL( QskInputPredictionBarScrollArea, HorizontalScrollHandle )
+QSK_SUBCONTROL( QskInputPredictionBarScrollArea, VerticalScrollBar )
+QSK_SUBCONTROL( QskInputPredictionBarScrollArea, VerticalScrollHandle )
+
 QSK_SUBCONTROL( QskInputPredictionBar, Panel )
 QSK_SUBCONTROL( QskInputPredictionBar, ButtonPanel )
 QSK_SUBCONTROL( QskInputPredictionBar, ButtonText )
@@ -59,10 +66,21 @@ namespace
     };
 }
 
+QskInputPredictionBarScrollArea::QskInputPredictionBarScrollArea( QQuickItem* parent )
+    : Inherited( parent )
+{
+    setSubcontrolProxy( Inherited::Panel, Panel );
+    setSubcontrolProxy( Inherited::Viewport, Viewport );
+    setSubcontrolProxy( Inherited::HorizontalScrollBar, HorizontalScrollBar );
+    setSubcontrolProxy( Inherited::HorizontalScrollHandle, HorizontalScrollHandle );
+    setSubcontrolProxy( Inherited::VerticalScrollBar, VerticalScrollBar );
+    setSubcontrolProxy( Inherited::VerticalScrollHandle, VerticalScrollHandle );
+}
+
 class QskInputPredictionBar::PrivateData
 {
   public:
-    QskScrollArea* scrollArea;
+    QskInputPredictionBarScrollArea* scrollArea;
     QskLinearBox* layoutBox;
     QStringList candidates;
 
@@ -77,7 +95,7 @@ QskInputPredictionBar::QskInputPredictionBar( QQuickItem* parent )
     setAutoLayoutChildren( true );
     initSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Fixed );
 
-    m_data->scrollArea = new QskScrollArea( this );
+    m_data->scrollArea = new QskInputPredictionBarScrollArea( this );
     m_data->scrollArea->setSizePolicy( QskSizePolicy::Expanding, QskSizePolicy::Fixed );
     m_data->scrollArea->setFlickableOrientations( Qt::Horizontal );
 
