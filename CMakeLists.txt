@@ -15,6 +15,7 @@ macro(qsk_setup_options)
     option(BUILD_INPUTCONTEXT "Build virtual keyboard support" ON)
     option(BUILD_EXAMPLES     "Build qskinny examples" ON)
     option(BUILD_PLAYGROUND   "Build qskinny playground" ON)
+    option(BUILD_TESTS        "Build qskinny auto tests" OFF)
 
     # we actually want to use cmake_dependent_option - minimum cmake version ??
 
@@ -155,7 +156,7 @@ if(BUILD_INPUTCONTEXT)
     add_subdirectory(inputcontext)
 endif()
 
-if(BUILD_EXAMPLES OR BUILD_PLAYGROUND)
+if(BUILD_EXAMPLES OR BUILD_PLAYGROUND OR BUILD_TESTS)
     add_subdirectory(support)
 endif()
 
@@ -169,4 +170,9 @@ endif()
 
 if(BUILD_PLAYGROUND)
     add_subdirectory(playground)
+endif()
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
 endif()
